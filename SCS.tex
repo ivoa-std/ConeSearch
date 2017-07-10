@@ -31,16 +31,18 @@ showstringspaces=False}
 
 \begin{document}
 \begin{abstract}
-This specification defines a simple query protocol for retrieving records from a catalog of astronomical sources. The query describes sky position and an angular distance, defining a cone on the sky. The response returns a list of astronomical sources from the catalog whose positions lie within the cone, formatted as a VOTable. This version of the specification is essentially a transcription of the original Cone Search specification in order to move it into the IVOA standardization process.
+This specification defines a simple query protocol for retrieving records from a catalog of astronomical sources. The query describes a sky position and an angular distance, defining a cone on the sky. The response returns a list of astronomical sources from the catalog whose positions lie within the cone, formatted as a VOTable. This version aims essentially at aligning this specification with the Data Access Layer (DAL) landscape at the time of writing.
 \end{abstract}
 
 
 \section*{Acknowledgments}
-This document was originally published as a document of the US National Virtual Observatory (NVO), available at \url{http://us-vo.org/pubs/files/conesearch.html}\todo{this link does not work anymore, find out if it's possible to find a link or remove it.}. This IVOA version is essentially a transcription of that document into the IVOA standards document format. Minor changes have been made to sharpen the specification description where needed and to otherwise fit it into the IVOA standards context; these changes are enumerated in Appendix \ref{appendix:c5}. It is the intention of this document that all existing services compliant with the original NVO document will be compliant with this specification. Similarly, all future service implementations that are based on this specification are expected to be compliant with the spirit of the original NVO document and practices in the VO current at the time of this writing; thus, existing client applications should work with the new implementations without change.
+This document was originally published as a document of the US National Virtual Observatory (NVO) \todo{check if the document or a link is still available} and then transcripted into an IVOA standards document format to became an IVOA recommendation. The changes made in this transcription and in the process of producing the first recommandation are reported in Appendix \ref{appendix:c}.
 
-Cone Search represents the first and arguably the most successful "standard protocol" developed within the Virtual Observatory movement. The editor, therefore, gratefully acknowledges the work of the original authors of the Cone Search specification as well as the numerous data providers who have implemented and continue to support this protocol.
+The Simple Cone Search version 1.03 document has been developed with support from the National Science Foundation's Information Technology Research Program under Cooperative Agreement AST0122449 with The Johns Hopkins University.
 
-This document has been developed with support from the National Science Foundation's Information Technology Research Program under Cooperative Agreement AST0122449 with The Johns Hopkins University.
+The SCS-1.1 revision has been developed under the ASTERICS project, supported by the European Commission Framework Programme Horizon 2020 Research and Innovation action, grant agreement n. 653477.
+
+Work of the original authors of the Cone Search specification as well as the numerous data providers who have implemented and continue to support this protocol is kindly ackonwledged.
 
 \section*{Conformance-related definitions}
 
@@ -372,6 +374,7 @@ Table Notes:
 Subsequent versions of this document should include the ConeSearch extension schema as a formal part of the specification.
 
 \section{Changes from Previous Versions}
+\label{appendix:c}
 
 \subsection{Changes from REC-1.03}
 \begin{itemize}
