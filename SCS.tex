@@ -31,14 +31,14 @@ showstringspaces=False}
 
 \begin{document}
 \begin{abstract}
-This specification defines a simple query protocol for retrieving records from a catalog of astronomical sources. The query describes a sky position and an angular distance, defining a cone on the sky. The response returns a list of astronomical sources from the catalog whose positions lie within the cone, formatted as a VOTable. This version aims essentially at aligning this specification with the Data Access Layer (DAL) landscape at the time of writing.
+This specification defines a simple query protocol, named Simple Cone Search (SCS or simply cone search hereafter), for retrieving records from a catalog of astronomical sources. The query describes a sky position and an angular distance, defining a cone on the sky. The response returns a list of astronomical sources from the catalog whose positions lie within the cone, formatted as a VOTable. This version aims essentially at aligning this specification with the Data Access Layer (DAL) landscape at the time of writing.
 \end{abstract}
 
 
 \section*{Acknowledgments}
 This document was originally published as a document of the US National Virtual Observatory (NVO) \todo{check if the document or a link is still available} and then transcripted into an IVOA standards document format to became an IVOA recommendation. The changes made in this transcription and in the process of producing the first recommandation are reported in Appendix \ref{appendix:c}.
 
-The Simple Cone Search version 1.03 document has been developed with support from the National Science Foundation's Information Technology Research Program under Cooperative Agreement AST0122449 with The Johns Hopkins University.
+The Simple Cone Search (SCS) version 1.03 document has been developed with support from the National Science Foundation's Information Technology Research Program under Cooperative Agreement AST0122449 with The Johns Hopkins University.
 
 The SCS-1.1 revision has been developed under the ASTERICS project, supported by the European Commission Framework Programme Horizon 2020 Research and Innovation action, grant agreement n. 653477.
 
@@ -63,7 +63,7 @@ infrastructure that enable VO applications.
 
 This specification describes how a provider of an astronomical source catalog can publish that catalog to the Virtual Observatory in such a way that a simple cone search can be done. The data remains in the control of the data provider, served through a web server to the world, but the query profile and response profile are carefully controlled, as described below. It is intended that setting up this web service be simple enough that data providers will not have to spend too much time on it (their funding to support such services is typically small). At the same time, the service implementation and the data it provides can serve as a basis for more sophisticated tools.
 
-This specification does not specify how Cone Search services are implemented, or how the data are stored or manipulated. The concern of this specification is how the data are exposed to the world through well-defined requests and responses.
+This specification does not specify how cone search services are implemented, or how the data are stored or manipulated. The concern of this specification is how the data are exposed to the world through well-defined requests and responses.
 
 This specification assumes that the data provider has already selected a catalog of astronomical sources. This catalog can be presented as a single table; it is expected that the table contains several columns.
 
@@ -87,72 +87,92 @@ This specification assumes that the data provider has already selected a catalog
 Fig.~\ref{fig:archdiag} shows the role this document plays within the
 IVOA architecture \citep{note:VOARCH}.
 
-\section{Service Interface Requirements}
+\section{Resource Interface}
 \label{sec:2}
 
-A service implementation that is compliant with this standard must meet the following requirements:
+A SCS service for accessing catalogue resources is implemented as a synchronous resource that must meet the following requirements:
+\begin{itemize}
+	\item the resources must respond to requests submitted using an HTTP GET query string as described in Sec.~\ref{sec:2.1};
+	\item the response must be a valid VOTable document, providing a table containing the sources of the catalogue whose positions are within the cone described in the query request (see Sec.~\ref{sec:2.2}); or
+	\item must return a stubbed VOTable in case of errror, as described in Sec.~\ref{sec:2.3}.
+\end{itemize}
 
-\begin{enumerate}
-	\item the service must respond to a HTTP GET request represented by a URL having two parts:\\
-	\begin{itemize}
-		\item A base URL of the form\\
-		
-		\url{http://<server-address>/<path>?[<extra-GET-arg>&[...]]}\\
-		
-		where <server-address> and <path> are URI-compliant components indicating the domain address and local location path where the service is deployed. The <server-address> may end with one or more locally supported URL arguments, <extra-GET-arg>; these arguments are not recognized parts of the Cone Search protocol and thus are treated opaquely by clients of the service as part of the base URL.\\
-Note that when it contains extra GET arguments, the base URL ends in an ampersand, \&; if there are no extra arguments, then it ends in a question mark, ?.\\
+\subsection{Interface base and parameters}
+\label{sec:2.1}
+The SCS service endpoint is represented by a \xmlel{base\_url} formed by a \xmlel{<base\_path>} and an optional \xmlel{<base\_query>} of the form
+\begin{itemize}
+	\item \texttt{http://my.server.org/<base\_path>?<base\_query>}
+\end{itemize}
+where \xmlel{<base\_path>} is a URI-compliant component indicating the local location path and the \xmlel{<base\_query>} may optionally be formed by locally supported query parameters; these latter are not recognized parts of the SCS protocol and thus are treated opaquely by clients of the service as part of the \xmlel{base\_url}.\\
+Note that when it contains extra GET arguments, the \xmlel{base\_url} ends in an ampersand, \&; if there are no extra arguments, then it ends in a question mark, ?.\\
 		\begin{bigdescription}
-		\item[Examples] \url{http://mycone.org/cgi-bin/VOsearch?}\\
-		\url{http://adil.ncsa.uiuc.edu/vocone?resolv&issurvey=T&}
+		\item[Examples] \texttt{http://mycone.org/cgi-bin/VOsearch?}\\
+		\texttt{http://adil.ncsa.uiuc.edu/vocone?resolv\&issurvey=T\&}
 		\end{bigdescription}
-		Every query to a given cone search service uses the same base URL.
-		\item Constraints expressed as a list of ampersand-delimited GET arguments of the form: <name>=<value> where <name> is a parameter name specified by this specification and <value> is its value. The constraints represent the query parameters which can vary for each successive query. The order of the name-parameter pairs is not significant.
-		\item The baseURL and constraint list are concatenated to form the query.
-		\item The set of query constraints must include the following parameters, which are interpreted by the service with the stated meaning:
-		\begin{description}
-			\item[\textbf{RA}] a right-ascension in the ICRS coordinate system for the positon of the center of the cone to search, given in decimal degrees.
-			\item[\textbf{DEC}] a declination in the ICRS coordinate system for the positon of the center of the cone to search, given in decimal degrees.
-			\item[\textbf{SR}] the radius of the cone to search, given in decimal degrees.
-		\end{description}
-		\begin{bigdescription}
-			\item[Example] \url{http://mycone.org/cgi-bin/search?RA=180.567&DEC=-30.45&SR=0.0125}
-		\end{bigdescription}
-		\item The query MAY contain the optional parameter, \textbf{VERB}, whose value is an integer--either 1, 2, or 3--indicating verbosity which determines how many columns are to be returned in the resulting table. Support for this parameter by a Cone Search service implementation is optional. If the service supports the parameter, then when the value is 1, the response should include the bare minimum of columns that the provider considers useful in describing the returned objects (while still remaining compliant with this standard; see section 2.2 below). When the value is 3, the service should return all of the columns that are available for describing the objects. A value of 2 is intended for requesting a medium number of columns between the minimum and maximum (inclusive) that are considered by the provider to most typically useful to the user. When the VERB parameter is not provided, the server should respond as if VERB=2. If the VERB parameter is not supported by the service, the service should ignore the parameter and should always return the same columns for every request.
-		\item There may be other parameters in the query, but this document does not specify their meaning or usage. If a query includes an optional parameter, either one specified by this document or not, that is not supported by the service implementation, the service must ignore that parameter.
-	\end{itemize}
-	A query following this syntax represents a request for information on sources located within the specified cone on the sky.
-	\item The service must respond with an XML document in the VOTable format, that represents a table of astronomical sources whose positions are within the cone (see Appendix \ref{appendix:a} for an example). There may also be other sources outside the cone -- the service implementor may decide on the exact search criterion used internally to the service to select the sources.
-	The base MIME-type of the HTTP response should be \texttt{text/xml}. The more specific form \texttt{text/xml;content=x-votable} may optionally be used. The MIME-type, \texttt{text/xml;votable} shall also be considered legal (for backward compatibility reasons); however, this value is strongly discouraged as it is not compliant with the MIME-type standard \citep{std:MIME}. The XML content of the response must be compliant with VOTable schema, version 1.0 \citep{std:VOT11} or 1.1 \citep{2004ivoa.spec.0811O}.
-	\begin{bigdescription}
-		\item[Editor's Note] The original NVO specification allowed a MIME-type of text/xml;votable, thus for backward compatibility this is still allowed but discouraged.
-	\end{bigdescription}
-	The VOTable MUST comply with these conditions:
-	\begin{itemize}
-		\item There must be a single RESOURCE in the VOTable, and that contains a single TABLE.
-		\item The TABLE must have FIELDS where the following UCD \todo{SCS-1.03 used to point to CDS tools, but now those ones are overwritten by UCD1+ tools} values have been set. There must only be one FIELD with each of these UCDs:
-		\begin{itemize}
-			\item Exactly one FIELD must have ucd="ID\_MAIN", with an array character type (fixed or variable length), representing an ID string for that record of the table. This identifier may not be repeated in the table, and it could be used to retrieve that same record again from that same table.
-			\item Exactly one FIELD must have ucd="POS\_EQ\_RA\_MAIN", with type double, representing the right-ascension of the source in the ICRS coordinate system.
-			\item Exactly one FIELD must have ucd="POS\_EQ\_DEC\_MAIN", with type double, representing the declination of the source in the ICRS coordinate system.
-		\end{itemize}
-		\item 	The VOTable may include an expression of the uncertainty of the positions given in the above mentioned fields to be interpreted either as a positional error of the source positions, or an angular size if the sources are resolved. If this uncertainty is not provided, it should be taken to be zero; otherwise, it may be set for all table entries with a PARAM in the RESOURCE which has a UCD that is set to OBS\_ANG-SIZE and has a value which is the angle in decimal degrees. Alternatively, a different value for each row in the table can be given via a FIELD in the table having a UCD set to OBS\_ANG-SIZE.
-		\item There may be other FIELDs in the table. Their specification should include a description, data-type, and UCD.
-	\end{itemize}
-	\item The service must respond with a stubbed version of the VOTable in the case of error. This must happen if the three required parameters (RA, DEC, SR) are not all present, or if their values cannot be parsed to floating-point numbers, or if the numbers are out of range (DEC=91.0, for example). The service may also make an error return if the search radius (give by the SR parameter) is larger than the MaxSR parameter of the Resource Profile (see Section \ref{sec:3}).
-	In the case of error, the service MUST respond with a VOTable that contains a single PARAM element or a single INFO element with \texttt{name="Error"}, where the corresponding value attribute should contain some explanation of the nature of the error. If an INFO element is used, it must appear as a direct child of one of the following elements:
-	\begin{itemize}
-		\item the root VOTABLE element (which is preferred by this document), or
-		\item the RESOURCE element
-	\end{itemize}
-	If a PARAM element is used, it must appear as a direct child of one of following elements:
-	\begin{itemize}
-		\item the RESOURCE element, or
-		\item a DEFINITION element below the root VOTABLE element (which is discouraged by this document).
-	\end{itemize}
-	\begin{bigdescription}
+Every query to a given cone search service uses the same base URL.
+
+Constraints to filter the catalogue are expressed as a list of ampersand-delimited GET arguments of the form: \xmlel{<name>=<value>} where \xmlel{<name>} is a parameter name specified by this specification and \xmlel{<value>} is its value. The constraints represent the query parameters which can vary for each successive query. The order of the name-parameter pairs is not significant.
+
+The \xmlel{base\_url} and constraint list are concatenated to form the query.
+
+The set of query constraints \textbf{must} include the following parameters, which are interpreted by the service with the stated meaning.
+\begin{description}
+	\item[\textbf{RA}]: a right-ascension in the ICRS coordinate system for the positon of the center of the cone to search, given in decimal degrees.
+	\item[\textbf{DEC}]: a declination in the ICRS coordinate system for the positon of the center of the cone to search, given in decimal degrees.
+	\item[\textbf{SR}] the radius of the cone to search, given in decimal degrees.
+\end{description}
+\begin{bigdescription}
+	\item[Example] \texttt{http://mycone.org/cgi-bin/search?RA=180.567\&DEC=-30.45\&SR=0.0125}
+\end{bigdescription}
+
+The query MAY contain the optional parameter, \textbf{VERB}, whose value is an integer (either 1, 2, or 3) indicating verbosity which determines how many columns are to be returned in the resulting table. Support for this parameter by a cone search service implementation is optional. If the service supports the parameter, then when the value is 1, the response should include the bare minimum of columns that the provider considers useful in describing the returned objects (while still remaining compliant with this standard; see section \ref{sec:2.2} below). When the value is 3, the service should return all of the columns that are available for describing the objects. A value of 2 is intended for requesting a medium number of columns between the minimum and maximum (inclusive) that are considered by the provider to most typically useful to the user. When the VERB parameter is not provided, the server should respond as if VERB=2. If the VERB parameter is not supported by the service, the service should ignore the parameter and should always return the same columns for every request.
+
+There may be other parameters in the query, but this document does not specify their meaning or usage. If a query includes an optional parameter, either one specified by this document or not, that is not supported by the service implementation, the service must ignore that parameter.
+
+A query following this syntax represents a request for information on sources located within the specified cone on the sky.
+
+\subsection{Successful Response}
+\label{sec:2.2}
+In case of a successful query the service must respond with an XML document in the VOTable format, that represents a table of astronomical sources whose positions are within the cone (see Appendix \ref{appendix:a} for an example). There may also be other sources outside the cone -- the service implementor may decide on the exact search criterion used internally to the service to select the sources.
+
+The base MIME-type of the HTTP response should be \texttt{text/xml}. The more specific form \texttt{text/xml;content=x-votable} may optionally be used. The MIME-type, \texttt{text/xml;votable} shall also be considered legal (for backward compatibility reasons); however, this value is strongly discouraged as it is not compliant with the MIME-type standard \citep{std:MIME}. The XML content of the response must be compliant with VOTable schema, version 1.0 \citep{std:VOT11} or 1.1 \citep{2004ivoa.spec.0811O}.
+
+\begin{bigdescription}
+	\item[Editor's Note] The original NVO specification allowed a MIME-type of text/xml;votable, thus for backward compatibility this is still allowed but discouraged.
+\end{bigdescription}
+
+The VOTable MUST comply with the following conditions.
+
+There \textbf{must} be a single \xmlel{RESOURCE} in the VOTable, and that contains a single \xmlel{TABLE}.
+
+The \xmlel{TABLE} \textbf{must} have \xmlel{FIELD}s where the following UCD values have been set. There \textbf{must} only be one \xmlel{FIELD} with each of these UCDs:
+\begin{itemize}
+	\item Exactly one \xmlel{FIELD} \textbf{must} have \xmlel{ucd="ID\_MAIN"}, with an array character type (fixed or variable length), representing an ID string for that record of the table. This identifier \textbf{may not} be repeated in the table, and it could be used to retrieve that same record again from that same table.
+	\item Exactly one \xmlel{FIELD} \textbf{must} have \xmlel{ucd="POS\_EQ\_RA\_MAIN"}, with type double, representing the right-ascension of the source in the ICRS coordinate system.
+	\item Exactly one \xmlel{FIELD} \textbf{must} have \xmlel{ucd="POS\_EQ\_DEC\_MAIN"}, with type double, representing the declination of the source in the ICRS coordinate system.
+\end{itemize}
+The VOTable may include an expression of the uncertainty of the positions given in the above mentioned fields to be interpreted either as a positional error of the source positions, or an angular size if the sources are resolved. If this uncertainty is not provided, it should be taken to be zero; otherwise, it may be set for all table entries with a \xmlel{PARAM} in the \xmlel{RESOURCE} which has a UCD that is set to OBS\_ANG-SIZE and has a value which is the angle in decimal degrees. Alternatively, a different value for each row in the table can be given via a \xmlel{FIELD} in the table having a UCD set to OBS\_ANG-SIZE.
+There may be other \xmlel{FIELD}s in the table. Their specification \textbf{should} include description, data-type, and UCD.
+
+\subsection{Error Response}
+\label{sec:2.3}
+The service \textbf{must} respond with a stubbed version of the VOTable in the case of error. This must happen if the three required parameters (RA, DEC, SR) are not all present, or if their values cannot be parsed to floating-point numbers, or if the numbers are out of range (DEC=91.0, for example). The service may also make an error return if the search radius (give by the SR parameter) is larger than the MaxSR parameter of the Resource Profile (see Section \ref{sec:3}).
+
+In the case of error, the service \textbf{must} respond with a VOTable that contains a single \xmlel{PARAM} element or a single \xmlel{INFO} element with \xmlel{name="Error"}, where the corresponding value attribute should contain some explanation of the nature of the error. If an \xmlel{INFO} element is used, it must appear as a direct child of one of the following elements:
+\begin{itemize}
+	\item the root \xmlel{VOTABLE} element (which is preferred by this document), or
+	\item the \xmlel{RESOURCE} element
+\end{itemize}
+
+If a \xmlel{PARAM} element is used, it must appear as a direct child of one of following elements:
+\begin{itemize}
+	\item the \xmlel{RESOURCE element}, or
+	\item a \xmlel{DEFINITION} element below the root \xmlel{VOTABLE} element (which is discouraged by this document).
+\end{itemize}
+\begin{bigdescription}
 	\item[Editor's Note] It was recognized that this requirement, as it was described in the original NVO specification, is ambiguous about both the element to use for the ERROR message and its location in the document. The VOTable standard allows PARAM and INFO elements to appear in various places within the document. Since several of the different methods have been used in practice by Cone Search service implementations, no attempt is made in this version to correct this ambiguity. All of the above-mentioned locations should be considered legal, and Cone Search service clients should be prepared to look in all of them for an ERROR message. The use of PARAM as a child of DEFINITIONS is discouraged as the DEFINITIONS element was deprecated in VOTable v1.1.
-	\end{bigdescription}
-	\begin{bigdescription}
+\end{bigdescription}
+\begin{bigdescription}
 	\item[Example Error Responses] Error INFO as child of VOTABLE (preferred)\\
 	\begin{lstlisting}[language=XML,basicstyle=\footnotesize]
 <?xml version="1.0"?>
@@ -177,9 +197,9 @@ Note that when it contains extra GET arguments, the base URL ends in an ampersan
  </RESOURCE>
 </VOTABLE>
 	\end{lstlisting}
-	\end{bigdescription}
-	Other conditions may NOT be considered erroneous, for example if a query cone is in the Southern hemisphere and the catalog coverage is in the Northern hemisphere. This type of query is different from an error return; it should return a VOTable as described above, with metadata, but no data records. In particular, a zero value of Search Radius should not return an error condition. This is because an application may be more interested in the metadata than the data, and send a fixed query (for example RA=0\&DEC=90\&SR=0) simply to discover the fields delivered by the service.
-\end{enumerate}
+\end{bigdescription}
+
+Other conditions may NOT be considered erroneous, for example if a query cone is in the Southern hemisphere and the catalog coverage is in the Northern hemisphere. This type of query is different from an error return; it should return a VOTable as described above, with metadata, but no data records. In particular, a zero value of Search Radius should not return an error condition. This is because an application may be more interested in the metadata than the data, and send a fixed query (for example RA=0\&DEC=90\&SR=0) simply to discover the fields delivered by the service.
 
 \section{The Resource Profile}
 \label{sec:3}
