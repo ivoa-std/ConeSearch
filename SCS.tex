@@ -36,7 +36,7 @@ This specification defines a simple query protocol, named Simple Cone Search (SC
 
 
 \section*{Acknowledgments}
-This document was originally published as a document of the US National Virtual Observatory (NVO) \todo{check if the document or a link is still available} and then transcripted into an IVOA standards document format to became an IVOA recommendation. The changes made in this transcription and in the process of producing the first recommandation are reported in Appendix \ref{appendix:c}.
+This document was originally published as a document of the US National Virtual Observatory (NVO) \todo{check if the document or a link is still available} and then transcripted into an IVOA standards document format to became an IVOA recommendation. The changes made in this transcription and in the process of producing the first recommandation are reported in Appendix \ref{app:changes}.
 
 The Simple Cone Search (SCS) version 1.03 document has been developed with support from the National Science Foundation's Information Technology Research Program under Cooperative Agreement AST0122449 with The Johns Hopkins University.
 
@@ -88,17 +88,17 @@ Fig.~\ref{fig:archdiag} shows the role this document plays within the
 IVOA architecture \citep{note:VOARCH}.
 
 \section{Resource Interface}
-\label{sec:2}
+\label{sec:resif}
 
-A SCS service for accessing catalogue resources is implemented as a synchronous resource that must meet the following requirements:
+A SCS service for accessing catalogue resources is implemented as a synchronous resource (as compliant as possible to the DALI specification, \citet{std:DALI}) that must meet the following requirements:
 \begin{itemize}
-	\item the resources must respond to requests submitted using an HTTP GET query string as described in Sec.~\ref{sec:2.1};
-	\item the response must be a valid VOTable document, providing a table containing the sources of the catalogue whose positions are within the cone described in the query request (see Sec.~\ref{sec:2.2}); or
-	\item must return a stubbed VOTable in case of errror, as described in Sec.~\ref{sec:2.3}.
+	\item the resource \textbf{must} respond to requests submitted using an HTTP GET query string, and may respond to HTTP POST query actions, as described in Sec.~\ref{sec:basepar};
+	\item the response must be a valid VOTable document, providing a table containing the sources of the catalogue whose positions are within the cone described in the query request (see Sec.~\ref{sec:response}); or
+	\item must return a stubbed VOTable in case of error, as described in Sec.~\ref{sec:error}.
 \end{itemize}
 
 \subsection{Interface base and parameters}
-\label{sec:2.1}
+\label{sec:basepar}
 The SCS service endpoint is represented by a \xmlel{base\_url} formed by a \xmlel{<base\_path>} and an optional \xmlel{<base\_query>} of the form
 \begin{itemize}
 	\item \texttt{http://my.server.org/<base\_path>?<base\_query>}
@@ -115,6 +115,8 @@ Constraints to filter the catalogue are expressed as a list of ampersand-delimit
 
 The \xmlel{base\_url} and constraint list are concatenated to form the query.
 
+In the case the SCS service accepts HTTP POST action for query, the \xmlel{value=param} constraints must be passed on to the service as data in the request body, with \texttt{application/x-www-form-urlencoded} encoding type. Whether the \xmlel{<base\_query>} parameters are accepted as POST parameters or not, is up to the service provider.\todo{There's currently no way to alert clients on SCS service POST capability. This poses a question on best practices here. Maybe allowing 1.03 baseURL but moving already towards a 1.1 PathParam only baseURL?} Mixed GET/POST queries are possible.
+
 The set of query constraints \textbf{must} include the following parameters, which are interpreted by the service with the stated meaning.
 \begin{description}
 	\item[\textbf{RA}]: a right-ascension in the ICRS coordinate system for the positon of the center of the cone to search, given in decimal degrees.
@@ -125,15 +127,15 @@ The set of query constraints \textbf{must} include the following parameters, whi
 	\item[Example] \texttt{http://mycone.org/cgi-bin/search?RA=180.567\&DEC=-30.45\&SR=0.0125}
 \end{bigdescription}
 
-The query MAY contain the optional parameter, \textbf{VERB}, whose value is an integer (either 1, 2, or 3) indicating verbosity which determines how many columns are to be returned in the resulting table. Support for this parameter by a cone search service implementation is optional. If the service supports the parameter, then when the value is 1, the response should include the bare minimum of columns that the provider considers useful in describing the returned objects (while still remaining compliant with this standard; see section \ref{sec:2.2} below). When the value is 3, the service should return all of the columns that are available for describing the objects. A value of 2 is intended for requesting a medium number of columns between the minimum and maximum (inclusive) that are considered by the provider to most typically useful to the user. When the VERB parameter is not provided, the server should respond as if VERB=2. If the VERB parameter is not supported by the service, the service should ignore the parameter and should always return the same columns for every request.
+The query MAY contain the optional parameter, \textbf{VERB}, whose value is an integer (either 1, 2, or 3) indicating verbosity which determines how many columns are to be returned in the resulting table. Support for this parameter by a cone search service implementation is optional. If the service supports the parameter, then when the value is 1, the response should include the bare minimum of columns that the provider considers useful in describing the returned objects (while still remaining compliant with this standard; see section \ref{sec:response} below). When the value is 3, the service should return all of the columns that are available for describing the objects. A value of 2 is intended for requesting a medium number of columns between the minimum and maximum (inclusive) that are considered by the provider to most typically useful to the user. When the VERB parameter is not provided, the server should respond as if VERB=2. If the VERB parameter is not supported by the service, the service should ignore the parameter and should always return the same columns for every request.
 
 There may be other parameters in the query, but this document does not specify their meaning or usage. If a query includes an optional parameter, either one specified by this document or not, that is not supported by the service implementation, the service must ignore that parameter.
 
 A query following this syntax represents a request for information on sources located within the specified cone on the sky.
 
 \subsection{Successful Response}
-\label{sec:2.2}
-In case of a successful query the service must respond with an XML document in the VOTable format, that represents a table of astronomical sources whose positions are within the cone (see Appendix \ref{appendix:a} for an example). There may also be other sources outside the cone -- the service implementor may decide on the exact search criterion used internally to the service to select the sources.
+\label{sec:response}
+In case of a successful query the service must respond with an XML document in the VOTable format, that represents a table of astronomical sources whose positions are within the cone (see Appendix \ref{app:responsesample} for an example). There may also be other sources outside the cone -- the service implementor may decide on the exact search criterion used internally to the service to select the sources.
 
 The base MIME-type of the HTTP response should be \texttt{text/xml}. The more specific form \texttt{text/xml;content=x-votable} may optionally be used. The MIME-type, \texttt{text/xml;votable} shall also be considered legal (for backward compatibility reasons); however, this value is strongly discouraged as it is not compliant with the MIME-type standard \citep{std:MIME}. The XML content of the response must be compliant with VOTable schema, version 1.0 \citep{std:VOT11} or 1.1 \citep{2004ivoa.spec.0811O}.
 
@@ -155,8 +157,8 @@ The VOTable may include an expression of the uncertainty of the positions given 
 There may be other \xmlel{FIELD}s in the table. Their specification \textbf{should} include description, data-type, and UCD.
 
 \subsection{Error Response}
-\label{sec:2.3}
-The service \textbf{must} respond with a stubbed version of the VOTable in the case of error. This must happen if the three required parameters (RA, DEC, SR) are not all present, or if their values cannot be parsed to floating-point numbers, or if the numbers are out of range (DEC=91.0, for example). The service may also make an error return if the search radius (give by the SR parameter) is larger than the MaxSR parameter of the Resource Profile (see Section \ref{sec:3}).
+\label{sec:error}
+The service \textbf{must} respond with a stubbed version of the VOTable in the case of error. This must happen if the three required parameters (RA, DEC, SR) are not all present, or if their values cannot be parsed to floating-point numbers, or if the numbers are out of range (DEC=91.0, for example). The service may also make an error return if the search radius (give by the SR parameter) is larger than the MaxSR parameter of the Resource Profile (see Section \ref{sec:regext}).
 
 In the case of error, the service \textbf{must} respond with a VOTable that contains a single \xmlel{PARAM} element or a single \xmlel{INFO} element with \xmlel{name="Error"}, where the corresponding value attribute should contain some explanation of the nature of the error. If an \xmlel{INFO} element is used, it must appear as a direct child of one of the following elements:
 \begin{itemize}
@@ -202,7 +204,7 @@ If a \xmlel{PARAM} element is used, it must appear as a direct child of one of f
 Other conditions may NOT be considered erroneous, for example if a query cone is in the Southern hemisphere and the catalog coverage is in the Northern hemisphere. This type of query is different from an error return; it should return a VOTable as described above, with metadata, but no data records. In particular, a zero value of Search Radius should not return an error condition. This is because an application may be more interested in the metadata than the data, and send a fixed query (for example RA=0\&DEC=90\&SR=0) simply to discover the fields delivered by the service.
 
 \section{The Resource Profile}
-\label{sec:3}
+\label{sec:regext}
 A Cone Search service MUST be described with a Resource Profile that includes the following information. The Profile is composed of named metadata listed below. The format used to encode the profile should be compliant with the publishing standards of the IVOA throughout the time the service is supported by the data provider. The metadata names and values used in the profile encoding should match those given below as closely as possible; where they do not match exactly, they should be consistent with the IVOA metadata conventions in place at any given time and the mapping of names and values actually used and those given below should be well documented.
 \begin{bigdescription}
 \item[Editor's Note] The original NVO specification pre-dates the IVOA standard for resource metadata [RM], and so, obviously, some inconsistencies with that standard exist. To deal with this, the wording of this section has been altered to allow profiles to be constructed according to the latest practices in the IVOA. Appendix B outlines the mapping of the metadata listed below to that in the RM as well as the XML Schema used to render the metadata within a Registry.
@@ -221,13 +223,13 @@ The resource profile consists of the following metadata with the stated definiti
 	\item[\textbf{MaxSR}] The largest search radius, given in decimal degrees, that will be accepted by the service without returning an error condition. A value of 180.0 indicates that there is no restriction.
 	\item[\textbf{MaxRecords}] The largest number of records that the service will return.
 	\item[\textbf{Verbosity}] True or false, depending on whether the service supports the VERB keyword in the request.
-	\item[\textbf{BaseURL}] The base URL for the service as described in Section \ref{sec:2}.
+	\item[\textbf{BaseURL}] The base URL for the service as described in Section \ref{sec:resif}.
 \end{itemize}
 The service will be considered published to the VO if the profile has been added to an IVOA Registry according to the IVOA standards and conventions at the time the service is made available, TOGETHER with maintaining the web service that is described by the profile in compliant order.
 
 \appendix
 \section{Sample VOTable Response}
-\label{appendix:a}
+\label{app:responsesample}
 This is a sample of a legal response to a Cone Search query.
 \begin{lstlisting}[language=XML,basicstyle=\footnotesize]
 <?xml version="1.0"?>
@@ -298,7 +300,7 @@ This is a sample of a legal response to a Cone Search query.
 \section{Current Practices for Representing Resource Profiles}
 
 \subsection{Mapping for Resource Profile Metadata to the RM}
-As mentioned in an Editor's Note in Section \ref{sec:3}, the original NVO specification pre-dated the IVOA standard for resource metadata known as the RM \citep{STD:RM101}. This section indicates how the resource profile metadata defined in this specification maps to the metadata defined in the RM.
+As mentioned in an Editor's Note in Section \ref{sec:regext}, the original NVO specification pre-dated the IVOA standard for resource metadata known as the RM \citep{STD:RM101}. This section indicates how the resource profile metadata defined in this specification maps to the metadata defined in the RM.
 \begin{table}[th]
 \begin{tabular}{p{0.4\textwidth}p{0.5\textwidth}}
 \sptablerule
@@ -394,10 +396,11 @@ Table Notes:
 Subsequent versions of this document should include the ConeSearch extension schema as a formal part of the specification.
 
 \section{Changes from Previous Versions}
-\label{appendix:c}
+\label{app:changes}
 
 \subsection{Changes from REC-1.03}
 \begin{itemize}
+	\item Added POST as optional HTTP query method
 	\item Addition of authors/editors.
 	\item Plain porting of the HTML document into ivoatex template, including change history.
 \end{itemize}
@@ -431,7 +434,6 @@ Subsequent versions of this document should include the ConeSearch extension sch
 \end{itemize}
 
 \subsection{Changes from the original NVO Specification Document}
-\label{appendix:c5}
 \begin{itemize}
 	\item References to the original HTML document have been replaced with references to this IVOA specification.
 	\item Replaced references to "curator" with "data provider" or similar wording.
