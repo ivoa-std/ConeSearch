@@ -100,9 +100,9 @@ A SCS service for accessing catalogue resources is implemented as a synchronous 
 \subsection{Interface base and parameters}
 \label{sec:basepar}
 The SCS service endpoint is represented by a \xmlel{base\_url} formed by a \xmlel{<base\_path>} and an optional \xmlel{<base\_query>} of the form
-\begin{itemize}
-	\item \texttt{http://my.server.org/<base\_path>?<base\_query>}
-\end{itemize}
+\begin{bigdescription}
+	\item[SCS base URL syntax] \texttt{http://<server>/<base\_path>?<base\_query>}
+\end{bigdescription}
 where \xmlel{<base\_path>} is a URI-compliant component indicating the local location path and the \xmlel{<base\_query>} may optionally be formed by locally supported query parameters; these latter are not recognized parts of the SCS protocol and thus are treated opaquely by clients of the service as part of the \xmlel{base\_url}.\\
 Note that when it contains extra GET arguments, the \xmlel{base\_url} ends in an ampersand, \&; if there are no extra arguments, then it ends in a question mark, ?.\\
 		\begin{bigdescription}
@@ -117,23 +117,38 @@ The \xmlel{base\_url} and constraint list are concatenated to form the query.
 
 In the case the SCS service accepts HTTP POST action for query, the \xmlel{value=param} constraints must be passed on to the service as data in the request body, with \texttt{application/x-www-form-urlencoded} encoding type. Whether the \xmlel{<base\_query>} parameters are accepted as POST parameters or not, is up to the service provider.\todo{There's currently no way to alert clients on SCS service POST capability. This poses a question on best practices here. Maybe allowing 1.03 baseURL but moving already towards a 1.1 PathParam only baseURL?} Mixed GET/POST queries are possible.
 
-The set of query constraints \textbf{must} include the following parameters, which are interpreted by the service with the stated meaning.
-\begin{description}
-	\item[\textbf{RA}]: a right-ascension in the ICRS coordinate system for the positon of the center of the cone to search, given in decimal degrees.
-	\item[\textbf{DEC}]: a declination in the ICRS coordinate system for the positon of the center of the cone to search, given in decimal degrees.
-	\item[\textbf{SR}] the radius of the cone to search, given in decimal degrees.
-\end{description}
-\begin{bigdescription}
-	\item[Example] \texttt{http://mycone.org/cgi-bin/search?RA=180.567\&DEC=-30.45\&SR=0.0125}
-\end{bigdescription}
+The set of query constraints a cone search needs to understand \textbf{must} include the \textbf{RA}, \textbf{DEC}, \textbf{SR} parameters, \textbf{should} include the \textbf{MAXREC} and \textbf{RESPONSEFORMAT}\todo{to be added} ones and \textbf{may} include the \textbf{VERB} one, all of which are to be interpreted with the following stated meaning and the DALI recommendations about parameters.
 
-The query MAY contain the optional parameter, \textbf{VERB}, whose value is an integer (either 1, 2, or 3) indicating verbosity which determines how many columns are to be returned in the resulting table. Support for this parameter by a cone search service implementation is optional. If the service supports the parameter, then when the value is 1, the response should include the bare minimum of columns that the provider considers useful in describing the returned objects (while still remaining compliant with this standard; see section \ref{sec:response} below). When the value is 3, the service should return all of the columns that are available for describing the objects. A value of 2 is intended for requesting a medium number of columns between the minimum and maximum (inclusive) that are considered by the provider to most typically useful to the user. When the VERB parameter is not provided, the server should respond as if VERB=2. If the VERB parameter is not supported by the service, the service should ignore the parameter and should always return the same columns for every request.
+\subsubsection{RA - Right Ascension}
+\textbf{RA} represents a right-ascension in the ICRS coordinate system for the position of the center of the cone to search, given in decimal degrees. It is a single valued parameter and \textbf{must} be present in the query.
+
+\subsubsection{DEC - Declination}
+\textbf{DEC} represents a declination in the ICRS coordinate system for the position of the center of the cone to search, given in decimal degrees. It is a single value parameter and \textbf{must} be present in the query.
+
+\subsubsection{SR - Search Radius}
+\textbf{SR} represents the radius of the cone to search, given in decimal degrees. It is a single valued parameter and \textbf{must} be present in the query. If set to zero (SR=0) it should have the same effect as setting MAXREC=0, i.e. a service metadata request as prescribed by DALI\footnote{SR=0 is kept in this version of this specification for back compatibility. It is suggested to prefer the usage of MAXREC to enable metadata discovery}.
+
+\subsubsection{MAXREC - Maximum number of records to be returned}
+As defined by DALI a cone search \textbf{should} accept the \textbf{MAXREC} parameter to let the client limit the number of records returned or require a service metadata response (see above).  Its usage is encouraged and preferred to the SR=0 solution for metadata discovery.
+
+\subsubsection{VERB - Verbosity level}
+The query \textbf{may} contain the optional single valued parameter, \textbf{VERB}, whose value is an integer (either 1, 2, or 3) indicating verbosity which determines how many columns are to be returned in the resulting table. If the service supports the parameter, then when the value is 1, the response should include the bare minimum of columns that the provider considers useful in describing the returned objects (while still remaining compliant with this standard; see section \ref{sec:response} below). When the value is 3, the service should return all of the columns that are available for describing the objects. A value of 2 is intended for requesting a medium number of columns between the minimum and maximum (inclusive) that are considered by the provider to most typically useful to the user. When the VERB parameter is not provided, the server should respond as if VERB=2. If the VERB parameter is not supported by the service, the service should ignore the parameter and should always return the same columns for every request.
 
 There may be other parameters in the query, but this document does not specify their meaning or usage. If a query includes an optional parameter, either one specified by this document or not, that is not supported by the service implementation, the service must ignore that parameter.
 
 A query following this syntax represents a request for information on sources located within the specified cone on the sky.
 
-\subsection{Successful Response}
+\subsection{Query examples}
+\begin{bigdescription}
+\item[Minimal SCS query] \texttt{http://my.cone/search?RA=10.68\&DEC=41.26\&SR=0.01}
+\item[Service Metadata query] \texttt{http://my.cone/search?cat=A1\&RA=0\&DEC=0\&SR=0\&MAXREC=0}
+\item[Limit number of records in response] \texttt{http://my.cone/search?RA=10.68\&DEC=41.26\&SR=1\&MAXREC=100}
+\item[Ask for the minimal set of response fields] \texttt{http://my.cone/search?RA=10.68\&DEC=41.26\&SR=0.01\&VERB=1}
+\end{bigdescription}
+
+TODO: add POST example.
+
+\section{Successful Response}
 \label{sec:response}
 In case of a successful query the service must respond with an XML document in the VOTable format, that represents a table of astronomical sources whose positions are within the cone (see Appendix \ref{app:responsesample} for an example). There may also be other sources outside the cone -- the service implementor may decide on the exact search criterion used internally to the service to select the sources.
 
@@ -156,7 +171,7 @@ The \xmlel{TABLE} \textbf{must} have \xmlel{FIELD}s where the following UCD valu
 The VOTable may include an expression of the uncertainty of the positions given in the above mentioned fields to be interpreted either as a positional error of the source positions, or an angular size if the sources are resolved. If this uncertainty is not provided, it should be taken to be zero; otherwise, it may be set for all table entries with a \xmlel{PARAM} in the \xmlel{RESOURCE} which has a UCD that is set to OBS\_ANG-SIZE and has a value which is the angle in decimal degrees. Alternatively, a different value for each row in the table can be given via a \xmlel{FIELD} in the table having a UCD set to OBS\_ANG-SIZE.
 There may be other \xmlel{FIELD}s in the table. Their specification \textbf{should} include description, data-type, and UCD.
 
-\subsection{Error Response}
+\section{Error Response}
 \label{sec:error}
 The service \textbf{must} respond with a stubbed version of the VOTable in the case of error. This must happen if the three required parameters (RA, DEC, SR) are not all present, or if their values cannot be parsed to floating-point numbers, or if the numbers are out of range (DEC=91.0, for example). The service may also make an error return if the search radius (give by the SR parameter) is larger than the MaxSR parameter of the Resource Profile (see Section \ref{sec:regext}).
 
@@ -400,9 +415,10 @@ Subsequent versions of this document should include the ConeSearch extension sch
 
 \subsection{Changes from REC-1.03}
 \begin{itemize}
+	\item Added DALI MAXREC
 	\item Added POST as optional HTTP query method
 	\item Addition of authors/editors.
-	\item Plain porting of the HTML document into ivoatex template, including change history.
+	\item Plain porting of the HTML document into ivoatex template, including change history, then modified it and reshaped.
 \end{itemize}
 
 \subsection{Changes from PR-1.02}
