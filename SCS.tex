@@ -93,7 +93,7 @@ IVOA architecture \citep{note:VOARCH}.
 A SCS service for accessing catalogue resources is implemented as a synchronous resource (as compliant as possible to the DALI specification, \citet{std:DALI}) that must meet the following requirements:
 \begin{itemize}
 	\item the resource \textbf{must} respond to requests submitted using an HTTP GET query string, and may respond to HTTP POST query actions, as described in Sec.~\ref{sec:basepar};
-	\item the response must be a valid VOTable document, providing a table containing the sources of the catalogue whose positions are within the cone described in the query request (see Sec.~\ref{sec:response}); or
+	\item the response, by default, \textbf{must} be a valid VOTable document, providing a table containing the sources of the catalogue whose positions are within the cone described in the query request (see Sec.~\ref{sec:response}); or
 	\item must return a stubbed VOTable in case of error, as described in Sec.~\ref{sec:error}.
 \end{itemize}
 
@@ -154,22 +154,25 @@ TODO\todo{add POST example?}
 
 \section{Successful Response}
 \label{sec:response}
-A successful query \textbf{must} result in an HTTP response with status code 200 (OK) and a content that, by default, \textbf{must be} VOTable format, that represents a table of astronomical sources whose positions are within the cone (see Appendix \ref{app:responsesample} for an example).  
+A successful query \textbf{must} result in an HTTP response with status code 200 (OK) and a content that, by default, \textbf{must} be in VOTable format, that represents a table of astronomical sources whose positions are within the cone (see Appendix \ref{app:responsesample} for an example).  
 
-There may also be other sources outside the cone -- the service implementor may decide on the exact search criterion used internally to the service to select the sources.
+There may also be other sources outside the cone, the service implementor may decide on the exact search criterion used internally to the service to select the sources.
 
 The response format may be other than VOTable when requested using the RESPONSEFORMAT query parameter described in Sec.~\ref{subsubsec:responseformat}. Mime-type of the response will vary accordingly to the output format, again as prescribed by DALI and reported in Sec.~\ref{subsubsec:responseformat}.
 
-The VOTable \textbf{MUST} comply with the following conditions.
+\subsection{VOTable compliant response}
 
-There \textbf{must} be a single \xmlel{RESOURCE} in the VOTable, and that contains a single \xmlel{TABLE}.
+In the of the default VOTable response, this \textbf{MUST} comply with the following requirements.
+
+There \textbf{must} be a single \xmlel{RESOURCE} with \xmlel{type="results"} in the VOTable, and containing a single \xmlel{TABLE}\todo{should we relax on the number of tables?}.
 
 The \xmlel{TABLE} \textbf{must} have \xmlel{FIELD}s where the following UCD values have been set. There \textbf{must} only be one \xmlel{FIELD} with each of these UCDs:
 \begin{itemize}
-	\item Exactly one \xmlel{FIELD} \textbf{must} have \xmlel{ucd="ID\_MAIN"}, with an array character type (fixed or variable length), representing an ID string for that record of the table. This identifier \textbf{may not} be repeated in the table, and it could be used to retrieve that same record again from that same table.
-	\item Exactly one \xmlel{FIELD} \textbf{must} have \xmlel{ucd="POS\_EQ\_RA\_MAIN"}, with type double, representing the right-ascension of the source in the ICRS coordinate system.
-	\item Exactly one \xmlel{FIELD} \textbf{must} have \xmlel{ucd="POS\_EQ\_DEC\_MAIN"}, with type double, representing the declination of the source in the ICRS coordinate system.
+	\item \textbf{Exactly one} \xmlel{FIELD} \textbf{must} have \xmlel{ucd="ID\_MAIN"}, with an array character type (fixed or variable length), representing an ID string for that record of the table. This identifier \textbf{may not} be repeated in the table, and it could be used to retrieve that same record again from that same table.
+	\item \textbf{Exactly one} \xmlel{FIELD}, representing the right ascension of the source in the ICRS coordinate system, \textbf{must} have \xmlel{ucd="POS\_EQ\_RA\_MAIN"}, and have \xmlel{datatype} set to \xmlel{"float"} or \xmlel{"double"}.
+	\item \textbf{Exactly one} \xmlel{FIELD}, representing the declination of the source in the ICRS coordinate system, \textbf{must} have \xmlel{ucd="POS\_EQ\_DEC\_MAIN"}, and have \xmlel{datatype} set to \xmlel{"float"} or \xmlel{"double"}.
 \end{itemize}
+
 The VOTable may include an expression of the uncertainty of the positions given in the above mentioned fields to be interpreted either as a positional error of the source positions, or an angular size if the sources are resolved. If this uncertainty is not provided, it should be taken to be zero; otherwise, it may be set for all table entries with a \xmlel{PARAM} in the \xmlel{RESOURCE} which has a UCD that is set to OBS\_ANG-SIZE and has a value which is the angle in decimal degrees. Alternatively, a different value for each row in the table can be given via a \xmlel{FIELD} in the table having a UCD set to OBS\_ANG-SIZE.
 There may be other \xmlel{FIELD}s in the table. Their specification \textbf{should} include description, data-type, and UCD.
 
@@ -417,6 +420,8 @@ Subsequent versions of this document should include the ConeSearch extension sch
 
 \subsection{Changes from REC-1.03}
 \begin{itemize}
+	\item relaxed RA and Dec FIELDs in response to allow float or double datatype
+	\item no more exactly one RESOURCE in response, now stating exactly one of type="results"
 	\item removed fixed version (1.0 or 1.1) for VOTable default response
 	\item Added DALI MAXREC and RESPONSEFORMAT
 	\item Added POST as optional HTTP query method
