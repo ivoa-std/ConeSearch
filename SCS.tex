@@ -117,21 +117,25 @@ The \xmlel{base\_url} and constraint list are concatenated to form the query.
 
 In the case the SCS service accepts HTTP POST action for query, the \xmlel{value=param} constraints must be passed on to the service as data in the request body, with \texttt{application/x-www-form-urlencoded} encoding type. Whether the \xmlel{<base\_query>} parameters are accepted as POST parameters or not, is up to the service provider.\todo{There's currently no way to alert clients on SCS service POST capability. This poses a question on best practices here. Maybe allowing 1.03 baseURL but moving already towards a 1.1 PathParam only baseURL?} Mixed GET/POST queries are possible.
 
-The set of query constraints a cone search needs to understand \textbf{must} include the \textbf{RA}, \textbf{DEC}, \textbf{SR} parameters, \textbf{should} include the \textbf{MAXREC} and \textbf{RESPONSEFORMAT}\todo{to be added} ones and \textbf{may} include the \textbf{VERB} one, all of which are to be interpreted with the following stated meaning and the DALI recommendations about parameters.
+The set of query constraints a cone search needs to understand \textbf{must} include the \textbf{RA}, \textbf{DEC}, \textbf{SR} parameters, \textbf{should} include the \textbf{MAXREC} and \textbf{RESPONSEFORMAT} ones and \textbf{may} include the \textbf{VERB} one, all of which are to be interpreted with the following stated meaning and the DALI recommendations about parameters.
 
-\subsubsection{RA - Right Ascension}
+\subsubsection{RA}
 \textbf{RA} represents a right-ascension in the ICRS coordinate system for the position of the center of the cone to search, given in decimal degrees. It is a single valued parameter and \textbf{must} be present in the query.
 
-\subsubsection{DEC - Declination}
+\subsubsection{DEC}
 \textbf{DEC} represents a declination in the ICRS coordinate system for the position of the center of the cone to search, given in decimal degrees. It is a single value parameter and \textbf{must} be present in the query.
 
-\subsubsection{SR - Search Radius}
+\subsubsection{SR}
 \textbf{SR} represents the radius of the cone to search, given in decimal degrees. It is a single valued parameter and \textbf{must} be present in the query. If set to zero (SR=0) it should have the same effect as setting MAXREC=0, i.e. a service metadata request as prescribed by DALI\footnote{SR=0 is kept in this version of this specification for back compatibility. It is suggested to prefer the usage of MAXREC to enable metadata discovery}.
 
-\subsubsection{MAXREC - Maximum number of records to be returned}
+\subsubsection{MAXREC}
 As defined by DALI a cone search \textbf{should} accept the \textbf{MAXREC} parameter to let the client limit the number of records returned or require a service metadata response (see above).  Its usage is encouraged and preferred to the SR=0 solution for metadata discovery.
 
-\subsubsection{VERB - Verbosity level}
+\subsubsection{RESPONSEFORMAT}
+\label{subsubsec:responseformat}
+An SCS service \textbf{must} provide responses in VOTable \citep{std:VOTABLE} format, compliant with respect to what will be detailed in Sec.~\ref{sec:response}, but \textbf{should} also support the DALI \textbf{RESPONSEFORMAT} parameter. Allowed media types for VOTable response \textbf{should} be the \xmlel{application/x-votable+xml} or \xmlel{text/xml} as specified by DALI but \xmlel{text/xml;content=x-votable} may be considered legal for backward compatibility reasons.
+
+\subsubsection{VERB}
 The query \textbf{may} contain the optional single valued parameter, \textbf{VERB}, whose value is an integer (either 1, 2, or 3) indicating verbosity which determines how many columns are to be returned in the resulting table. If the service supports the parameter, then when the value is 1, the response should include the bare minimum of columns that the provider considers useful in describing the returned objects (while still remaining compliant with this standard; see section \ref{sec:response} below). When the value is 3, the service should return all of the columns that are available for describing the objects. A value of 2 is intended for requesting a medium number of columns between the minimum and maximum (inclusive) that are considered by the provider to most typically useful to the user. When the VERB parameter is not provided, the server should respond as if VERB=2. If the VERB parameter is not supported by the service, the service should ignore the parameter and should always return the same columns for every request.
 
 There may be other parameters in the query, but this document does not specify their meaning or usage. If a query includes an optional parameter, either one specified by this document or not, that is not supported by the service implementation, the service must ignore that parameter.
@@ -146,13 +150,17 @@ A query following this syntax represents a request for information on sources lo
 \item[Ask for the minimal set of response fields] \texttt{http://my.cone/search?RA=10.68\&DEC=41.26\&SR=0.01\&VERB=1}
 \end{bigdescription}
 
-TODO: add POST example.
+TODO\todo{add POST example?}
 
 \section{Successful Response}
 \label{sec:response}
-In case of a successful query the service must respond with an XML document in the VOTable format, that represents a table of astronomical sources whose positions are within the cone (see Appendix \ref{app:responsesample} for an example). There may also be other sources outside the cone -- the service implementor may decide on the exact search criterion used internally to the service to select the sources.
+In case of a successful query the service \textbf{must} respond with an XML document in VOTable format, that represents a table of astronomical sources whose positions are within the cone (see Appendix \ref{app:responsesample} for an example). 
 
-The base MIME-type of the HTTP response should be \texttt{text/xml}. The more specific form \texttt{text/xml;content=x-votable} may optionally be used. The MIME-type, \texttt{text/xml;votable} shall also be considered legal (for backward compatibility reasons); however, this value is strongly discouraged as it is not compliant with the MIME-type standard \citep{std:MIME}. The XML content of the response must be compliant with VOTable schema, version 1.0 \citep{std:VOT11} or 1.1 \citep{2004ivoa.spec.0811O}.
+The response may be provided in other formats (e.g. other standards or CSVs or custom formats) when requested using the RESPONSEFORMAT query solution described in Sec.~\ref{subsubsec:responseformat}. Mime-type of the response will vary accordingly to the output format, again as prescribed by DALI and reported in Sec.~\ref{subsubsec:responseformat}.
+
+There may also be other sources outside the cone -- the service implementor may decide on the exact search criterion used internally to the service to select the sources.
+
+\todo{relax this}The XML content of the response must be compliant with VOTable schema, version 1.0 \citep{std:VOT11} or 1.1 \citep{2004ivoa.spec.0811O}.
 
 \begin{bigdescription}
 	\item[Editor's Note] The original NVO specification allowed a MIME-type of text/xml;votable, thus for backward compatibility this is still allowed but discouraged.
