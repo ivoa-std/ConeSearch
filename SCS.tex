@@ -154,19 +154,13 @@ TODO\todo{add POST example?}
 
 \section{Successful Response}
 \label{sec:response}
-In case of a successful query the service \textbf{must} respond with an XML document in VOTable format, that represents a table of astronomical sources whose positions are within the cone (see Appendix \ref{app:responsesample} for an example). 
-
-The response may be provided in other formats (e.g. other standards or CSVs or custom formats) when requested using the RESPONSEFORMAT query solution described in Sec.~\ref{subsubsec:responseformat}. Mime-type of the response will vary accordingly to the output format, again as prescribed by DALI and reported in Sec.~\ref{subsubsec:responseformat}.
+A successful query \textbf{must} result in an HTTP response with status code 200 (OK) and a content that, by default, \textbf{must be} VOTable format, that represents a table of astronomical sources whose positions are within the cone (see Appendix \ref{app:responsesample} for an example).  
 
 There may also be other sources outside the cone -- the service implementor may decide on the exact search criterion used internally to the service to select the sources.
 
-\todo{relax this}The XML content of the response must be compliant with VOTable schema, version 1.0 \citep{std:VOT11} or 1.1 \citep{2004ivoa.spec.0811O}.
+The response format may be other than VOTable when requested using the RESPONSEFORMAT query parameter described in Sec.~\ref{subsubsec:responseformat}. Mime-type of the response will vary accordingly to the output format, again as prescribed by DALI and reported in Sec.~\ref{subsubsec:responseformat}.
 
-\begin{bigdescription}
-	\item[Editor's Note] The original NVO specification allowed a MIME-type of text/xml;votable, thus for backward compatibility this is still allowed but discouraged.
-\end{bigdescription}
-
-The VOTable MUST comply with the following conditions.
+The VOTable \textbf{MUST} comply with the following conditions.
 
 There \textbf{must} be a single \xmlel{RESOURCE} in the VOTable, and that contains a single \xmlel{TABLE}.
 
@@ -423,7 +417,8 @@ Subsequent versions of this document should include the ConeSearch extension sch
 
 \subsection{Changes from REC-1.03}
 \begin{itemize}
-	\item Added DALI MAXREC
+	\item removed fixed version (1.0 or 1.1) for VOTable default response
+	\item Added DALI MAXREC and RESPONSEFORMAT
 	\item Added POST as optional HTTP query method
 	\item Addition of authors/editors.
 	\item Plain porting of the HTML document into ivoatex template, including change history, then modified it and reshaped.
