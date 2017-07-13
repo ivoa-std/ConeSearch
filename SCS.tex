@@ -87,7 +87,7 @@ This specification assumes that the data provider has already selected a catalog
 Fig.~\ref{fig:archdiag} shows the role this document plays within the
 IVOA architecture \citep{note:VOARCH}.
 
-\section{Resource Interface}
+\section{Resource}
 \label{sec:resif}
 
 A SCS service for accessing catalogue resources is implemented as a synchronous resource (as compliant as possible to the DALI specification, \citet{std:DALI}) that must meet the following requirements:
@@ -97,25 +97,23 @@ A SCS service for accessing catalogue resources is implemented as a synchronous 
 	\item must return a stubbed VOTable in case of error, as described in Sec.~\ref{sec:error}.
 \end{itemize}
 
-\subsection{Interface base and parameters}
+\subsection{Query}
 \label{sec:basepar}
-The SCS service endpoint is represented by a \xmlel{base\_url} formed by a \xmlel{<base\_path>} and an optional \xmlel{<base\_query>} of the form
-\begin{bigdescription}
-	\item[SCS base URL syntax] \texttt{http://<server>/<base\_path>?<base\_query>}
-\end{bigdescription}
-where \xmlel{<base\_path>} is a URI-compliant component indicating the local location path and the \xmlel{<base\_query>} may optionally be formed by locally supported query parameters; these latter are not recognized parts of the SCS protocol and thus are treated opaquely by clients of the service as part of the \xmlel{base\_url}.\\
-Note that when it contains extra GET arguments, the \xmlel{base\_url} ends in an ampersand, \&; if there are no extra arguments, then it ends in a question mark, ?.\\
+The SCS service endpoint is represented by a \texttt{base\_url} formed by a \texttt{<base\_path>} and an optional \texttt{<base\_query>} of the form
+$$\hbox{\nolinkurl{http://<server>/<base\_path>?<base\_query>} ,}$$
+where \texttt{<base\_path>} is a URI-compliant component indicating the local location path and the \texttt{<base\_query>} may optionally be formed by locally supported query parameters; these latter are not recognized parts of the SCS protocol and thus are treated opaquely by clients of the service as part of the \texttt{base\_url}.\\
+Note that when it contains extra GET arguments, the \texttt{base\_url} ends in an ampersand, \&; if there are no extra arguments, then it ends in a question mark, ?.\\
 		\begin{bigdescription}
-		\item[Examples] \texttt{http://mycone.org/cgi-bin/VOsearch?}\\
-		\texttt{http://adil.ncsa.uiuc.edu/vocone?resolv\&issurvey=T\&}
+		\item[Examples] \nolinkurl{http://mycone.org/cgi-bin/VOsearch?}\\
+		\nolinkurl{http://adil.ncsa.uiuc.edu/vocone?resolv\&issurvey=T\&}
 		\end{bigdescription}
 Every query to a given cone search service uses the same base URL.
 
-Constraints to filter the catalogue are expressed as a list of ampersand-delimited GET arguments of the form: \xmlel{<name>=<value>} where \xmlel{<name>} is a parameter name specified by this specification and \xmlel{<value>} is its value. The constraints represent the query parameters which can vary for each successive query. The order of the name-parameter pairs is not significant.
+Constraints to filter the catalogue are expressed as a list of ampersand-delimited GET arguments of the form: \texttt{<name>=<value>} where \texttt{<name>} is a parameter name specified by this specification and \texttt{<value>} is its value. The constraints represent the query parameters which can vary for each successive query. The order of the name-parameter pairs is not significant.
 
-The \xmlel{base\_url} and constraint list are concatenated to form the query.
+The \texttt{base\_url} and constraint list are concatenated to form the query.
 
-In the case the SCS service accepts HTTP POST action for query, the \xmlel{value=param} constraints must be passed on to the service as data in the request body, with \texttt{application/x-www-form-urlencoded} encoding type. Whether the \xmlel{<base\_query>} parameters are accepted as POST parameters or not, is up to the service provider.\todo{There's currently no way to alert clients on SCS service POST capability. This poses a question on best practices here. Maybe allowing 1.03 baseURL but moving already towards a 1.1 PathParam only baseURL?} Mixed GET/POST queries are possible.
+In the case the SCS service accepts HTTP POST action for query, the \texttt{value=param} constraints must be passed on to the service as data in the request body, with \texttt{application/x-www-form-urlencoded} encoding type. Whether the \texttt{<base\_query>} parameters are accepted as POST parameters or not, is up to the service provider.\todo{There's currently no way to alert clients on SCS service POST capability. This poses a question on best practices here. Maybe allowing 1.03 baseURL but moving already towards a 1.1 PathParam only baseURL?} Mixed GET/POST queries are possible.
 
 The set of query constraints a cone search needs to understand \textbf{must} include the \textbf{RA}, \textbf{DEC}, \textbf{SR} parameters, \textbf{should} include the \textbf{MAXREC} and \textbf{RESPONSEFORMAT} ones and \textbf{may} include the \textbf{VERB} one, all of which are to be interpreted with the following stated meaning and the DALI recommendations about parameters.
 
@@ -133,7 +131,7 @@ As defined by DALI a cone search \textbf{should} accept the \textbf{MAXREC} para
 
 \subsubsection{RESPONSEFORMAT}
 \label{subsubsec:responseformat}
-An SCS service \textbf{must} provide responses in VOTable \citep{std:VOTABLE} format, compliant with respect to what will be detailed in Sec.~\ref{sec:response}, but \textbf{should} also support the DALI \textbf{RESPONSEFORMAT} parameter. Allowed media types for VOTable response \textbf{should} be the \xmlel{application/x-votable+xml} or \xmlel{text/xml} as specified by DALI but \xmlel{text/xml;content=x-votable} may be considered legal for backward compatibility reasons.
+An SCS service \textbf{must} provide responses in VOTable \citep{std:VOTABLE} format, compliant with respect to what will be detailed in Sec.~\ref{sec:response}, but \textbf{should} also support the DALI \textbf{RESPONSEFORMAT} parameter. Allowed media types for VOTable response \textbf{should} be the \texttt{application/x-votable+xml} or \texttt{text/xml} as specified by DALI but \texttt{text/xml;content=x-votable} may be considered legal for backward compatibility reasons.
 
 \subsubsection{VERB}
 The query \textbf{may} contain the optional single valued parameter, \textbf{VERB}, whose value is an integer (either 1, 2, or 3) indicating verbosity which determines how many columns are to be returned in the resulting table. If the service supports the parameter, then when the value is 1, the response should include the bare minimum of columns that the provider considers useful in describing the returned objects (while still remaining compliant with this standard; see section \ref{sec:response} below). When the value is 3, the service should return all of the columns that are available for describing the objects. A value of 2 is intended for requesting a medium number of columns between the minimum and maximum (inclusive) that are considered by the provider to most typically useful to the user. When the VERB parameter is not provided, the server should respond as if VERB=2. If the VERB parameter is not supported by the service, the service should ignore the parameter and should always return the same columns for every request.
@@ -144,10 +142,10 @@ A query following this syntax represents a request for information on sources lo
 
 \subsection{Query examples}
 \begin{bigdescription}
-\item[Minimal SCS query] \texttt{http://my.cone/search?RA=10.68\&DEC=41.26\&SR=0.01}
-\item[Service Metadata query] \texttt{http://my.cone/search?cat=A1\&RA=0\&DEC=0\&SR=0\&MAXREC=0}
-\item[Limit number of records in response] \texttt{http://my.cone/search?RA=10.68\&DEC=41.26\&SR=1\&MAXREC=100}
-\item[Ask for the minimal set of response fields] \texttt{http://my.cone/search?RA=10.68\&DEC=41.26\&SR=0.01\&VERB=1}
+\item[Minimal SCS query] \nolinkurl{http://my.cone/search?RA=10.68\&DEC=41.26\&SR=0.01}
+\item[Service Metadata query] \nolinkurl{http://my.cone/search?cat=A1\&RA=0\&DEC=0\&SR=0\&MAXREC=0}
+\item[Limit number of records in response] \nolinkurl{http://my.cone/search?RA=10.68\&DEC=41.26\&SR=1\&MAXREC=100}
+\item[Ask for the minimal set of response fields] \nolinkurl{http://my.cone/search?RA=10.68\&DEC=41.26\&SR=0.01\&VERB=1}
 \end{bigdescription}
 
 TODO\todo{add POST example?}
@@ -164,17 +162,17 @@ The response format may be other than VOTable when requested using the RESPONSEF
 
 In the of the default VOTable response, this \textbf{MUST} comply with the following requirements.
 
-There \textbf{must} be a single \xmlel{RESOURCE} with \xmlel{type="results"} in the VOTable, and containing a single \xmlel{TABLE}\todo{should we relax on the number of tables?}.
+There \textbf{must} be a single \xmlel{RESOURCE} with \xmlel{type}=\texttt{"results"}\todo{Do current cone services use this attribute?} in the VOTable, and containing a single \xmlel{TABLE}\todo{should we relax on the number of tables?}.
 
 The \xmlel{TABLE} \textbf{must} have \xmlel{FIELD}s where the following UCD values have been set. There \textbf{must} only be one \xmlel{FIELD} with each of these UCDs:
 \begin{itemize}
-	\item \textbf{Exactly one} \xmlel{FIELD} \textbf{must} have \xmlel{ucd="ID\_MAIN"}, with an array character type (fixed or variable length), representing an ID string for that record of the table. This identifier \textbf{may not} be repeated in the table, and it could be used to retrieve that same record again from that same table.
-	\item \textbf{Exactly one} \xmlel{FIELD}, representing the right ascension of the source in the ICRS coordinate system, \textbf{must} have \xmlel{ucd="POS\_EQ\_RA\_MAIN"}, and have \xmlel{datatype} set to \xmlel{"float"} or \xmlel{"double"}.
-	\item \textbf{Exactly one} \xmlel{FIELD}, representing the declination of the source in the ICRS coordinate system, \textbf{must} have \xmlel{ucd="POS\_EQ\_DEC\_MAIN"}, and have \xmlel{datatype} set to \xmlel{"float"} or \xmlel{"double"}.
+	\item \textbf{Exactly one} \xmlel{FIELD} \textbf{must} have \xmlel{ucd}=\texttt{"ID\_MAIN"}, with an array character type (fixed or variable length), representing an ID string for that record of the table. This identifier \textbf{may not} be repeated in the table, and it could be used to retrieve that same record again from that same table.
+	\item \textbf{Exactly one} \xmlel{FIELD}, representing the right ascension of the source in the ICRS coordinate system, \textbf{must} have \xmlel{ucd}=\texttt{"POS\_EQ\_RA\_MAIN"}, and have \xmlel{datatype} set to \texttt{"float"} or \texttt{"double"}.
+	\item \textbf{Exactly one} \xmlel{FIELD}, representing the declination of the source in the ICRS coordinate system, \textbf{must} have \xmlel{ucd}=\texttt{"POS\_EQ\_DEC\_MAIN"}, and have \xmlel{datatype} set to \texttt{"float"} or \texttt{"double"}.
 \end{itemize}
 
 The VOTable may include an expression of the uncertainty of the positions given in the above mentioned fields to be interpreted either as a positional error of the source positions, or an angular size if the sources are resolved. If this uncertainty is not provided, it should be taken to be zero; otherwise, it may be set for all table entries with a \xmlel{PARAM} in the \xmlel{RESOURCE} which has a UCD that is set to OBS\_ANG-SIZE and has a value which is the angle in decimal degrees. Alternatively, a different value for each row in the table can be given via a \xmlel{FIELD} in the table having a UCD set to OBS\_ANG-SIZE.
-There may be other \xmlel{FIELD}s in the table. Their specification \textbf{should} include description, data-type, and UCD.
+There may be other \xmlel{FIELD}s in the table. Their specification \textbf{should} include description, data-type, and UCD.\todo{A solution to move to UCD1+ would be nice, but it should probably be postponed to a major revision.}
 
 \section{Error Response}
 \label{sec:error}
@@ -223,34 +221,280 @@ If a \xmlel{PARAM} element is used, it must appear as a direct child of one of f
 
 Other conditions may NOT be considered erroneous, for example if a query cone is in the Southern hemisphere and the catalog coverage is in the Northern hemisphere. This type of query is different from an error return; it should return a VOTable as described above, with metadata, but no data records. In particular, a zero value of Search Radius should not return an error condition. This is because an application may be more interested in the metadata than the data, and send a fixed query (for example RA=0\&DEC=90\&SR=0) simply to discover the fields delivered by the service.
 
-\section{The Resource Profile}
+\section{Resource Registry Extension}
 \label{sec:regext}
-A Cone Search service MUST be described with a Resource Profile that includes the following information. The Profile is composed of named metadata listed below. The format used to encode the profile should be compliant with the publishing standards of the IVOA throughout the time the service is supported by the data provider. The metadata names and values used in the profile encoding should match those given below as closely as possible; where they do not match exactly, they should be consistent with the IVOA metadata conventions in place at any given time and the mapping of names and values actually used and those given below should be well documented.
-\begin{bigdescription}
-\item[Editor's Note] The original NVO specification pre-dates the IVOA standard for resource metadata [RM], and so, obviously, some inconsistencies with that standard exist. To deal with this, the wording of this section has been altered to allow profiles to be constructed according to the latest practices in the IVOA. Appendix B outlines the mapping of the metadata listed below to that in the RM as well as the XML Schema used to render the metadata within a Registry.
-\end{bigdescription}
-Several of the metadata listed below can have values that are hierarchical; this hierarchy should be represented in a manner most appropriate to the format used. When the format does not provide any such mechanism, it is recommended that the value be represented as a strings delimited by dots with the root domain of the value appearing first.
 
-The resource profile consists of the following metadata with the stated definitions:
-\begin{itemize}
-	\item[\textbf{ResponsibleParty}] The data provider's name and email.
-	\item[\textbf{ServiceName}] The name of the catalog served by the service, for example "IRSA.2MASS.ExtendedSources".
-	\item[\textbf{Description}] A couple of paragraphs of text that describe the nature of the catalog and its wider context.
-	\item[\textbf{Instrument}] The instrument that made the observations, for example STScI.HST.WFPC2.
-	\item[\textbf{Waveband}] The waveband of the observations, with ONE selected from this list: radio, millimeter, infrared, optical, ultraviolet, xray, gammaray.
-	\item[\textbf{Epoch}] The epoch of the observations, as a free-form string.
-	\item[\textbf{Coverage}] The coverage on the sky, as a free-form string.
-	\item[\textbf{MaxSR}] The largest search radius, given in decimal degrees, that will be accepted by the service without returning an error condition. A value of 180.0 indicates that there is no restriction.
-	\item[\textbf{MaxRecords}] The largest number of records that the service will return.
-	\item[\textbf{Verbosity}] True or false, depending on whether the service supports the VERB keyword in the request.
-	\item[\textbf{BaseURL}] The base URL for the service as described in Section \ref{sec:resif}.
-\end{itemize}
-The service will be considered published to the VO if the profile has been added to an IVOA Registry according to the IVOA standards and conventions at the time the service is made available, TOGETHER with maintaining the web service that is described by the profile in compliant order.
+\begin{admonition}{Note}
+The content of \textbf{Section \ref{sec:regext}} is taken from REC-SimpleDALRegExt-1.1, sections 1, 2 and 3, specifically section 3.1 that is dedicated to the Simple Cone Search case.
+\end{admonition}
+
+To adequately describe that a service supports the Simple Cone Search protocol, it is necessary to define SCS specific capability metadata. This is needed both to allow discovery of cone search services within VO registered resources (through the Registry Interfaces standard, \citet{std:RI1}, deploying VOResource documents, \citet{std:VOR}) and to generally describe service behaviour to help applications consume it properly, given compliance to the protocol.
+
+This section specifies these metadata for cone search resources and is intended to be applicable wherever VOResource records are used, in particular for standard encoding of resource descriptions within IVOA registries and for encoding capability metadata available through VOSI \citep{std:VOSI11} interfaces.
+
+Apart from the above standards referenced here above, this registry extension depends on the VODataService \citep{std:VODS11} standard.
+
+\subsection{Resource record and Capability requirements}
+To be recognized as a SCS, the service resource must be described as a resource of type \xmlel{vr:Service} (defined in the VOResource schema) or one of its legal sub-types. The resource type is set by setting the \xmlel{xsi:type} attribute on the element representing the root of the VOResource record to the namespace-qualified resource type name. SCS \textbf{should} be of the resource type \xmlel{vs:CatalogService} (defined in the VODataService extension schema)\footnote{\xmlel{vr:} and \xmlel{vs:} are the canonical prefixes for the namespaces associated with VOResource and VODataService XML schemata}. 
+
+Since the \xmlel{vs:CatalogService} resource type allows it, record authors are encouraged to include a full description of the columns in the table returned in query response (assuming full verbosity), as well as to provide sky coverage information.
+
+\subsubsection{Capability}
+The VOResource record \textbf{must} include a \xmlel{capability} element that \textbf{must} have a \xmlel{standardID} attribute set to
+$$\hbox{\nolinkurl{ivo://ivoa.net/std/conesearch#query-1.1}}$$
+to unambiguously identify the resource as a Simple Cone Search compliant to SCS-1.1 version. The \xmlel{capability} \textbf{should} also have \xmlel{xsi:type="cs:ConeSearch"} to specialize the \xmlel{vr:Capability} to be of the specific sub-type supporting the cone search protocols. The \xmlel{cs:} here refers to the canonical prefix for the namespace associated with the SCS extension schema, that is
+$$\hbox{\nolinkurl{http://www.ivoa.net/xml/ConeSearch/v1.0} ,}$$
+the same as for SCS-1.03, as explained in the XML Schema Versioning \citep{note:schemaversioning} document; distinction among the two schemata version being delivered by the \xmlel{version} attribute in the schema root element.
+
+The \xmlel{cs:ConeSearch} type is described in Sec.~\ref{subsec:cstype}
+
+\subsubsection{Interface}
+The \xmlel{capability} element describing \textbf{must} include a child \xmlel{interface} element.
+The \xmlel{interface} element \xmlel{xsi:type} attribute \textbf{must} be set to \texttt{vs:ParamHTTP}, and its \xmlel{role} attribute \textbf{must} be set to \texttt{"std"}. A \xmlel{accessURL} element within that
+\xmlel{interface} \textbf{must} be set to the \xmlel{<base\_url>} of the service (see \ref{sec:basepar}). 
+
+It is not necessary to provide the \xmlel{use} attribute to the
+\xmlel{accessURL} element (as its value can be assumed); however, when
+it is provided, it must be set to \texttt{"base"}. Similarly, it is not
+necessary to provide the \xmlel{interface} element with
+\xmlel{queryType} or \xmlel{resultType} elements; however, when
+provided, their values should be \texttt{"GET"} and
+\texttt{"application/x-votable+xml"}, respectively. The
+\xmlel{vs:ParamHTTP} allows one to describe input parameters supported
+by the service; description authors are encouraged to list the optional
+parameters and any custom parameters supported by the instance of the
+service.  
+
+\subsubsection{\textit{cs:}ConeSearch}
+\label{subsec:cstype}
+The \xmlel{cs:ConeSearch} type is a \xmlel{vr:Capability} sub-type that should be used
+to describe a service's support for the Simple Cone Search protocol;
+it is defined as follows:
+
+% GENERATED: !schemadoc ConeSearch-v1.1.xsd ConeSearch
+\begin{generated}
+\begingroup
+      	\renewcommand*\descriptionlabel[1]{%
+      	\hbox to 5.5em{\emph{#1}\hfil}}\vspace{2ex}\noindent\textbf{\xmlel{cs:ConeSearch} Type Schema Documentation}
+
+\noindent{\small
+            The capabilities of a Cone Search implementation.  
+         \par}
+
+\vspace{1ex}\noindent\textbf{\xmlel{cs:ConeSearch} Type Schema Definition}
+
+\begin{lstlisting}[language=XML,basicstyle=\footnotesize]
+<xs:complexType name="ConeSearch" >
+  <xs:complexContent >
+    <xs:extension base="vr:Capability" >
+      <xs:sequence >
+        <xs:element name="maxSR" type="xs:float" minOccurs="0" 
+          maxOccurs="1" />
+        <xs:element name="maxRecords" type="xs:positiveInteger" 
+          minOccurs="0" maxOccurs="1" />
+        <xs:element name="verbosity" type="xs:boolean" />
+        <xs:element name="testQuery" type="cs:Query" minOccurs="0"
+          maxOccurs="1" />
+      </xs:sequence>
+    </xs:extension>
+  </xs:complexContent>
+</xs:complexType>
+\end{lstlisting}
+
+\vspace{0.5ex}\noindent\textbf{\xmlel{cs:ConeSearch} Extension Metadata Elements}
+
+\begingroup\small\begin{bigdescription}\item[Element \xmlel{maxSR}]
+\begin{description}
+\item[Type] floating-point number: \xmlel{xs:float}
+\item[Meaning] 
+                        The largest search radius, in degrees, that will be
+                        accepted by the service without returning an error 
+                        condition.  Not providing this element or 
+                        specifying a value of 180 indicates that there
+                        is no restriction.
+                     
+\item[Occurrence] optional
+\item[Comment] 
+                        Not providing a value is the prefered way to indicate
+                        that there is no restriction. 
+                     
+
+\end{description}
+\item[Element \xmlel{maxRecords}]
+\begin{description}
+\item[Type] \xmlel{xs:positiveInteger}
+\item[Meaning] 
+                        The largest number of records that the service will 
+                        return.  Not providing this value means that
+                        there is no effective limit.  
+                     
+\item[Occurrence] optional
+\item[Comment] 
+                        This does not refer to the total number of records in 
+                        the catalog but rather maximum number of records the 
+                        service is capable of returning.  A limit that is 
+                        greater than the number of records available in the 
+                        archive is equivalent to their being no effective 
+                        limit.  (See RM, Hanisch 2007.)
+                     
+
+\end{description}
+\item[Element \xmlel{verbosity}]
+\begin{description}
+\item[Type] boolean (true/false): xs:boolean
+\item[Meaning] 
+                        True if the service supports the VERB keyword; 
+                        false, otherwise.
+                     
+\item[Occurrence] required
+
+\end{description}
+\item[Element \xmlel{testQuery}]
+\begin{description}
+\item[Type] composite: \xmlel{cs:Query}
+\item[Meaning] 
+                        A query that will result in at least one
+                        matched record that can be used to test the
+                        service.  
+                     
+\item[Occurrence] optional
+
+\end{description}
+
+
+\end{bigdescription}\endgroup
+
+\endgroup
+\end{generated}
+
+% /GENERATED
+
+The custom metadata that the \xmlel{cs:ConeSearch} type provides is given 
+above. Other genaral metadata useful to describe the SCS 
+specification are directly part of the core VOResource schema.
+
+\subsubsection{testQuery and the Query Type}
+
+The \xmlel{testQuery} element is intended to help other VO components (e.g.
+registries, validation services, services that monitor the VO's
+operational health, but typically not end users) test that the service
+is up and operating correctly. It provides a set of legal input
+parameters that should return a legal response that includes at least
+one matched record. Since this query is intended for testing purposes,
+the size of the result set should be small.
+
+The \xmlel{cs:Query} type captures the different components of the query into
+separate elements, as defined below:
+
+% GENERATED: !schemadoc ConeSearch-v1.1.xsd Query
+\begin{generated}
+\begingroup
+      	\renewcommand*\descriptionlabel[1]{%
+      	\hbox to 5.5em{\emph{#1}\hfil}}\vspace{2ex}\noindent\textbf{\xmlel{cs:Query} Type Schema Documentation}
+
+\noindent{\small
+            A query to be sent to the service
+         \par}
+
+\vspace{1ex}\noindent\textbf{\xmlel{cs:Query} Type Schema Definition}
+
+\begin{lstlisting}[language=XML,basicstyle=\footnotesize]
+<xs:complexType name="Query" >
+  <xs:sequence >
+    <xs:element name="ra" type="xs:double" />
+    <xs:element name="dec" type="xs:double" />
+    <xs:element name="sr" type="xs:double" />
+    <xs:element name="verb" type="xs:positiveInteger" minOccurs="0" />
+    <xs:element name="catalog" type="xs:string" minOccurs="0" />
+    <xs:element name="extras" type="xs:string" minOccurs="0" />
+  </xs:sequence>
+</xs:complexType>
+\end{lstlisting}
+
+\vspace{0.5ex}\noindent\textbf{\xmlel{cs:Query} Metadata Elements}
+
+\begingroup\small\begin{bigdescription}\item[Element \xmlel{ra}]
+\begin{description}
+\item[Type] floating-point number: \xmlel{xs:double}
+\item[Meaning] 
+                   the right ascension of the search cone's center in
+                   decimal degrees.  
+               
+\item[Occurrence] required
+
+\end{description}
+\item[Element \xmlel{dec}]
+\begin{description}
+\item[Type] floating-point number: \xmlel{xs:double}
+\item[Meaning] 
+                   the declination of the search cone's center in
+                   decimal degrees.  
+               
+\item[Occurrence] required
+
+\end{description}
+\item[Element \xmlel{sr}]
+\begin{description}
+\item[Type] floating-point number: \xmlel{xs:double}
+\item[Meaning] 
+                   the radius of the search cone in decimal degrees.
+               
+\item[Occurrence] required
+
+\end{description}
+\item[Element \xmlel{verb}]
+\begin{description}
+\item[Type] \xmlel{xs:positiveInteger}
+\item[Meaning] 
+                   the verbosity level to use where 1 means the bare
+                   minimum set of columns and 3 means the full set of 
+                   available columns.
+               
+\item[Occurrence] optional
+
+\end{description}
+\item[Element \xmlel{catalog}]
+\begin{description}
+\item[Type] string: \xmlel{xs:string}
+\item[Meaning] 
+                   the catalog to query.  
+               
+\item[Occurrence] optional
+\item[Comment] 
+                   When the service can access more than one catalog,
+                   this input parameter, if available, is used to
+                   indicate which service to access.
+               
+
+\end{description}
+\item[Element \xmlel{extras}]
+\begin{description}
+\item[Type] string: \xmlel{xs:string}
+\item[Meaning] 
+                   any extra (non-standard) parameters that must be 
+                   provided (apart from what is part of base URL given 
+                   by the accessURL element).
+               
+\item[Occurrence] optional
+\item[Comment] 
+                   this value should be in the form of name=value
+                   pairs delimited with ampersands (\&).  
+               
+
+\end{description}
+
+
+\end{bigdescription}\endgroup
+
+\endgroup
+\end{generated}
+
+\todo{attach xsd?}
 
 \appendix
 \section{Sample VOTable Response}
 \label{app:responsesample}
-This is a sample of a legal response to a Cone Search query.
+This is a sample of a legal response to a Cone Search query.\todo{Needs to be changed}
 \begin{lstlisting}[language=XML,basicstyle=\footnotesize]
 <?xml version="1.0"?>
 <!DOCTYPE VOTABLE SYSTEM "http://us-vo.org/xml/VOTable.dtd">
@@ -317,109 +561,12 @@ This is a sample of a legal response to a Cone Search query.
 </VOTABLE>
 \end{lstlisting}
 
-\section{Current Practices for Representing Resource Profiles}
-
-\subsection{Mapping for Resource Profile Metadata to the RM}
-As mentioned in an Editor's Note in Section \ref{sec:regext}, the original NVO specification pre-dated the IVOA standard for resource metadata known as the RM \citep{STD:RM101}. This section indicates how the resource profile metadata defined in this specification maps to the metadata defined in the RM.
-\begin{table}[th]
-\begin{tabular}{p{0.4\textwidth}p{0.5\textwidth}}
-\sptablerule
-\textbf{Cone Search Metadatum} & \textbf{RM Metadatum}\\
-\sptablerule
-\textbf{ResponsibleParty} & Publisher, Contact.Email\\
-\textbf{ServiceName} & Title\\
-\textbf{Description} & Description\\
-\textbf{Instrument} & Instrument\\
-\textbf{Waveband} & Coverage.Spectral\\
-\textbf{Epoch} & Coverage.Temporal.StartTime, Coverage.Temporal.StopTime\textsuperscript{1}\\
-\textbf{Coverage} & Coverage.Spatial\\
-\textbf{MaxSR} & Service.MaxSearchRadius\\
-\textbf{MaxRecords} & Service.MaxReturnRecords\\
-\textbf{Verbosity} & n/a\textsuperscript{2}\\
-\textbf{BaseURL} & Service.BaseURL\\
-\sptablerule
-\caption{Metadata Mapping}
-\label{table:b1meta}
-\end{tabular}
-\end{table}
-Table notes:
-\begin{enumerate}
-	\item The notion of the epoch the observations is captured in the RM as the temporal coverage. The notion of the equinox of the observational positions is captured part of the RM's Coverage.Spatial.
-	\item As this concept is not covered by the RM, it should be considered service-specific capability metadata.
-\end{enumerate}
-
-\subsection{VOResource (pre-v1.0) Schema Extension for Cone Search Services}
-Just prior to the adoption of IVOA standard for registry interfaces, v1.0, resource descriptions were encoded using the VOResource XML Schema, v0.10 and its family of extension schemas. The extensions used to specifically describe Cone Search services were VODataService, v0.5 and ConeSearch, v0.3\todo{The references to RI, VOResource, VODataService and ConeSearch here, are all referring to xsd schemata currently obsoleted.}. See the embedded documentation in each of these schemas for the precise definitions and usage of the metadata encodable through them.
-
-The following table enumerates the mapping of resource profile metadata defined in this specification with those defined in the XML schemas.
-
-\begin{table}[th]
-\begin{tabular}{p{0.38\textwidth}p{0.27\textwidth}p{0.34\textwidth}}
-\sptablerule
-\multirow{2}{*}{\textbf{Cone Search Metadatum}}&\multicolumn{2}{p{0.59\textwidth}}{\textbf{VOResource Metadatum}}\\
-&\textbf{Schema Name}&\textbf{XPath Name}\\
-\sptablerule
-\textbf{ResponsibleParty} & VOResource & curation/publisher, curation/contact/email\\
-\textbf{ServiceName} & VOResource & title\\
-\textbf{Description} &	VOResource & content/description\\
-\textbf{Instrument} & VOResource & instrument\\
-\textbf{Waveband} & VODataService & coverage/spectral/waveband\\
-\textbf{Epoch} & VODataService & coverage/temporal/startTime, coverage/temporal/stopTime\textsuperscript{1}\\
-\textbf{Coverage} & VODataService & coverage/spatial\textsuperscript{2}\\
-\textbf{MaxSR} & ConeSearch & capability/maxSR\\
-\textbf{MaxRecords} & ConeSearch & capability/maxRecords\\
-\textbf{Verbosity} & ConeSearch & capability/verbosity\\
-\textbf{BaseURL} & VOResource & interface/accessURL\\
-\sptablerule
-\caption{VOResource pre-0.10 extension}
-\label{table:extable}
-\end{tabular}
-\end{table}
-Table Notes:
-\begin{enumerate}
- \item The notion of the epoch the observations is captured in the schema inside coverage/temporal. The notion of the equinox of the observational positions is captured within coverage/spatial/region, such as in coverage/spatial/region[@xsi:type='vs:Circle']/coordFrame. 
- \item the coverage/spatial element encodes its information as a complex set of child elements.
-\end{enumerate}
-
-\subsection{VOResource (v1.0) Schema Extension for Cone Search Services}
-With the expected adoption of the IVOA standard for Registry Interface, resources are described using the VOResource schema, v1.0 and its family of extensions. Cone Search services are specifically described using the VODataService, v1.0, and ConeSearch, v1.0, extension schemas. Coverage information is encoded using the Space-Time Coordinates (STC) schema.
-
-The following table enumerates the mapping of resource profile metadata defined in this specification with those defined in the XML schemas.
-
-\begin{table}[th]
-\begin{tabular}{p{0.4\textwidth}p{0.29\textwidth}p{0.3\textwidth}}
-\sptablerule
-\multirow{2}{*}{\textbf{Cone Search Metadatum}}&\multicolumn{2}{p{0.59\textwidth}}{\textbf{VOResource Metadatum}}\\
-&\textbf{Schema Name}&\textbf{XPath Name}\\
-\sptablerule
-\textbf{ResponsibleParty} & VOResource & curation/publisher, curation/contact/email\\
-\textbf{ServiceName} & VOResource & title\\
-\textbf{Description} &	VOResource & content/description\\
-\textbf{Instrument} & VOResource & instrument\\
-\textbf{Waveband} & VODataService & coverage/waveband\\
-\textbf{Epoch} & VODataService & coverage/stc:STCResourceProfile/stc:AstroCoordArea\textsuperscript{1}\\
-\textbf{Coverage} & VODataService & coverage/stc:STCResourceProfile/stc:AstroCoordArea\textsuperscript{1}\\
-\textbf{MaxSR} & ConeSearch & capability/maxSR\\
-\textbf{MaxRecords} & ConeSearch & capability/maxRecords\\
-\textbf{Verbosity} & ConeSearch & capability/verbosity\\
-\textbf{BaseURL} & VOResource & capability/interface[@role='std']/accessURL\\
-\sptablerule
-\caption{VOResource 1.0 extension}
-\label{table:extable}
-\end{tabular}
-\end{table}
-
-Table Notes:
-\begin{enumerate}
-	\item In STC, coverage on the sky and in time are described in an integrated way within the stc:AstroCoordArea element. The notion of the equinox of the observational positions is captured within stc:AstroCoordSystem element.
-\end{enumerate}
-Subsequent versions of this document should include the ConeSearch extension schema as a formal part of the specification.
-
 \section{Changes from Previous Versions}
 \label{app:changes}
 
 \subsection{Changes from REC-1.03}
 \begin{itemize}
+	\item changed resource metadata importing directly from SimpleDALRegExt
 	\item relaxed RA and Dec FIELDs in response to allow float or double datatype
 	\item no more exactly one RESOURCE in response, now stating exactly one of type="results"
 	\item removed fixed version (1.0 or 1.1) for VOTable default response
