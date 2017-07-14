@@ -7,7 +7,7 @@ DOCNAME = SCS
 DOCVERSION = 1.1
 
 # Publication date, ISO format; update manually for "releases"
-DOCDATE = 2017-06-21
+DOCDATE = 2017-07-14
 
 # What is it you're writing: NOTE, WD, PR, REC, PEN, or EN
 DOCTYPE = WD
