@@ -152,7 +152,7 @@ TODO\todo{add POST example?}
 
 \section{Successful Response}
 \label{sec:response}
-A successful query \textbf{must} result in an HTTP response with status code 200 (OK) and a content that, by default, \textbf{must} be in VOTable format, that represents a table of astronomical sources whose positions are within the cone (see Appendix \ref{app:responsesample} for an example).  
+A successful query \textbf{must} result in an HTTP response with status code 200 (OK) and a content that, by default, \textbf{must} be in VOTable format (version 1.0 or later), that represents a table of astronomical sources whose positions are within the cone (see Appendix \ref{app:responsesample} for an example)\todo{Example needs to be rebuild.}.  
 
 There may also be other sources outside the cone, the service implementor may decide on the exact search criterion used internally to the service to select the sources.
 
@@ -176,22 +176,28 @@ There may be other \xmlel{FIELD}s in the table. Their specification \textbf{shou
 
 \section{Error Response}
 \label{sec:error}
-The service \textbf{must} respond with a stubbed version of the VOTable in the case of error. This must happen if the three required parameters (RA, DEC, SR) are not all present, or if their values cannot be parsed to floating-point numbers, or if the numbers are out of range (DEC=91.0, for example). The service may also make an error return if the search radius (give by the SR parameter) is larger than the MaxSR parameter of the Resource Profile (see Section \ref{sec:regext}).
 
-In the case of error, the service \textbf{must} respond with a VOTable that contains a single \xmlel{PARAM} element or a single \xmlel{INFO} element with \xmlel{name="Error"}, where the corresponding value attribute should contain some explanation of the nature of the error. If an \xmlel{INFO} element is used, it must appear as a direct child of one of the following elements:
+If the service detects an exceptional condition, it \textbf{should} return an error document with an appropriate status code, as specified by DALI, with, possibly, a Content-Type header to tell the client the format of the document.
+
+In the case the error is expressed in VOTable format, recommendation expressed in Section 4.4 of DALI (currently version 1.1) \textbf{should} be followed, inluding the overflow behaviour in the case the MAXREC parameter is in use.
+
+Errors \textbf{must} be reported in case any one of the three required paramaters (RA, DEC, SR) is missing, 
+or if their values cannot be parsed to floating-point numbers, or if the numbers are out of range (DEC=91.0, for example). 
+
+The service \textbf{may} also return an error if the search radius (give by the SR parameter) is larger than the one set by the \xmlel{maxSR} element child of the \xmlel{capability} one of the service described as a VO resource (see Sec.~\ref{sec:regext}).
+
+The service \textbf{may}, as an alternative, report exceptions using the profile expressed by the previous SCS recommendation \citep[v1.03]{std:SCS}. This alternative for error reporting is to be considered \textbf{deprecated}, being the purpose of this specification to fill in the gap of the SCS protocol with the general DAL landscape. The way the alternative works is detailed in Sec.~\ref{subsec:err103} here below.
+
+\subsection{(\textbf{deprecated}) Alternative Error Response}
+\label{subsec:err103}
+In the case of error, the service \textbf{must} respond with a VOTable that contains a single \xmlel{PARAM} element or a single \xmlel{INFO} element with \xmlel{name}=\texttt{"Error"}, where the corresponding \xmlel{value} attribute should contain some explanation of the nature of the error. If an \xmlel{INFO} element is used, it must appear as a direct child of one of the following elements:
 \begin{itemize}
 	\item the root \xmlel{VOTABLE} element (which is preferred by this document), or
 	\item the \xmlel{RESOURCE} element
 \end{itemize}
 
-If a \xmlel{PARAM} element is used, it must appear as a direct child of one of following elements:
-\begin{itemize}
-	\item the \xmlel{RESOURCE element}, or
-	\item a \xmlel{DEFINITION} element below the root \xmlel{VOTABLE} element (which is discouraged by this document).
-\end{itemize}
-\begin{bigdescription}
-	\item[Editor's Note] It was recognized that this requirement, as it was described in the original NVO specification, is ambiguous about both the element to use for the ERROR message and its location in the document. The VOTable standard allows PARAM and INFO elements to appear in various places within the document. Since several of the different methods have been used in practice by Cone Search service implementations, no attempt is made in this version to correct this ambiguity. All of the above-mentioned locations should be considered legal, and Cone Search service clients should be prepared to look in all of them for an ERROR message. The use of PARAM as a child of DEFINITIONS is discouraged as the DEFINITIONS element was deprecated in VOTable v1.1.
-\end{bigdescription}
+If a \xmlel{PARAM} element is used, it must appear as a direct child of  the \xmlel{RESOURCE} element.\todo{Removed reference to the DEFINITION element solution, definitely out of VOTable since long.} Please note that, apart from being deprecated here, the use of the \xmlel{PARAM} element to convey error response was already discouraged in the previous version of this specification.
+
 \begin{bigdescription}
 	\item[Example Error Responses] Error INFO as child of VOTABLE (preferred)\\
 	\begin{lstlisting}[language=XML,basicstyle=\footnotesize]
@@ -219,7 +225,7 @@ If a \xmlel{PARAM} element is used, it must appear as a direct child of one of f
 	\end{lstlisting}
 \end{bigdescription}
 
-Other conditions may NOT be considered erroneous, for example if a query cone is in the Southern hemisphere and the catalog coverage is in the Northern hemisphere. This type of query is different from an error return; it should return a VOTable as described above, with metadata, but no data records. In particular, a zero value of Search Radius should not return an error condition. This is because an application may be more interested in the metadata than the data, and send a fixed query (for example RA=0\&DEC=90\&SR=0) simply to discover the fields delivered by the service.
+Queries targeting no records \textbf{should not} generate an error response, but an empty metadata response.\todo{Does it make sense to keep this sentence, shortened from the previous version? MMo guess: no}
 
 \section{Resource Registry Extension}
 \label{sec:regext}
