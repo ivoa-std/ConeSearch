@@ -43,7 +43,7 @@ The Simple Cone Search (SCS) version 1.03 document has been developed with suppo
 
 The SCS-1.1 revision has been developed under the ASTERICS project, supported by the European Commission Framework Programme Horizon 2020 Research and Innovation action, grant agreement n. 653477.
 
-Work of the original authors of the Cone Search specification as well as the numerous data providers who have implemented and continue to support this protocol is kindly ackonwledged.
+Work of the original authors of the Cone Search specification as well as the numerous data providers who have implemented and continue to support this protocol is kindly acknowledged.
 
 \section*{Conformance-related definitions}
 
@@ -171,7 +171,7 @@ A web service with SCS capabilities \textbf{should} have a VOSI-availability res
 \subsection{Capabilities: VOSI-capabilities}
 A web service with SCS capabilities must have a VOSI-capabilities resource as described in DALI. The standardID for the {query} capability is reported, among other details and recommendations in Sec.~\ref{subsec:capability}.
 
-Services that present they \texttt{\{query\}} base URL as a plain ReST resource without additional opaque query parameters are strongly encouraged to provide a capabilities endpoint as a sibling to the \texttt{\{query\}} resource. The capabilities resource may be unfeasible to maintain for services exposing a base URL with the deprecated format.
+Services that present the \texttt{\{query\}} base URL as a plain ReST resource without additional opaque query parameters are strongly encouraged to provide a capabilities endpoint as a sibling to the \texttt{\{query\}} resource. The capabilities resource may be unfeasible to maintain for services exposing a base URL with the deprecated format.
 
 \section{Successful Response}
 \label{sec:response}
@@ -207,7 +207,7 @@ In the case the error is expressed in VOTable format, recommendation expressed i
 Errors \textbf{must} be reported in case any one of the three required paramaters (RA, DEC, SR) is missing, 
 or if their values cannot be parsed to floating-point numbers, or if the numbers are out of range (DEC=91.0, for example). 
 
-The service \textbf{may} also return an error if the search radius (give by the SR parameter) is larger than the one set by the \xmlel{maxSR} element child of the \xmlel{capability} one of the service described as a VO resource (see Sec.~\ref{sec:regext}).
+The service \textbf{may} also return an error if the search radius (given by the SR parameter) is larger than the one set by the \xmlel{maxSR} element child of the \xmlel{capability} one of the service described as a VO resource (see Sec.~\ref{sec:regext}).
 
 The service \textbf{may}, as an alternative, report exceptions using the profile expressed by the previous SCS recommendation \citep[v1.03]{std:SCS}. This alternative for error reporting is to be considered \textbf{deprecated}, being the purpose of this specification to fill in the gap of the SCS protocol with the general DAL landscape. The way the alternative works is detailed in Sec.~\ref{subsec:err103} here below.
 
