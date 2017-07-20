@@ -128,7 +128,7 @@ Usage of fixed, custom query parameters, defined by the service provider to buil
 $$\hbox{\nolinkurl{http://<server>/<local_path>?<base\_query>&}}$$
 (standard behaviour of base URLs in SCS-1.03) is allowed but \textbf{deprecated} in order to bring cone searches base URLs in the common ReST DALI shape. Clients \textbf{must} anyway treat opaquely this fixed \texttt{<base\_query>} addition.
 
-In the case of HTTP POST action, the behaviour of SCS services having the deprecated base URL format (including custom extra parameters) is not specified, because it is not defined whether the query method has to be a pure POST action or a mixed GET/POST request.
+In the case of HTTP POST action, the behaviour of SCS services having the deprecated base URL format (including custom extra parameters) is not specified. It is however suggested to adopt a mixed GET/POST solution, so the let the fixed \texttt{<base\_query>} arguments always be submited in the query part of the HTTP request.
 
 On the opposite, service having \texttt{\{query\}} base URL as mandated by this specification are highly encouraged to support HTTP POST method in order to fulfill DALI compliance.
 
