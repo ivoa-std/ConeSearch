@@ -183,9 +183,9 @@ The response format may be other than VOTable when requested using the RESPONSEF
 
 \subsection{VOTable compliant response}
 
-In the of the default VOTable response, this \textbf{MUST} comply with the following requirements.
+In the case the service response is serialised in the default, VOTable, format, this response \textbf{MUST} comply with the following requirements.
 
-There \textbf{must} be a single \xmlel{RESOURCE} with \xmlel{type}=\texttt{"results"}\todo{Do current cone services use this attribute?} in the VOTable, and containing a single \xmlel{TABLE}\todo{should we relax on the number of tables?}.
+There \textbf{must} be a single \xmlel{RESOURCE} with \xmlel{type}=\texttt{"results"}\todo{Do current cone services use this attribute? Update: no, most SCS-1.03 services do not.} in the VOTable, and containing a single \xmlel{TABLE}\todo{should we relax on the number of tables? Discuss this with apps.}.
 
 The \xmlel{TABLE} \textbf{must} have \xmlel{FIELD}s where the following UCD values have been set. There \textbf{must} only be one \xmlel{FIELD} with each of these UCDs:
 \begin{itemize}
@@ -279,7 +279,7 @@ the same as for SCS-1.03, as explained in the XML Schema Versioning \citep{note:
 The \xmlel{cs:ConeSearch} type is described in Sec.~\ref{subsec:cstype}
 
 \subsubsection{Interface}
-The \xmlel{capability} element describing \textbf{must} include a child \xmlel{interface} element.
+The \xmlel{capability} element described in Sec.~\ref{subsec:capability} \textbf{must} include a child \xmlel{interface} element.
 The \xmlel{interface} element \xmlel{xsi:type} attribute \textbf{must} be set to \texttt{vs:ParamHTTP}, and its \xmlel{role} attribute \textbf{must} be set to \texttt{"std"}. A \xmlel{accessURL} element within that
 \xmlel{interface} \textbf{must} be set to the \xmlel{<base\_url>} of the service (see \ref{sec:basepar}). 
 
