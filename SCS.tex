@@ -37,7 +37,7 @@ This specification defines a simple query protocol, named Simple Cone Search (SC
 
 
 \section*{Acknowledgments}
-This document was originally published as a document of the US National Virtual Observatory (NVO) \todo{check if the document or a link is still available} and then transcripted into an IVOA standards document format to became an IVOA recommendation. The changes made in this transcription and in the process of producing the first recommandation are reported in Appendix \ref{app:changes}.
+This document was originally published as a document of the US National Virtual Observatory (NVO) \todo{check if the document or a link is still available} and then transcripted into an IVOA standards document format to became an IVOA recommendation. The changes made in this transcription and in the process of producing the first recommendation are reported in Appendix \ref{app:changes}.
 
 The Simple Cone Search (SCS) version 1.03 document has been developed with support from the National Science Foundation's Information Technology Research Program under Cooperative Agreement AST0122449 with The Johns Hopkins University.
 
@@ -115,22 +115,22 @@ It \textbf{must} have one \{query\} resource and \textbf{should} have a VOSI-cap
 \label{sec:basepar}
 The SCS \{query\} resource \textbf{must} meet the following requirements:
 \begin{itemize}
-	\item the resource \textbf{must} respond to requests submitted using an HTTP GET query string, and \textbf{should} respond to HTTP POST query actions, as described in Sec.~\ref{sec:basepar};
+	\item the resource \textbf{must} respond to requests submitted using an HTTP GET query string, and \textbf{should} respond to HTTP POST query actions (as described in later in this same section);
 	\item the response, by default, \textbf{must} be a valid VOTable document, providing a table containing the sources of the catalogue whose positions are within the cone described in the query request (see Sec.~\ref{sec:response});
 	\item in case of error, the response \textbf{must} follow prescriptions as described in Sec.~\ref{sec:error}.
 \end{itemize}
 
 The SCS service \texttt{\{query\}} resource is a synchronous web resource, as described by DALI, of the form
-$$\hbox{\nolinkurl{http://<server>/<local_path>?} .}$$
-To this base URL the query parameters, described herafter, are attached to build the query request to be submitted through HTTP.
+$$\hbox{\nolinkurl{http://<server>/<local_path>?} }$$
+To this base URL the query parameters, described hereafter, are attached to build the query request to be submitted through HTTP.
 
 Usage of fixed, custom query parameters, defined by the service provider to build a base URL of the form
 $$\hbox{\nolinkurl{http://<server>/<local_path>?<base\_query>&}}$$
-(standard behaviour of base URLs in SCS-1.03) is allowed but \textbf{deprecated} in order to bring cone searches base URLs in the common ReST DALI shape. Clients \textbf{must} anyway treat opaquely this fixed \texttt{<base\_query>} addition.
+(standard behaviour of base URLs in SCS-1.03) is allowed but \textbf{deprecated} in order to bring cone searches base URLs in the common ReST shape promoted by DALI. Clients \textbf{must} anyway treat opaquely these fixed \texttt{<base\_query>} additions.
 
-In the case of HTTP POST action, the behaviour of SCS services having the deprecated base URL format (including custom extra parameters) is not specified. It is however suggested to adopt a mixed GET/POST solution, so the let the fixed \texttt{<base\_query>} arguments always be submited in the query part of the HTTP request.
+In the case of HTTP POST action, the behaviour of SCS services having the deprecated base URL format (including custom extra parameters) is not specified. It is however suggested to adopt a mixed GET/POST solution, so the let the fixed \texttt{<base\_query>} arguments always be submitted in the query part of the HTTP request.
 
-On the opposite, service having \texttt{\{query\}} base URL as mandated by this specification are highly encouraged to support HTTP POST method in order to fulfill DALI compliance.
+On the opposite, services having plain \texttt{\{query\}} base URLs as mandated by this specification are highly encouraged to support HTTP POST method in order to fulfill DALI compliance.
 
 The set of query constraints a cone search needs to understand \textbf{must} include the \textbf{RA}, \textbf{DEC}, \textbf{SR} parameters, \textbf{should} include the \textbf{MAXREC} and \textbf{RESPONSEFORMAT} ones and \textbf{may} include the \textbf{VERB} one, all of which are to be interpreted with the following stated meaning and the DALI recommendations about parameters.
 
@@ -151,9 +151,9 @@ As defined by DALI a cone search \textbf{should} accept the \textbf{MAXREC} para
 An SCS service \textbf{must} provide responses in VOTable \citep{std:VOTABLE} format, compliant with respect to what will be detailed in Sec.~\ref{sec:response}, but \textbf{should} also support the DALI \textbf{RESPONSEFORMAT} parameter. Allowed media types for VOTable response \textbf{should} be the \texttt{application/x-votable+xml} or \texttt{text/xml} as specified by DALI but \texttt{text/xml;content=x-votable} may be considered legal for backward compatibility reasons.
 
 \subsubsection{VERB}
-The query \textbf{may} contain the optional single valued parameter, \textbf{VERB}, whose value is an integer (either 1, 2, or 3) indicating verbosity which determines how many columns are to be returned in the resulting table. If the service supports the parameter, then when the value is 1, the response should include the bare minimum of columns that the provider considers useful in describing the returned objects (while still remaining compliant with this standard; see section \ref{sec:response} below). When the value is 3, the service should return all of the columns that are available for describing the objects. A value of 2 is intended for requesting a medium number of columns between the minimum and maximum (inclusive) that are considered by the provider to most typically useful to the user. When the VERB parameter is not provided, the server should respond as if VERB=2. If the VERB parameter is not supported by the service, the service should ignore the parameter and should always return the same columns for every request.
+The query \textbf{may} contain the optional single valued parameter, \textbf{VERB}, whose value is an integer (either 1, 2, or 3) indicating verbosity which determines how many columns are to be returned in the resulting table. If the service supports the parameter, then when the value is 1, the response should include the bare minimum of columns that the provider considers useful in describing the returned objects (while still remaining compliant with this standard; see section \ref{sec:response} below). When the value is 3, the service should return all of the columns that are available for describing the objects. A value of 2 is intended for requesting a medium number of columns between the minimum and maximum (inclusive) that are considered by the provider to most typically useful to the user. When the VERB parameter is not provided, the server should respond as if VERB=2. If the VERB parameter is not supported by the service, the service should ignore the parameter and should always return the same set of columns for every request.
 
-There may be other parameters in the query, but this document does not specify their meaning or usage. If a query includes an optional parameter, either one specified by this document or not, that is not supported by the service implementation, the service must ignore that parameter.
+There may be other parameters in the query, but this document does not specify their meaning or usage. If a query includes an optional parameter, either one specified by this document or not, that is not supported by the service implementation, the service must ignore that parameter.\todo{MMo: I don't think I like this idea, it sound like failing silently}
 
 A query following this syntax represents a request for information on sources located within the specified cone on the sky.
 
@@ -195,7 +195,7 @@ The \xmlel{TABLE} \textbf{must} have \xmlel{FIELD}s where the following UCD valu
 \end{itemize}
 
 The VOTable may include an expression of the uncertainty of the positions given in the above mentioned fields to be interpreted either as a positional error of the source positions, or an angular size if the sources are resolved. If this uncertainty is not provided, it should be taken to be zero; otherwise, it may be set for all table entries with a \xmlel{PARAM} in the \xmlel{RESOURCE} which has a UCD that is set to OBS\_ANG-SIZE and has a value which is the angle in decimal degrees. Alternatively, a different value for each row in the table can be given via a \xmlel{FIELD} in the table having a UCD set to OBS\_ANG-SIZE.
-There may be other \xmlel{FIELD}s in the table. Their specification \textbf{should} include description, data-type, and UCD.\todo{A solution to move to UCD1+ would be nice, but it should probably be postponed to a major revision.}
+There may be other \xmlel{FIELD}s in the table. Their specification \textbf{should} include description, datatype, and UCD.\todo{A solution to move to UCD1+ would be nice, but it should probably be postponed to a major revision.}
 
 \section{Error Response}
 \label{sec:error}
@@ -276,7 +276,7 @@ to unambiguously identify the resource as a Simple Cone Search compliant to SCS-
 $$\hbox{\nolinkurl{http://www.ivoa.net/xml/ConeSearch/v1.0} ,}$$
 the same as for SCS-1.03, as explained in the XML Schema Versioning \citep{note:schemaversioning} document; distinction among the two schemata version being delivered by the \xmlel{version} attribute in the schema root element.
 
-The \xmlel{cs:ConeSearch} type is described in Sec.~\ref{subsec:cstype}
+The \xmlel{cs:ConeSearch} type is described in Sec.~\ref{subsec:cstype}.
 
 \subsubsection{Interface}
 The \xmlel{capability} element described in Sec.~\ref{subsec:capability} \textbf{must} include a child \xmlel{interface} element.
