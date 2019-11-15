@@ -32,18 +32,37 @@ showstringspaces=False}
 
 \begin{document}
 \begin{abstract}
-This specification defines a simple query protocol, named Simple Cone Search (SCS or simply cone search hereafter), for retrieving records from a catalog of astronomical sources. The query describes a sky position and an angular distance, defining a cone on the sky. The response returns a list of astronomical sources from the catalog whose positions lie within the cone, formatted as a VOTable. This version aims essentially at aligning this specification with the Data Access Layer (DAL) landscape at the time of writing.
+This specification defines a simple query protocol, named Simple Cone
+Search, for retrieving records
+from a catalog of astronomical sources. The query describes a sky
+position and an angular distance, defining a cone on the sky. The
+response returns a list of astronomical sources from the catalog whose
+positions lie within the cone, formatted as a VOTable. This version aims
+essentially at aligning this specification with the Data Access Layer
+(DAL) landscape at the time of writing.
 \end{abstract}
 
 
 \section*{Acknowledgments}
-This document was originally published as a document of the US National Virtual Observatory (NVO) \todo{check if the document or a link is still available} and then transcripted into an IVOA standards document format to became an IVOA recommendation. The changes made in this transcription and in the process of producing the first recommendation are reported in Appendix \ref{app:changes}.
+This document was originally published as a document of the US National
+Virtual Observatory (NVO) \todo{check if the document or a link is still
+available} and then transcripted into an IVOA standards document format
+to became an IVOA recommendation. The changes made in this transcription
+and in the process of producing the first recommendation are reported in
+Appendix \ref{app:changes}.
 
-The Simple Cone Search (SCS) version 1.03 document has been developed with support from the National Science Foundation's Information Technology Research Program under Cooperative Agreement AST0122449 with The Johns Hopkins University.
+The Simple Cone Search version 1.03 document has been developed
+with support from the National Science Foundation's Information
+Technology Research Program under Cooperative Agreement AST0122449 with
+The Johns Hopkins University.
 
-The SCS-1.1 revision has been developed under the ASTERICS project, supported by the European Commission Framework Programme Horizon 2020 Research and Innovation action, grant agreement n. 653477.
+The ConeSearch-1.1 revision has been developed under the ASTERICS
+project, supported by the European Commission Framework Programme
+Horizon 2020 Research and Innovation action, grant agreement n. 653477.
 
-Work of the original authors of the Cone Search specification as well as the numerous data providers who have implemented and continue to support this protocol is kindly acknowledged.
+Work of the original authors of the Cone Search specification as well as
+the numerous data providers who have implemented and continue to support
+this protocol is kindly acknowledged.
 
 \section*{Conformance-related definitions}
 
@@ -62,11 +81,25 @@ infrastructure that enable VO applications.
 
 \section{Introduction}
 
-This specification describes how a provider of an astronomical source catalog can publish that catalog to the Virtual Observatory in such a way that a simple cone search can be done. The data remains in the control of the data provider, served through a web server to the world, but the query profile and response profile are carefully controlled, as described below. It is intended that setting up this web service be simple enough that data providers will not have to spend too much time on it (their funding to support such services is typically small). At the same time, the service implementation and the data it provides can serve as a basis for more sophisticated tools.
+This specification describes how a provider of an astronomical source
+catalog can publish that catalog to the Virtual Observatory in such a
+way that a simple cone search can be done. The data remains in the
+control of the data provider, served through a web server to the world,
+but the query profile and response profile are carefully controlled, as
+described below. It is intended that setting up this web service be
+simple enough that data providers will not have to spend too much time
+on it (their funding to support such services is typically small). At
+the same time, the service implementation and the data it provides can
+serve as a basis for more sophisticated tools.
 
-This specification does not specify how cone search services are implemented, or how the data are stored or manipulated. The concern of this specification is how the data are exposed to the world through well-defined requests and responses.
+This specification does not specify how cone search services are
+implemented, or how the data are stored or manipulated. The concern of
+this specification is how the data are exposed to the world through
+well-defined requests and responses.
 
-This specification assumes that the data provider has already selected a catalog of astronomical sources. This catalog can be presented as a single table; it is expected that the table contains several columns.
+This specification assumes that the data provider has already selected a
+catalog of astronomical sources. This catalog can be presented as a
+single table; it is expected that the table contains several columns.
 
 \subsection{Role within the VO Architecture}
 
@@ -81,7 +114,7 @@ This specification assumes that the data provider has already selected a catalog
 % from FIGURES in the Makefile, too.
 
 \includegraphics[width=0.9\textwidth]{archdiag.png}
-\caption{Architecture diagram for SCS - TODO}
+\caption{Architecture diagram for Simple Cone Search - TODO}
 \label{fig:archdiag}
 \end{figure}
 
@@ -91,7 +124,9 @@ IVOA architecture \citep{note:VOARCH}.
 \section{Resource}
 \label{sec:resif}
 
-A SCS service for accessing catalogue resources is implemented as a synchronous resource, as compliant as possible to the DALI specification \citep{std:DALI}.
+A Simple Cone Search service for accessing catalogue resources is implemented as a
+synchronous resource, as compliant as possible to the DALI specification
+\citep{std:DALI}.
 
 \begin{table}[th]
 \begin{center}
@@ -105,30 +140,38 @@ VOSI-availability & (/availability) & should\\
 \sptablerule
 \label{table:resources}
 \end{tabular}
-\caption{SCS resources tree}
+\caption{Simple Cone Search resources tree}
 \end{center}
 \end{table}
 
-It \textbf{must} have one \{query\} resource and \textbf{should} have a VOSI-capability resource and a VOSI-availability one. The VOSI-capability \textbf{must} be a sibling to the \{query\} one.
+It \textbf{must} have one \{query\} resource and \textbf{should} have a
+VOSI-capability resource and a VOSI-availability one. The
+VOSI-capability \textbf{must} be a sibling to the \{query\} one.
 
 \subsection{\{query\} resource}
 \label{sec:basepar}
-The SCS \{query\} resource \textbf{must} meet the following requirements:
+The Simple Cone Search \{query\} resource \textbf{must} meet the following requirements:
 \begin{itemize}
-	\item the resource \textbf{must} respond to requests submitted using an HTTP GET query string, and \textbf{should} respond to HTTP POST query actions (as described in later in this same section);
-	\item the response, by default, \textbf{must} be a valid VOTable document, providing a table containing the sources of the catalogue whose positions are within the cone described in the query request (see Sec.~\ref{sec:response});
-	\item in case of error, the response \textbf{must} follow prescriptions as described in Sec.~\ref{sec:error}.
+	\item the resource \textbf{must} respond to requests submitted using
+an HTTP GET query string, and \textbf{should} respond to HTTP POST query
+actions (as described in later in this same section);
+	\item the response, by default, \textbf{must} be a valid VOTable
+document, providing a table containing the sources of the catalogue
+whose positions are within the cone described in the query request (see
+Sec.~\ref{sec:response});
+	\item in case of error, the response \textbf{must} follow
+prescriptions as described in Sec.~\ref{sec:error}.
 \end{itemize}
 
-The SCS service \texttt{\{query\}} resource is a synchronous web resource, as described by DALI, of the form
+The Simple Cone Search service \texttt{\{query\}} resource is a synchronous web resource, as described by DALI, of the form
 $$\hbox{\nolinkurl{http://<server>/<local_path>?} }$$
 To this base URL the query parameters, described hereafter, are attached to build the query request to be submitted through HTTP.
 
 Usage of fixed, custom query parameters, defined by the service provider to build a base URL of the form
 $$\hbox{\nolinkurl{http://<server>/<local_path>?<base\_query>&}}$$
-(standard behaviour of base URLs in SCS-1.03) is allowed but \textbf{deprecated} in order to bring cone searches base URLs in the common ReST shape promoted by DALI. Clients \textbf{must} anyway treat opaquely these fixed \texttt{<base\_query>} additions.
+(standard behaviour of base URLs in Simple Cone Search-1.03) is allowed but \textbf{deprecated} in order to bring cone searches base URLs in the common ReST shape promoted by DALI. Clients \textbf{must} anyway treat opaquely these fixed \texttt{<base\_query>} additions.
 
-In the case of HTTP POST action, the behaviour of SCS services having the deprecated base URL format (including custom extra parameters) is not specified. It is however suggested to adopt a mixed GET/POST solution, so the let the fixed \texttt{<base\_query>} arguments always be submitted in the query part of the HTTP request.
+In the case of HTTP POST action, the behaviour of Simple Cone Search services having the deprecated base URL format (including custom extra parameters) is not specified. It is however suggested to adopt a mixed GET/POST solution, so the let the fixed \texttt{<base\_query>} arguments always be submitted in the query part of the HTTP request.
 
 On the opposite, services having plain \texttt{\{query\}} base URLs as mandated by this specification are highly encouraged to support HTTP POST method in order to fulfill DALI compliance.
 
@@ -148,7 +191,14 @@ As defined by DALI a cone search \textbf{should} accept the \textbf{MAXREC} para
 
 \subsubsection{RESPONSEFORMAT}
 \label{subsubsec:responseformat}
-An SCS service \textbf{must} provide responses in VOTable \citep{std:VOTABLE} format, compliant with respect to what will be detailed in Sec.~\ref{sec:response}, but \textbf{should} also support the DALI \textbf{RESPONSEFORMAT} parameter. Allowed media types for VOTable response \textbf{should} be the \texttt{application/x-votable+xml} or \texttt{text/xml} as specified by DALI but \texttt{text/xml;content=x-votable} may be considered legal for backward compatibility reasons.
+An Simple Cone Search service \textbf{must} provide responses in VOTable
+\citep{std:VOTABLE} format, compliant with respect to what will be
+detailed in Sec.~\ref{sec:response}, but \textbf{should} also support
+the DALI \textbf{RESPONSEFORMAT} parameter. Allowed media types for
+VOTable response \textbf{should} be the
+\texttt{application/x-votable+xml} or \texttt{text/xml} as specified by
+DALI but \texttt{text/xml;content=x-votable} may be considered legal for
+backward compatibility reasons.
 
 \subsubsection{VERB}
 The query \textbf{may} contain the optional single valued parameter, \textbf{VERB}, whose value is an integer (either 1, 2, or 3) indicating verbosity which determines how many columns are to be returned in the resulting table. If the service supports the parameter, then when the value is 1, the response should include the bare minimum of columns that the provider considers useful in describing the returned objects (while still remaining compliant with this standard; see section \ref{sec:response} below). When the value is 3, the service should return all of the columns that are available for describing the objects. A value of 2 is intended for requesting a medium number of columns between the minimum and maximum (inclusive) that are considered by the provider to most typically useful to the user. When the VERB parameter is not provided, the server should respond as if VERB=2. If the VERB parameter is not supported by the service, the service should ignore the parameter and should always return the same set of columns for every request.
@@ -159,17 +209,17 @@ A query following this syntax represents a request for information on sources lo
 
 \subsection{Query examples}
 \begin{bigdescription}
-\item[Minimal SCS query] \nolinkurl{http://my.cone/search?RA=10.68\&DEC=41.26\&SR=0.01}
+\item[Minimal Simple Cone Search query] \nolinkurl{http://my.cone/search?RA=10.68\&DEC=41.26\&SR=0.01}
 \item[Service Metadata query] \nolinkurl{http://my.cone/search?cat=A1\&RA=0\&DEC=0\&SR=0\&MAXREC=0}
 \item[Limit number of records in response] \nolinkurl{http://my.cone/search?RA=10.68\&DEC=41.26\&SR=1\&MAXREC=100}
 \item[Ask for the minimal set of response fields] \nolinkurl{http://my.cone/search?RA=10.68\&DEC=41.26\&SR=0.01\&VERB=1}
 \end{bigdescription}
 
 \subsection{Availability: VOSI-availability}
-A web service with SCS capabilities \textbf{should} have a VOSI-availability resource as described in DALI. Since VOSI relaxed the availability endpoint, letting it be located elsewhere than being a sibling to the service base URL, support for this interface is encouraged even in the case of services having base URL of the deprecated form.
+A web service with Simple Cone Search capabilities \textbf{should} have a VOSI-availability resource as described in DALI. Since VOSI relaxed the availability endpoint, letting it be located elsewhere than being a sibling to the service base URL, support for this interface is encouraged even in the case of services having base URL of the deprecated form.
 
 \subsection{Capabilities: VOSI-capabilities}
-A web service with SCS capabilities must have a VOSI-capabilities resource as described in DALI. The standardID for the {query} capability is reported, among other details and recommendations in Sec.~\ref{subsec:capability}.
+A web service with Simple Cone Search capabilities must have a VOSI-capabilities resource as described in DALI. The standardID for the {query} capability is reported, among other details and recommendations in Sec.~\ref{subsec:capability}.
 
 Services that present the \texttt{\{query\}} base URL as a plain ReST resource without additional opaque query parameters are strongly encouraged to provide a capabilities endpoint as a sibling to the \texttt{\{query\}} resource. The capabilities resource may be unfeasible to maintain for services exposing a base URL with the deprecated format.
 
@@ -185,7 +235,7 @@ The response format may be other than VOTable when requested using the RESPONSEF
 
 In the case the service response is serialised in the default, VOTable, format, this response \textbf{MUST} comply with the following requirements.
 
-There \textbf{must} be a single \xmlel{RESOURCE} with \xmlel{type}=\texttt{"results"}\todo{Do current cone services use this attribute? Update: no, most SCS-1.03 services do not.} in the VOTable, and containing a single \xmlel{TABLE}\todo{should we relax on the number of tables? Discuss this with apps.}.
+There \textbf{must} be a single \xmlel{RESOURCE} with \xmlel{type}=\texttt{"results"}\todo{Do current cone services use this attribute? Update: no, most Simple Cone Search-1.03 services do not.} in the VOTable, and containing a single \xmlel{TABLE}\todo{should we relax on the number of tables? Discuss this with apps.}.
 
 The \xmlel{TABLE} \textbf{must} have \xmlel{FIELD}s where the following UCD values have been set. There \textbf{must} only be one \xmlel{FIELD} with each of these UCDs:
 \begin{itemize}
@@ -209,7 +259,13 @@ or if their values cannot be parsed to floating-point numbers, or if the numbers
 
 The service \textbf{may} also return an error if the search radius (given by the SR parameter) is larger than the one set by the \xmlel{maxSR} element child of the \xmlel{capability} one of the service described as a VO resource (see Sec.~\ref{sec:regext}).
 
-The service \textbf{may}, as an alternative, report exceptions using the profile expressed by the previous SCS recommendation \citep[v1.03]{std:SCS}. This alternative for error reporting is to be considered \textbf{deprecated}, being the purpose of this specification to fill in the gap of the SCS protocol with the general DAL landscape. The way the alternative works is detailed in Sec.~\ref{subsec:err103} here below.
+The service \textbf{may}, as an alternative, report exceptions using the
+profile expressed by the previous Simple Cone Search recommendation
+\citep[v1.03]{std:SCS}. This alternative for error
+reporting is to be considered \textbf{deprecated}, being the purpose of
+this specification to fill in the gap of the Simple Cone Search protocol
+with the general DAL landscape. The way the alternative works is
+detailed in Sec.~\ref{subsec:err103} here below.
 
 \subsection{(\textbf{deprecated}) Alternative Error Response}
 \label{subsec:err103}
@@ -257,14 +313,25 @@ Queries targeting no records \textbf{should not} generate an error response, but
 The content of \textbf{Section \ref{sec:regext}} is taken from REC-SimpleDALRegExt-1.1, sections 1, 2 and 3, specifically section 3.1 that is dedicated to the Simple Cone Search case.
 \end{admonition}
 
-To adequately describe that a service supports the Simple Cone Search protocol, it is necessary to define SCS specific capability metadata. This is needed both to allow discovery of cone search services within VO registered resources (through the Registry Interfaces standard, \citet{std:RI1}, deploying VOResource documents, \citet{std:VOR}) and to generally describe service behaviour to help applications consume it properly, given compliance to the protocol.
+To adequately describe that a service supports the Simple Cone Search
+protocol, it is necessary to define Simple Cone Search specific
+capability metadata. This is needed both to allow discovery of cone
+search services within VO registered resources (through the Registry
+Interfaces standard, \citet{std:RI1}, deploying VOResource documents,
+\citet{std:VOR}) and to generally describe service behaviour to help
+applications consume it properly, given compliance to the protocol.
 
-This section specifies these metadata for cone search resources and is intended to be applicable wherever VOResource records are used, in particular for standard encoding of resource descriptions within IVOA registries and for encoding capability metadata available through VOSI \citep{std:VOSI11} interfaces.
+This section specifies these metadata for cone search resources and is
+intended to be applicable wherever VOResource records are used, in
+particular for standard encoding of resource descriptions within IVOA
+registries and for encoding capability metadata available through VOSI
+\citep{std:VOSI11} interfaces.
 
-Apart from the above standards referenced here above, this registry extension depends on the VODataService \citep{std:VODS11} standard.
+Apart from the above standards referenced here above, this registry
+extension depends on the VODataService \citep{std:VODS11} standard.
 
 \subsection{Resource record and Capability requirements}
-To be recognized as a SCS, the service resource must be described as a resource of type \xmlel{vr:Service} (defined in the VOResource schema) or one of its legal sub-types. The resource type is set by setting the \xmlel{xsi:type} attribute on the element representing the root of the VOResource record to the namespace-qualified resource type name. SCS \textbf{should} be of the resource type \xmlel{vs:CatalogService} (defined in the VODataService extension schema)\footnote{\xmlel{vr:} and \xmlel{vs:} are the canonical prefixes for the namespaces associated with VOResource and VODataService XML schemata}. 
+To be recognized as a Simple Cone Search, the service resource must be described as a resource of type \xmlel{vr:Service} (defined in the VOResource schema) or one of its legal sub-types. The resource type is set by setting the \xmlel{xsi:type} attribute on the element representing the root of the VOResource record to the namespace-qualified resource type name. Simple Cone Search \textbf{should} be of the resource type \xmlel{vs:CatalogService} (defined in the VODataService extension schema)\footnote{\xmlel{vr:} and \xmlel{vs:} are the canonical prefixes for the namespaces associated with VOResource and VODataService XML schemata}. 
 
 Since the \xmlel{vs:CatalogService} resource type allows it, record authors are encouraged to include a full description of the columns in the table returned in query response (assuming full verbosity), as well as to provide sky coverage information.
 
@@ -272,9 +339,12 @@ Since the \xmlel{vs:CatalogService} resource type allows it, record authors are 
 \label{subsec:capability}
 The VOResource record \textbf{must} include a \xmlel{capability} element that \textbf{must} have a \xmlel{standardID} attribute set to
 $$\hbox{\nolinkurl{ivo://ivoa.net/std/conesearch#query-1.1}}$$
-to unambiguously identify the resource as a Simple Cone Search compliant to SCS-1.1 version. The \xmlel{capability} \textbf{should} also have \xmlel{xsi:type="cs:ConeSearch"} to specialize the \xmlel{vr:Capability} to be of the specific sub-type supporting the cone search protocols. The \xmlel{cs:} here refers to the canonical prefix for the namespace associated with the SCS extension schema, that is
+to unambiguously identify the resource as a Simple Cone Search compliant to Simple Cone Search-1.1 version. The \xmlel{capability} \textbf{should} also have \xmlel{xsi:type="cs:ConeSearch"} to specialize the \xmlel{vr:Capability} to be of the specific sub-type supporting the cone search protocols. The \xmlel{cs:} here refers to the canonical prefix for the namespace associated with the Simple Cone Search extension schema, that is
 $$\hbox{\nolinkurl{http://www.ivoa.net/xml/ConeSearch/v1.0} ,}$$
-the same as for SCS-1.03, as explained in the XML Schema Versioning \citep{note:schemaversioning} document; distinction among the two schemata version being delivered by the \xmlel{version} attribute in the schema root element.
+the same as for Simple Cone Search-1.03, as explained in the XML Schema
+Versioning \citep{note:schemaversioning} document; distinction among the
+two schemata version being delivered by the \xmlel{version} attribute in
+the schema root element.
 
 The \xmlel{cs:ConeSearch} type is described in Sec.~\ref{subsec:cstype}.
 
@@ -400,7 +470,7 @@ it is defined as follows:
 % /GENERATED
 
 The custom metadata that the \xmlel{cs:ConeSearch} type provides is given 
-above. Other genaral metadata useful to describe the SCS 
+above. Other genaral metadata useful to describe the Simple Cone Search 
 specification are directly part of the core VOResource schema.
 
 \subsubsection{testQuery and the Query Type}
@@ -420,7 +490,9 @@ separate elements, as defined below:
 \begin{generated}
 \begingroup
       	\renewcommand*\descriptionlabel[1]{%
-      	\hbox to 5.5em{\emph{#1}\hfil}}\vspace{2ex}\noindent\textbf{\xmlel{cs:Query} Type Schema Documentation}
+				\hbox to
+5.5em{\emph{#1}\hfil}}\vspace{2ex}\noindent\textbf{\xmlel{cs:Query} Type
+Schema Documentation}
 
 \noindent{\small
             A query to be sent to the service
@@ -605,7 +677,8 @@ This is a sample of a legal response to a Cone Search query.\todo{Needs to be ch
 	\item Added DALI MAXREC and RESPONSEFORMAT
 	\item Added POST as optional HTTP query method
 	\item Addition of authors/editors.
-	\item Plain porting of the HTML document into ivoatex template, including change history, then modified it and reshaped.
+	\item Plain porting of the HTML document into ivoatex template,
+including change history, then modified it and reshaped.
 \end{itemize}
 
 \subsection{Changes from PR-1.02}
@@ -615,7 +688,9 @@ This is a sample of a legal response to a Cone Search query.\todo{Needs to be ch
 
 \subsection{Changes from PR-1.01}
 \begin{itemize}[noitemsep]
-	\item eliminated the choice of encoding an ERROR response in a PARAM that is a direct child of VOTABLE as this is not legal in the VOTable schema.
+	\item eliminated the choice of encoding an ERROR response in a PARAM
+that is a direct child of VOTABLE as this is not legal in the VOTable
+schema.
 	\item Allowed the use of the INFO element for error messages.
 	\item In examples, made sure PARAM elements have datatype attributes
 	\item Corrected wording to be definitive that positions are given in the ICRS coordinate system.
@@ -638,7 +713,8 @@ This is a sample of a legal response to a Cone Search query.\todo{Needs to be ch
 
 \subsection{Changes from the original NVO Specification Document}
 \begin{itemize}[noitemsep]
-	\item References to the original HTML document have been replaced with references to this IVOA specification.
+	\item References to the original HTML document have been replaced with
+references to this IVOA specification.
 	\item Replaced references to "curator" with "data provider" or similar wording.
 	\item Replaced references to the NVO with references either to the IVOA or this specification, as appropriate.
 	\item Ambiguous language like "perhaps" has been replaced with more definitive wording where appropriate. Use of the word "will" is replaced with "must" and "can" with "may", in accordance with the definitions set in the preface.
@@ -663,7 +739,7 @@ This is a sample of a legal response to a Cone Search query.\todo{Needs to be ch
 	\item An appendix has been added to describe the current practice for registering Cone Search services.
 \end{itemize}
 
-\bibliography{ivoatex/ivoabib,ivoatex/docrepo,scs}
+\bibliography{ivoatex/ivoabib,ivoatex/docrepo,ConeSearch}
 
 
 \end{document}
