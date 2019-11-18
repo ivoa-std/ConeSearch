@@ -12,6 +12,18 @@ Data Access Layer (DAL) landscape at the time of writing.
 Expected is also addition of a feature to allow for filtering in a specific time window.
 
 ## note
+This ivoatex Simple Cone Search source was started out of the HTML version of the
+REC-SCS-1.03-20080222.html (that for this reason is preserved in this
+source bundle up to the next WD-1.1).
+
+Initial porting, whose goal was to bring the specification to revision
+1.1  has been a plain transposition of the HTML into LaTeX, and includes
+all of the history changes that the original document listed in appendix.
+Porting tried to be as faithful as possible, given broken links and
+references, styling issues and so. However the goal was not to produce
+as one-to-one ivoatex SCS-1.03, but to form a basis to start the
+revision from.
+
 Porting from the svn repo is in progress, all issues/features will be investigated
 after the end of the porting.
 
