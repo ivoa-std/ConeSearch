@@ -21,7 +21,7 @@ Initial porting, whose goal was to bring the specification to revision
 all of the history changes that the original document listed in appendix.
 Porting tried to be as faithful as possible, given broken links and
 references, styling issues and so. However the goal was not to produce
-as one-to-one ivoatex SCS-1.03, but to form a basis to start the
+a one-to-one ivoatex SCS-1.03, but to form a basis to start the
 revision from.
 
 Porting from the svn repo is in progress, all issues/features will be investigated
