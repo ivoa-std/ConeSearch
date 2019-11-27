@@ -11,6 +11,8 @@ Data Access Layer (DAL) landscape at the time of writing.
 
 Expected is also addition of a feature to allow for filtering in a specific time window.
 
+Keep in mind to use the --recurse-submodules option when cloning the repository.
+
 ## note
 This ivoatex Simple Cone Search source was started out of the HTML version of the
 REC-SCS-1.03-20080222.html (that for this reason is preserved in this
