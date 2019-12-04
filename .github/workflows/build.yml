@@ -1,6 +1,6 @@
 name: Test building the standard
 
-on: [push]
+on: [push, pull_request]
 
 jobs:
   build:
@@ -23,3 +23,8 @@ jobs:
       run: |
         test -f ConeSearch.pdf
         test -f ConeSearch.bbl
+        
+    - uses: actions/upload-artifact@v1
+      with:
+        name: pdf preview
+        path: ConeSearch.pdf
