@@ -1,0 +1,22 @@
+name: Test building the standard
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v1
+    - name: Setup dependencies
+      run: sudo apt install texlive-latex-base texlive-latex-recommended texlive-latex-extra texlive-fonts-recommended latex-xcolor xsltproc
+      
+    - name: Build the document
+      run: make biblio forcetex html
+      
+    - name: Check the output
+      run: |
+        test -f ConeSearch.pdf
+        test -f ConeSearch.html
+        test -f ConeSearch.bbl
