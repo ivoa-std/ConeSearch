@@ -17,10 +17,9 @@ jobs:
         sudo apt install texlive-latex-base texlive-latex-recommended texlive-latex-extra texlive-fonts-recommended xsltproc
       
     - name: Build the document
-      run: make biblio forcetex html
+      run: make biblio forcetex
       
     - name: Check the output
       run: |
         test -f ConeSearch.pdf
-        test -f ConeSearch.html
         test -f ConeSearch.bbl
