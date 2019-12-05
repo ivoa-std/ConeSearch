@@ -17,10 +17,10 @@ DOCTYPE = WD
 SOURCES = $(DOCNAME).tex
 
 # List of pixel image files to be included in submitted package 
-FIGURES = archdiag.png
+FIGURES =
 
 # List of PDF figures (for vector graphics)
-VECTORFIGURES = 
+VECTORFIGURES = role_diagram.pdf
 
 # Additional files to distribute (e.g., CSS, schema files, examples...)
 AUX_FILES = 
