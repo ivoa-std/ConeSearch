@@ -1,6 +1,8 @@
 name: Test building the standard
 
-on: [push, pull_request]
+on: 
+  pull_request:
+    types: [opened, synchronize, reopened]
 
 jobs:
   build:
@@ -26,5 +28,5 @@ jobs:
         
     - uses: actions/upload-artifact@v1
       with:
-        name: pdf preview
+        name: PDF Preview
         path: ConeSearch.pdf
