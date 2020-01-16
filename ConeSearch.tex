@@ -194,7 +194,7 @@ The set of query constraints a cone search needs to understand \textbf{must} inc
 
 \subsubsection{SR}
 \textbf{SR} represents the radius of the cone to search, given in decimal degrees. It is a single valued parameter and \textbf{must} be present in the query. If set to zero (SR=0) it should have the same effect as setting MAXREC=0, i.e. a service metadata request as prescribed by DALI\footnote{SR=0 is kept in this version of this specification for back compatibility. It is suggested to prefer the usage of MAXREC to enable metadata discovery}.
-\todo{\ada{For the case in which only information of time is provided or where a cone search is not representing the location of a source (e.g. GW and neutrinos) we should relax this parameter to say something refering to unlocated space. How do we do this? (Idealy we would add the possibility of querying a database by STMOC and getting a response within the STMOC -- once STMOC std, come back to this idea?).}}
+\todo{\ada{For the case in which only information of time is provided or where a cone search is not representing the location of a source (e.g. GW and neutrinos) this can be set to 180 (in agreement with that is written in the maxSR section 5.1.3. If the service allows that or not is another story. (Idealy we would add the possibility of querying a database by STMOC and getting a response within the STMOC -- once STMOC std, come back to this idea?).}}
 
 \subsubsection{TIME}
 \textbf{TIME} represents the time interval to be searched for data. The value is an open or closed interval with numeric values (interpreted as Modified Julian Dates). A TIME constraint is satisfied if the interval intersects the time coverage of the observation. Values used in the TIME parameter are always interpreted as specified in DALI in the section on literal values: UTC time scale and UNKNOWN reference position. Modified Julian Date values are always in days. The parameter TIME \textbf{may} be present in the query. 
@@ -366,6 +366,7 @@ two schemata version being delivered by the \xmlel{version} attribute in
 the schema root element.
 
 The \xmlel{cs:ConeSearch} type is described in Sec.~\ref{subsec:cstype}.
+\todo{\ada{Do we need to add here something about the fact that sometimes services will provide time and sometimes not?}}
 
 \subsubsection{Interface}
 The \xmlel{capability} element described in Sec.~\ref{subsec:capability} \textbf{must} include a child \xmlel{interface} element.
