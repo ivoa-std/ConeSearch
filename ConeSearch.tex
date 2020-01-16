@@ -633,7 +633,7 @@ Schema Documentation}
 \section{Sample VOTable Response}
 \label{app:responsesample}
 This is a sample of a legal response to a Cone Search query.\todo{Needs to be changed}
-\todo{\ada{I would propose to set three very simple examples: for only position, for position and time, for time and no position constrain. For example 1 - any typical cat is ok, for 2 - take e.g. ZTF, for 3 - take the case of GW.}}  
+
 \begin{lstlisting}[language=XML,basicstyle=\footnotesize]
 <?xml version="1.0"?>
 <!DOCTYPE VOTABLE SYSTEM "http://us-vo.org/xml/VOTable.dtd">
@@ -659,7 +659,7 @@ This is a sample of a legal response to a Cone Search query.\todo{Needs to be ch
       <FIELD name="ra" datatype="double" unit="degree" ucd="POS_EQ_RA_MAIN"> 
         <DESCRIPTION> Right Ascension </DESCRIPTION>
       </FIELD>
-      <FIELD name="dec" datatype="double" unit="degree" ucd="POS_EQ_DEC_MAIN"> \ada{I think this should be ucd="pos.eq.dec;meta.main"}
+      <FIELD name="dec" datatype="double" unit="degree" ucd="POS_EQ_DEC_MAIN"> 
         <DESCRIPTION> Declination </DESCRIPTION>
       </FIELD>
       <FIELD name="flux_20_cm" datatype="double" unit="mJy" >
@@ -700,20 +700,40 @@ This is a sample of a legal response to a Cone Search query.\todo{Needs to be ch
 </VOTABLE>
 \end{lstlisting}
 
-\ada{this is an example of a legal response to A Cone Search query using the time paramter}
+\todo{\ada{shouldn't we change the example to VOTable 1.4}}
 
+\ada{This is an example of a legal response to a Cone Search query using the time parameter:}
+\todo{\ada{Can you check this please?}}
 \begin{lstlisting}[language=XML,basicstyle=\footnotesize]
-<FIELD name="name" datatype="char" arraysize="*" >
-<DESCRIPTION> FIRST Source Designation </DESCRIPTION>
-</FIELD>
-<FIELD name="ra" datatype="double" unit="degree" ucd="POS_EQ_RA_MAIN">
-<DESCRIPTION> Right Ascension </DESCRIPTION>
-</FIELD>
-<FIELD name="dec" datatype="double" unit="degree" ucd="POS_EQ_DEC_MAIN"> \ada{I think this should be
-<DESCRIPTION> Declination </DESCRIPTION>
-</FIELD>
-
-STILL NEED to add the time 
+<?xml version="1.0" encoding="UTF-8"?>
+<VOTABLE version="1.4" xmlns="http://www.ivoa.net/xml/VOTable/v1.3">
+  <RESOURCE>
+    <COOSYS ID="system" epoch="J2015.5" system="ICRS"/>
+    <TIMESYS ID="time_frame" refposition="BARYCENTER" timeorigin="2455197.5" timescale="TCB"/>
+  </RESOURCE>
+  <TABLE name="data">
+    <FIELD name="ra" datatype="double" unit="degree" ucd="pos.eq.ra;meta.main" ref="system"> 
+      <DESCRIPTION> Right Ascension </DESCRIPTION>
+    </FIELD>
+    <FIELD name="dec" datatype="double" unit="degree" ucd="pos.eq.dec;meta.main" ref="system"> 
+      <DESCRIPTION> Right Ascension </DESCRIPTION>
+    </FIELD>
+    <FIELD name="time" datatype="double" unit="d" ucd="time.epoch;meta.main" ref="time_frame"> 
+      <DESCRIPTION> Time of observation </DESCRIPTION>
+    </FIELD>
+    <FIELD name="mag" datatype="float" ucd="phot.mag;em.opt.V" unit="mag"/>
+      <DESCRIPTION> Magnitude of the source </DESCRIPTION>
+    </FIELD>
+    </FIELD>
+      <TABLEDATA>
+        <TR>270.14754119086</TD>
+        <TR>-30.90475459580</TD>
+        <TD>2309.00199864</TD>
+        <TD>18.990655</TD>
+      </TABLEDATA>
+    </DATA>
+  </TABLE>
+</VOTABLE>
 \end{lstlisting}
 
 
