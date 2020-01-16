@@ -521,13 +521,14 @@ Schema Documentation}
 \vspace{1ex}\noindent\textbf{\xmlel{cs:Query} Type Schema Definition}
 
 \todo{\ada{Added here the time, please check that}}
+
 \begin{lstlisting}[language=XML,basicstyle=\footnotesize]
 <xs:complexType name="Query" >
   <xs:sequence >
     <xs:element name="ra" type="xs:double" />
     <xs:element name="dec" type="xs:double" />
     <xs:element name="sr" type="xs:double" />
-    <xs:element name="time" type="xs:double" />
+    <xs:element name="time" xtype="xs:interval" />
     <xs:element name="verb" type="xs:positiveInteger" minOccurs="0" />
     <xs:element name="catalog" type="xs:string" minOccurs="0" />
     <xs:element name="extras" type="xs:string" minOccurs="0" />
