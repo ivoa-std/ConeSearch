@@ -11,6 +11,7 @@ showstringspaces=False}
 
 \usepackage{multirow}
 
+
 \title{Simple Cone Search}
 
 \ivoagroup{Data Access Layer}
@@ -34,13 +35,16 @@ showstringspaces=False}
 \begin{document}
 \begin{abstract}
 This specification defines a simple query protocol, named Simple Cone
-Search, for retrieving records
-from a catalog of astronomical sources. The query describes a sky
-position and an angular distance, defining a cone on the sky. The
-response returns a list of astronomical sources from the catalog whose
-positions lie within the cone, formatted as a VOTable. This version aims
-essentially at aligning this specification with the Data Access Layer
-(DAL) landscape at the time of writing.
+Search, for retrieving records from a catalog of astronomical sources.
+The query describes a sky position and an angular distance, defining a cone on the sky.
+The response returns a list of astronomical sources from the catalog whose
+positions lie within the cone, formatted as a VOTable.
+This version aims at aligning this specification with the Data Access Layer (DAL) landscape. 
+We also extend the protocol to query catalogs by an interval of time. 
+The response returns a list of astronomical sources from the catalog whose time values lie
+within the time interval, formatted as a VOTable.\todo{check this}
+
+
 \end{abstract}
 
 
@@ -60,6 +64,10 @@ The Johns Hopkins University.
 The ConeSearch-1.1 revision has been developed under the ASTERICS
 project, supported by the European Commission Framework Programme
 Horizon 2020 Research and Innovation action, grant agreement n. 653477.
+This work has been supported by the ESCAPE project (the European Science
+Cluster of Astronomy \& Particle Physics ESFRI Research Infrastructures)
+that has received funding from the European Union’s Horizon 2020 research
+and innovation programme under the Grant Agreement n. 824064
 
 Work of the original authors of the Cone Search specification as well as
 the numerous data providers who have implemented and continue to support
@@ -157,11 +165,11 @@ The Simple Cone Search \{query\} resource \textbf{must} meet the following requi
 an HTTP GET query string, and \textbf{should} respond to HTTP POST query
 actions (as described in later in this same section);
 	\item the response, by default, \textbf{must} be a valid VOTable
-document, providing a table containing the sources of the catalogue
-whose positions are within the cone described in the query request (see
-Sec.~\ref{sec:response});
+          document, providing a table containing the sources of the catalogue
+          whose positions and/or timestamps are within the cone and/or time
+          interval described in the query request (see Sec.~\ref{sec:response});
 	\item in case of error, the response \textbf{must} follow
-prescriptions as described in Sec.~\ref{sec:error}.
+          prescriptions as described in Sec.~\ref{sec:error}.
 \end{itemize}
 
 The Simple Cone Search service \texttt{\{query\}} resource is a synchronous web resource, as described by DALI, of the form
@@ -176,7 +184,7 @@ In the case of HTTP POST action, the behaviour of Simple Cone Search services ha
 
 On the opposite, services having plain \texttt{\{query\}} base URLs as mandated by this specification are highly encouraged to support HTTP POST method in order to fulfill DALI compliance.
 
-The set of query constraints a cone search needs to understand \textbf{must} include the \textbf{RA}, \textbf{DEC}, \textbf{SR} parameters, \textbf{should} include the \textbf{MAXREC} and \textbf{RESPONSEFORMAT} ones and \textbf{may} include the \textbf{VERB} one, all of which are to be interpreted with the following stated meaning and the DALI recommendations about parameters.
+The set of query constraints a cone search needs to understand \textbf{must} include the \textbf{RA}, \textbf{DEC}, \textbf{SR} parameters, \textbf{may} understand the TIME parameter \todo{is may ok? this needs to be checked. The idea is not to break conesearch as it has been used until now, to allow services without time to work as usual}, \textbf{should} include the \textbf{MAXREC} and \textbf{RESPONSEFORMAT} ones and \textbf{may} include the \textbf{VERB} one, all of which are to be interpreted with the following stated meaning and the DALI recommendations about parameters.
 
 \subsubsection{RA}
 \textbf{RA} represents a right-ascension in the ICRS coordinate system for the position of the center of the cone to search, given in decimal degrees. It is a single valued parameter and \textbf{must} be present in the query.
@@ -185,7 +193,13 @@ The set of query constraints a cone search needs to understand \textbf{must} inc
 \textbf{DEC} represents a declination in the ICRS coordinate system for the position of the center of the cone to search, given in decimal degrees. It is a single value parameter and \textbf{must} be present in the query.
 
 \subsubsection{SR}
-\textbf{SR} represents the radius of the cone to search, given in decimal degrees. It is a single valued parameter and \textbf{must} be present in the query. If set to zero (SR=0) it should have the same effect as setting MAXREC=0, i.e. a service metadata request as prescribed by DALI\footnote{SR=0 is kept in this version of this specification for back compatibility. It is suggested to prefer the usage of MAXREC to enable metadata discovery}.
+\textbf{SR} represents the radius of the cone to search, given in decimal degrees. It is a single valued parameter and \textbf{must} be present in the query. If set to zero (SR=0) it should have the same effect as setting MAXREC=0, i.e. a service metadata request as prescribed by DALI\footnote{SR=0 is kept in this version of this specification for back compatibility. It is suggested to prefer the usage of MAXREC to enable metadata discovery}\textsuperscript{, }\footnote{SR=180 can be used for cases in which only information of time is provided or where a cone search is not a convenient search for the location of a source in they sky (e.g. GW and neutrinos).}
+\todo{SR can be set to 180, this is in agreement with what is written in the maxSR section 5.1.3. If the service allows that or not is another story. (Idealy we would add the possibility of querying a database by STMOC and getting a response within the STMOC -- once STMOC std, we might want to come back to this idea).}
+
+\subsubsection{TIME}
+\textbf{TIME} represents the time interval to be searched for data. The value is an open or closed interval with numeric values (interpreted as Modified Julian Dates). A TIME constraint is satisfied if the interval intersects the time coverage of the observation. Values used in the TIME parameter are always interpreted as specified in DALI in the section on literal values: UTC time scale and UNKNOWN reference position. Modified Julian Date values are always in days. The parameter TIME \textbf{may} be present in the query. 
+
+\todo{I added the TIME as an interval of time, consistent with SIA2 and SODA. I personally would have chosen BCRS to be in line with ST-MOCs, but talking to Francois and Pat they wanted this to be inline with SIA2 and SODA. As long as this makes sense and we move fast I am willing to compromise there.}
 
 \subsubsection{MAXREC}
 As defined by DALI a cone search \textbf{should} accept the \textbf{MAXREC} parameter to let the client limit the number of records returned or require a service metadata response (see above).  Its usage is encouraged and preferred to the SR=0 solution for metadata discovery.
@@ -214,6 +228,8 @@ A query following this syntax represents a request for information on sources lo
 \item[Service Metadata query] \nolinkurl{http://my.cone/search?cat=A1\&RA=0\&DEC=0\&SR=0\&MAXREC=0}
 \item[Limit number of records in response] \nolinkurl{http://my.cone/search?RA=10.68\&DEC=41.26\&SR=1\&MAXREC=100}
 \item[Ask for the minimal set of response fields] \nolinkurl{http://my.cone/search?RA=10.68\&DEC=41.26\&SR=0.01\&VERB=1}
+\item[Query by time interval]\nolinkurl{http://my.cone/search?RA=10.68\&DEC=41.26\&SR=ALLSKY&TIME=MJD\_MIN MJD\_MAX}
+\item[Query by position and time interval]\nolinkurl{http://my.cone/search?RA=10.68\&DEC=41.26\&SR=0.01&TIME=MJD\_MIN MJD\_MAX}
 \end{bigdescription}
 
 \subsection{Availability: VOSI-availability}
@@ -226,7 +242,7 @@ Services that present the \texttt{\{query\}} base URL as a plain ReST resource w
 
 \section{Successful Response}
 \label{sec:response}
-A successful query \textbf{must} result in an HTTP response with status code 200 (OK) and a content that, by default, \textbf{must} be in VOTable format (version 1.0 or later), that represents a table of astronomical sources whose positions are within the cone (see Appendix \ref{app:responsesample} for an example)\todo{Example needs to be rebuild.}.  
+A successful query \textbf{must} result in an HTTP response with status code 200 (OK) and a content that, by default, \textbf{must} be in VOTable format (version 1.0 or later), that represents a table of astronomical sources whose positions are within the cone and/ or time inverterval as applicable (see Appendix \ref{app:responsesample} for examples)\todo{Example needs to be rebuild. }
 
 There may also be other sources outside the cone, the service implementor may decide on the exact search criterion used internally to the service to select the sources.
 
@@ -236,18 +252,20 @@ The response format may be other than VOTable when requested using the RESPONSEF
 
 In the case the service response is serialised in the default, VOTable, format, this response \textbf{MUST} comply with the following requirements.
 
-There \textbf{must} be a single \xmlel{RESOURCE} with \xmlel{type}=\texttt{"results"}\todo{Do current cone services use this attribute? Update: no, most Simple Cone Search-1.03 services do not.} in the VOTable, and containing a single \xmlel{TABLE}\todo{should we relax on the number of tables? Discuss this with apps.}.
+There \textbf{must} be a single \xmlel{RESOURCE} with \xmlel{type}=\texttt{"results"}\todo{Do current cone services use this attribute? Update: no, most Simple Cone Search-1.03 services do not.} in the VOTable, and containing a single \xmlel{TABLE}\todo{should we relax on the number of tables? Discuss this with apps}.
 
 The \xmlel{TABLE} \textbf{must} have \xmlel{FIELD}s where the following UCD values have been set. There \textbf{must} only be one \xmlel{FIELD} with each of these UCDs:
 \begin{itemize}
 	\item \textbf{Exactly one} \xmlel{FIELD} \textbf{must} have \xmlel{ucd}=\texttt{"ID\_MAIN"}, with an array character type (fixed or variable length), representing an ID string for that record of the table. This identifier \textbf{may not} be repeated in the table, and it could be used to retrieve that same record again from that same table.
-	\item \textbf{Exactly one} \xmlel{FIELD}, representing the right ascension of the source in the ICRS coordinate system, \textbf{must} have \xmlel{ucd}=\texttt{"POS\_EQ\_RA\_MAIN"}, and have \xmlel{datatype} set to \texttt{"float"} or \texttt{"double"}.
-	\item \textbf{Exactly one} \xmlel{FIELD}, representing the declination of the source in the ICRS coordinate system, \textbf{must} have \xmlel{ucd}=\texttt{"POS\_EQ\_DEC\_MAIN"}, and have \xmlel{datatype} set to \texttt{"float"} or \texttt{"double"}.
+	\item \textbf{Exactly one} \xmlel{FIELD}, representing the right ascension of the source in the ICRS coordinate system, \textbf{must} have \xmlel{ucd}=\texttt{"POS\_EQ\_RA\_MAIN"} \todo{I think this should be pos.eq.ra;meta.main}, and have \xmlel{datatype} set to \texttt{"float"} or \texttt{"double"}.
+	\item \textbf{Exactly one} \xmlel{FIELD}, representing the declination of the source in the ICRS coordinate system, \textbf{must} have \xmlel{ucd}=\texttt{"POS\_EQ\_DEC\_MAIN"} \todo{I think this should be pos.eq.dec;meta.main}, and have \xmlel{datatype} set to \texttt{"float"} or \texttt{"double"}.
+	\item \textbf{Exactly one} \xmlel{FIELD}, representing the time of the observation, \textbf{must} have \xmlel{ucd}=\texttt{"time.epoch;meta.main"}, and have \xmlel{datatype} set to \texttt{"float"} or \texttt{"double"}. 
+
 \end{itemize}
 
-The VOTable may include an expression of the uncertainty of the positions given in the above mentioned fields to be interpreted either as a positional error of the source positions, or an angular size if the sources are resolved. If this uncertainty is not provided, it should be taken to be zero; otherwise, it may be set for all table entries with a \xmlel{PARAM} in the \xmlel{RESOURCE} which has a UCD that is set to OBS\_ANG-SIZE and has a value which is the angle in decimal degrees. Alternatively, a different value for each row in the table can be given via a \xmlel{FIELD} in the table having a UCD set to OBS\_ANG-SIZE.
-There may be other \xmlel{FIELD}s in the table. Their specification \textbf{should} include description, datatype, and UCD.\todo{A solution to move to UCD1+ would be nice, but it should probably be postponed to a major revision.}
-
+The VOTable may include an expression of the uncertainty of the positions given in the above mentioned fields to be interpreted either as a positional error of the source positions, or an angular size if the sources are resolved. If this uncertainty is not provided, it should be taken to be zero; otherwise, it may be set for all table entries with a \xmlel{PARAM} in the \xmlel{RESOURCE} which has a UCD that is set to OBS\_ANG-SIZE \todo{what UCD1+ should this be?} and has a value which is the angle in decimal degrees. Alternatively, a different value for each row in the table can be given via a \xmlel{FIELD} in the table having a UCD set to OBS\_ANG-SIZE.
+There may be other \xmlel{FIELD}s in the table. Their specification \textbf{should} include description, datatype, and UCD.\todo{A solution to move to UCD1+ would be nice, but it should probably be postponed to a major revision. I think the time is now.}
+ 
 \section{Error Response}
 \label{sec:error}
 
@@ -348,6 +366,7 @@ two schemata version being delivered by the \xmlel{version} attribute in
 the schema root element.
 
 The \xmlel{cs:ConeSearch} type is described in Sec.~\ref{subsec:cstype}.
+\todo{Do we need to add here something about the fact that sometimes services will provide time and sometimes not?}
 
 \subsubsection{Interface}
 The \xmlel{capability} element described in Sec.~\ref{subsec:capability} \textbf{must} include a child \xmlel{interface} element.
@@ -501,12 +520,15 @@ Schema Documentation}
 
 \vspace{1ex}\noindent\textbf{\xmlel{cs:Query} Type Schema Definition}
 
+\todo{Added here the time, please check that}
+
 \begin{lstlisting}[language=XML,basicstyle=\footnotesize]
 <xs:complexType name="Query" >
   <xs:sequence >
     <xs:element name="ra" type="xs:double" />
     <xs:element name="dec" type="xs:double" />
     <xs:element name="sr" type="xs:double" />
+    <xs:element name="time" xtype="xs:interval" />
     <xs:element name="verb" type="xs:positiveInteger" minOccurs="0" />
     <xs:element name="catalog" type="xs:string" minOccurs="0" />
     <xs:element name="extras" type="xs:string" minOccurs="0" />
@@ -545,6 +567,20 @@ Schema Documentation}
 \item[Occurrence] required
 
 \end{description}
+
+               
+\todo{Added this here}
+
+\item[Element \xmlel{time}]
+\begin{description}
+\item[Type] floating-point number: \xmlel{xs:double}
+\item[Meaning] 
+                    the interval of time in the seach in MJD (days). 
+                  \item[Occurrence] optional
+
+\end{description}
+
+
 \item[Element \xmlel{verb}]
 \begin{description}
 \item[Type] \xmlel{xs:positiveInteger}
@@ -553,7 +589,7 @@ Schema Documentation}
                    minimum set of columns and 3 means the full set of 
                    available columns.
                
-\item[Occurrence] optional
+\item[Occurrence] optional 
 
 \end{description}
 \item[Element \xmlel{catalog}]
@@ -598,6 +634,7 @@ Schema Documentation}
 \section{Sample VOTable Response}
 \label{app:responsesample}
 This is a sample of a legal response to a Cone Search query.\todo{Needs to be changed}
+
 \begin{lstlisting}[language=XML,basicstyle=\footnotesize]
 <?xml version="1.0"?>
 <!DOCTYPE VOTABLE SYSTEM "http://us-vo.org/xml/VOTable.dtd">
@@ -620,10 +657,10 @@ This is a sample of a legal response to a Cone Search query.\todo{Needs to be ch
       <FIELD name="name" datatype="char" arraysize="*"  >
         <DESCRIPTION> FIRST Source Designation </DESCRIPTION>
       </FIELD>
-      <FIELD name="ra" datatype="double" unit="degree" ucd="POS_EQ_RA_MAIN">
+      <FIELD name="ra" datatype="double" unit="degree" ucd="POS_EQ_RA_MAIN"> 
         <DESCRIPTION> Right Ascension </DESCRIPTION>
       </FIELD>
-      <FIELD name="dec" datatype="double" unit="degree" ucd="POS_EQ_DEC_MAIN">
+      <FIELD name="dec" datatype="double" unit="degree" ucd="POS_EQ_DEC_MAIN"> 
         <DESCRIPTION> Declination </DESCRIPTION>
       </FIELD>
       <FIELD name="flux_20_cm" datatype="double" unit="mJy" >
@@ -664,11 +701,49 @@ This is a sample of a legal response to a Cone Search query.\todo{Needs to be ch
 </VOTABLE>
 \end{lstlisting}
 
+\todo{shouldn't we change the example to VOTable 1.4}
+
+This is an example of a legal response to a Cone Search query using the time parameter:
+\todo{Can you check this please?}
+\begin{lstlisting}[language=XML,basicstyle=\footnotesize]
+<?xml version="1.0" encoding="UTF-8"?>
+<VOTABLE version="1.4" xmlns="http://www.ivoa.net/xml/VOTable/v1.3">
+  <RESOURCE>
+    <COOSYS ID="system" epoch="J2015.5" system="ICRS"/>
+    <TIMESYS ID="time_frame" refposition="BARYCENTER" timeorigin="2455197.5" timescale="TCB"/>
+  </RESOURCE>
+  <TABLE name="data">
+    <FIELD name="ra" datatype="double" unit="degree" ucd="pos.eq.ra;meta.main" ref="system"> 
+      <DESCRIPTION> Right Ascension </DESCRIPTION>
+    </FIELD>
+    <FIELD name="dec" datatype="double" unit="degree" ucd="pos.eq.dec;meta.main" ref="system"> 
+      <DESCRIPTION> Right Ascension </DESCRIPTION>
+    </FIELD>
+    <FIELD name="time" datatype="double" unit="d" ucd="time.epoch;meta.main" ref="time_frame"> 
+      <DESCRIPTION> Time of observation </DESCRIPTION>
+    </FIELD>
+    <FIELD name="mag" datatype="float" ucd="phot.mag;em.opt.V" unit="mag"/>
+      <DESCRIPTION> Magnitude of the source </DESCRIPTION>
+    </FIELD>
+    </FIELD>
+      <TABLEDATA>
+        <TR>270.14754119086</TD>
+        <TR>-30.90475459580</TD>
+        <TD>2309.00199864</TD>
+        <TD>18.990655</TD>
+      </TABLEDATA>
+    </DATA>
+  </TABLE>
+</VOTABLE>
+\end{lstlisting}
+
+
 \section{Changes from Previous Versions}
 \label{app:changes}
 
 \subsection{Changes from REC-1.03}
 \begin{itemize}[noitemsep]
+	\item added the extension for time search.
 	\item moving base URL to a plain http://server/path? format
 	\item changed error response to comply with DALI
 	\item changed resource metadata importing directly from SimpleDALRegExt
