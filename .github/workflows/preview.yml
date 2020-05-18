@@ -1,7 +1,7 @@
 name: Update PDF Preview
 
 env:
-  doc_name: ADQL
+  doc_name: ConeSearch
 
 on:
   push:
