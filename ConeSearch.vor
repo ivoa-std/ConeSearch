@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ri:Resource xsi:type="vstd:ServiceStandard" status="active" xmlns="" 
+             created="2013-03-25T19:21:51.06" updated="2020-05-15T11:19:48.22"
+             xmlns:ri="http://www.ivoa.net/xml/RegistryInterface/v1.0"
+             xmlns:vr="http://www.ivoa.net/xml/VOResource/v1.0"
+             xmlns:vstd="http://www.ivoa.net/xml/StandardsRegExt/v1.0" 
+             xmlns:vs="http://www.ivoa.net/xml/VODataService/v1.1" 
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+    <title>   Simple Cone Search   </title>
+    <shortName>   ConeSearch   </shortName>
+    <identifier>   ivo://ivoa.net/std/ConeSearch   </identifier>
+
+    <curation>
+      <publisher ivo-id="ivo://ivoa.net/IVOA">
+        International Virtual Observatory Alliance
+      </publisher>
+      <creator>
+        <name>  Roy Williams   </name>
+      </creator>
+      <creator>
+        <name>  Robert Hanisch   </name>
+      </creator>
+      <creator>
+        <name>  Alex Szalay   </name>
+      </creator>
+      <creator>
+        <name>  Raymond Plante   </name>
+      </creator>
+      <date>   2008-02-22   </date>
+      <version> 1.0 </version>
+      <contact>
+        <name>   Data Access Layer Working Group   </name>
+	<email>  dal@ivoa.net    </email>
+      </contact>
+    </curation>
+
+    <content>
+      <subject>   software standard   </subject>
+      <subject>   virtual observatory   </subject>
+      <subject>   data access layer   </subject>
+      <subject>   DAL   </subject>
+      <description>
+        This specification defines a simple query protocol for
+        retrieving records from a catalog of astronomical sources. The
+        query describes sky position and an angular distance, defining
+        a cone on the sky. The response returns a list of astronomical
+        sources from the catalog whose positions lie within the cone,
+        formatted as a VOTable. This version of the specification is
+        essentially a transcription of the original Cone Search
+        specification in order to move it into the IVOA
+        standardization process. Note that
+        the metadata used to describe a Cone Search service in the registry
+        is defined in the SimpleDALRegExt standard 
+        (ivo://www.ivoa.net/std/SimpleDALRegExt; 
+        http://www.ivoa.net/Documents/SimpleDALRegExt/).  
+      </description>
+      <referenceURL>
+         http://www.ivoa.net/Documents/latest/ConeSearch.html
+      </referenceURL>
+      <type>   Other   </type>
+      <contentLevel>   Research   </contentLevel>
+      <relationship>
+        <relationshipType>related-to</relationshipType>
+        <relatedResource ivo-id="ivo://www.ivoa.net/std/SimpleDALRegExt">
+          SimpleDALRegExt: Describing Simple Data Access Services
+        </relatedResource>
+      </relationship>
+    </content>
+
+    <endorsedVersion status="rec"> 1.03 </endorsedVersion>
+
+    <interface xsi:type="vs:ParamHTTP" role="std" version="1.0">
+       <accessURL use="base"> http://sample.org/cgi-bin/scs </accessURL>
+       <queryType>GET</queryType>
+       <resultType>text/xml+votable</resultType>
+
+       <!-- 
+         -  These are the standard input parameters defined in the 
+         -  SCS spec
+         -->
+       <param use="required">
+         <name>RA</name>
+         <description>
+            the right-ascension in the ICRS coordinate system for the
+            positon of the center of the cone to search, given in
+            decimal degrees. 
+         </description>
+         <unit>degrees</unit>
+         <dataType arraysize="2">real</dataType>
+       </param>
+       <param use="required">
+         <name>DEC</name>
+         <description>
+            the declination in the ICRS coordinate system for the
+            positon of the center of the cone to search, given in
+            decimal degrees. 
+         </description>
+         <unit>degrees</unit>
+         <dataType arraysize="2">real</dataType>
+       </param>
+       <param use="required">
+         <name>SR</name>
+         <description>
+           the radius of the cone to search, given in decimal degrees.
+         </description>
+         <unit>degrees</unit>
+         <dataType arraysize="2">real</dataType>
+       </param>
+       <param use="ignored">
+         <name>VERB</name>
+         <description>
+           the level of verbosity in the output.
+         </description>
+         <dataType>string</dataType>
+       </param>
+    </interface>
+   
+</ri:Resource>
