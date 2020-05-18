@@ -50,7 +50,7 @@
         formatted as a VOTable. This version of the specification is
         essentially a transcription of the original Cone Search
         specification in order to move it into the IVOA
-        standardization process.  Note that
+        standardization process. Note that
         the metadata used to describe a Cone Search service in the registry
         is defined in the SimpleDALRegExt standard 
         (ivo://www.ivoa.net/std/SimpleDALRegExt; 
