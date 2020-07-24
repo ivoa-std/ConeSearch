@@ -334,13 +334,11 @@ string for that record of the table. This identifier \textbf{may not} be
 repeated in the table, and it could be used to retrieve that same record
 again from that same table.  \item \textbf{Exactly one} \xmlel{FIELD},
 representing the right ascension of the source in the ICRS coordinate
-system, \textbf{must} have \xmlel{ucd}=\texttt{"POS\_EQ\_RA\_MAIN"}
-\todo{I think this should be pos.eq.ra;meta.main}, and have
+system, \textbf{must} have \xmlel{ucd}=\texttt{"POS\_EQ\_RA\_MAIN"}, and have
 \xmlel{datatype} set to \texttt{"float"} or \texttt{"double"}.  \item
 \textbf{Exactly one} \xmlel{FIELD}, representing the declination of the
 source in the ICRS coordinate system, \textbf{must} have
-\xmlel{ucd}=\texttt{"POS\_EQ\_DEC\_MAIN"} \todo{I think this should be
-pos.eq.dec;meta.main}, and have \xmlel{datatype} set to \texttt{"float"}
+\xmlel{ucd}=\texttt{"POS\_EQ\_DEC\_MAIN"}, and have \xmlel{datatype} set to \texttt{"float"}
 or \texttt{"double"}.  \item \textbf{Exactly one} \xmlel{FIELD},
 representing the time of the observation, \textbf{must} have
 \xmlel{ucd}=\texttt{"time.epoch;meta.main"}, and have \xmlel{datatype}
@@ -354,15 +352,13 @@ as a positional error of the source positions, or an angular size if the
 sources are resolved. If this uncertainty is not provided, it should be
 taken to be zero; otherwise, it may be set for all table entries with a
 \xmlel{PARAM} in the \xmlel{RESOURCE} which has a UCD that is set to
-OBS\_ANG-SIZE \todo{what UCD1+ should this be?} and has a value which is
+OBS\_ANG-SIZE and has a value which is
 the angle in decimal degrees. Alternatively, a different value for each
 row in the table can be given via a \xmlel{FIELD} in the table having a
 UCD set to OBS\_ANG-SIZE.  There may be other \xmlel{FIELD}s in the
 table. Their specification \textbf{should} include description,
-datatype, and UCD.\todo{A solution to move to UCD1+ would be nice, but
-it should probably be postponed to a major revision. I think the time is
-now.}
- 
+datatype, and UCD.
+
 \section{Error Response} \label{sec:error}
 
 If the service detects an exceptional condition, it \textbf{should}
