@@ -303,8 +303,7 @@ to maintain for services exposing a base URL with the deprecated format.
 content that, by default, \textbf{must} be in VOTable format (version
 1.0 or later), that represents a table of astronomical sources whose
 positions are within the cone and/ or time inverterval as applicable
-(see Appendix \ref{app:responsesample} for examples)\todo{Example needs
-to be rebuild. }
+(see Appendix \ref{app:responsesample} for examples).
 
 There may also be other sources outside the cone, the service
 implementor may decide on the exact search criterion used internally to
@@ -691,135 +690,230 @@ form of name=value pairs delimited with ampersands (\&).
 \todo{attach xsd?}
 
 \appendix \section{Sample VOTable Response} \label{app:responsesample}
-This is a sample of a legal response to a Cone Search query.\todo{Needs
-to be changed}
+This is a sample of a legal response to a Cone Search query.
 
-\begin{lstlisting}[language=XML,basicstyle=\footnotesize] <?xml
-version="1.0"?> <!DOCTYPE VOTABLE SYSTEM
-"http://us-vo.org/xml/VOTable.dtd"> <VOTABLE version="1.0">
-<DEFINITIONS> <COOSYS system="eq_FK5" equinox="2000" /> </DEFINITIONS>
-<RESOURCE ID="T9001"> <DESCRIPTION> HEASARC Browse data service Please
-send inquiries to mailto:request@athena.gsfc.nasa.gov </DESCRIPTION>
-<PARAM ID="default_search_radius" ucd="OBS_ANG-SIZE" datatype="double"
-value="0.0516666666666667" /> <TABLE ID="heasarc_first_9001">
-<DESCRIPTION> Faint Images of the Radio Sky at Twenty cm Source Catalog
-(FIRST) </DESCRIPTION> <FIELD name="unique_id" datatype="char"
-arraysize="*"  ucd="ID_MAIN"> <DESCRIPTION> Integer key </DESCRIPTION>
-</FIELD> <FIELD name="name" datatype="char" arraysize="*"  >
-<DESCRIPTION> FIRST Source Designation </DESCRIPTION> </FIELD> <FIELD
-name="ra" datatype="double" unit="degree" ucd="POS_EQ_RA_MAIN">
-<DESCRIPTION> Right Ascension </DESCRIPTION> </FIELD> <FIELD name="dec"
-datatype="double" unit="degree" ucd="POS_EQ_DEC_MAIN"> <DESCRIPTION>
-Declination </DESCRIPTION> </FIELD> <FIELD name="flux_20_cm"
-datatype="double" unit="mJy" > <DESCRIPTION> Peak 1.4GHz Flux Density
-(mJy) </DESCRIPTION> </FIELD> <FIELD name="flux_20_cm_error"
-datatype="double" unit="mJy" > <DESCRIPTION> Estimated rms in at Source
-(mJy) </DESCRIPTION> </FIELD> <FIELD name="int_flux_20_cm"
-datatype="double" unit="mJy" > <DESCRIPTION> Integrated 1.4GHz Flux
-Density (mJy) </DESCRIPTION> </FIELD> <DATA> <TABLEDATA> <TR>
-<TD>384559</TD><TD>FIRST J120002.6+595708</TD>
-<TD>180.0110042</TD><TD>59.9523889</TD> <TD>    1.11</TD><TD>
-0.139</TD><TD>    1.14</TD> </TR> <TR> <TD>385094</TD><TD>FIRST
-J120025.3+600103</TD> <TD>180.1057250</TD><TD>60.0175556</TD> <TD>
-2.89</TD><TD> 0.142</TD><TD>    2.56</TD> </TR> <TR>
-<TD>384928</TD><TD>FIRST J120018.1+600236</TD>
-<TD>180.0755500</TD><TD>60.0434750</TD> <TD>   19.38</TD><TD>
-0.145</TD><TD>   19.23</TD> </TR> <TR> <TD>384490</TD><TD>FIRST
-J115959.4+600403</TD> <TD>179.9978875</TD><TD>60.0677083</TD> <TD>
-1.01</TD><TD> 0.147</TD><TD>    1.20</TD> </TR> </TABLEDATA> </DATA>
-</TABLE> </RESOURCE> </VOTABLE> \end{lstlisting}
-
-\todo{shouldn't we change the example to VOTable 1.4}
+\begin{lstlisting}[language=XML,basicstyle=\footnotesize] 
+<?xml version="1.0"?>
+<!DOCTYPE VOTABLE SYSTEM "http://us-vo.org/xml/VOTable.dtd"> 
+<VOTABLE version="1.0">
+	<DEFINITIONS>
+		<COOSYS system="eq_FK5" equinox="2000" /> 
+	</DEFINITIONS>
+	<RESOURCE ID="T9001"> 
+		<DESCRIPTION>HEASARC Browse data service Please send inquiries 
+			to mailto:request@athena.gsfc.nasa.gov
+		</DESCRIPTION>
+		<PARAM ID="default_search_radius" ucd="OBS_ANG-SIZE" 
+			datatype="double" value="0.0516666666666667" /> 
+		<TABLE ID="heasarc_first_9001">
+			<DESCRIPTION>
+				Faint Images of the Radio Sky at Twenty cm Source Catalog (FIRST)
+			</DESCRIPTION> 
+			<FIELD name="unique_id" datatype="char" arraysize="*"  ucd="ID_MAIN"> 
+				<DESCRIPTION>Integer key</DESCRIPTION>
+			</FIELD>
+			<FIELD name="name" datatype="char" arraysize="*">
+				<DESCRIPTION>FIRST Source Designation</DESCRIPTION>
+			</FIELD>
+			<FIELD name="ra" datatype="double" unit="degree" ucd="POS_EQ_RA_MAIN">
+				<DESCRIPTION>Right Ascension</DESCRIPTION>
+			</FIELD>
+			<FIELD name="dec" datatype="double" unit="degree" ucd="POS_EQ_DEC_MAIN">
+				<DESCRIPTION>Declination</DESCRIPTION>
+			</FIELD>
+			<FIELD name="flux_20_cm" datatype="double" unit="mJy">
+				 <DESCRIPTION>Peak 1.4GHz Flux Density(mJy)</DESCRIPTION>
+			</FIELD>
+			<FIELD name="flux_20_cm_error" datatype="double" unit="mJy">
+				<DESCRIPTION>Estimated rms in at Source (mJy)</DESCRIPTION>
+			</FIELD>
+			<FIELD name="int_flux_20_cm" datatype="double" unit="mJy">
+				<DESCRIPTION>Integrated 1.4GHz Flux Density (mJy)</DESCRIPTION>
+			</FIELD>
+			<DATA>
+				<TABLEDATA>
+					<TR>
+						<TD>384559</TD>
+						<TD>FIRST J120002.6+595708</TD>
+						<TD>180.0110042</TD>
+						<TD>59.9523889</TD>
+						<TD>1.11</TD>
+						<TD>0.139</TD>
+						<TD>1.14</TD>
+					</TR><TR>
+						<TD>385094</TD>
+						<TD>FIRST J120025.3+600103</TD>
+						<TD>180.1057250</TD>
+						<TD>60.0175556</TD>
+						<TD>2.89</TD>
+						<TD>0.142</TD>
+						<TD>2.56</TD>
+					</TR><TR>
+						<TD>384928</TD>
+						<TD>FIRST J120018.1+600236</TD>
+						<TD>180.0755500</TD>
+						<TD>60.0434750</TD>
+						<TD>19.38</TD>
+						<TD>0.145</TD>
+						<TD>19.23</TD>
+					</TR><TR>
+						<TD>384490</TD>
+						<TD>FIRST J115959.4+600403</TD>
+						<TD>179.9978875</TD>
+						<TD>60.0677083</TD>
+						<TD>1.01</TD>
+						<TD>0.147</TD>
+						<TD>1.20</TD>
+					</TR>
+				</TABLEDATA>
+			</DATA>
+		</TABLE>
+	</RESOURCE>
+</VOTABLE>
+\end{lstlisting}
 
 This is an example of a legal response to a Cone Search query using the
 time parameter:
-\begin{lstlisting}[language=XML,basicstyle=\footnotesize] <?xml
-version="1.0" encoding="UTF-8"?> <VOTABLE version="1.4"
-xmlns="http://www.ivoa.net/xml/VOTable/v1.3"> <RESOURCE> <COOSYS
-ID="system" epoch="J2015.5" system="ICRS"/> <TIMESYS ID="time_frame"
-refposition="BARYCENTER" timeorigin="2455197.5" timescale="TCB"/>
-</RESOURCE> <TABLE name="data"> <FIELD name="ra" datatype="double"
-unit="degree" ucd="pos.eq.ra;meta.main" ref="system"> <DESCRIPTION>
-Right Ascension </DESCRIPTION> </FIELD> <FIELD name="dec"
-datatype="double" unit="degree" ucd="pos.eq.dec;meta.main" ref="system">
-<DESCRIPTION> Right Ascension </DESCRIPTION> </FIELD> <FIELD name="time"
-datatype="double" unit="d" ucd="time.epoch;meta.main" ref="time_frame">
-<DESCRIPTION> Time of observation </DESCRIPTION> </FIELD> <FIELD
-name="mag" datatype="float" ucd="phot.mag;em.opt.V" unit="mag"/>
-<DESCRIPTION> Magnitude of the source </DESCRIPTION> </FIELD> </FIELD>
-<TABLEDATA> <TR>270.14754119086</TD> <TR>-30.90475459580</TD>
-<TD>2309.00199864</TD> <TD>18.990655</TD> </TABLEDATA> </DATA> </TABLE>
-</VOTABLE> \end{lstlisting}
+\begin{lstlisting}[language=XML,basicstyle=\footnotesize] 
+<?xml version="1.0" encoding="UTF-8"?> 
+<VOTABLE version="1.4" xmlns="http://www.ivoa.net/xml/VOTable/v1.3">
+	<RESOURCE>
+		<COOSYS ID="system" epoch="J2015.5" system="ICRS"/> 
+		<TIMESYS ID="time_frame" refposition="BARYCENTER" 
+			timeorigin="2455197.5" timescale="TCB"/>
+	</RESOURCE>
+	<TABLE name="data">
+		<FIELD name="ra" datatype="double" unit="degree" 
+			ucd="pos.eq.ra;meta.main" ref="system"> 
+			<DESCRIPTION>Right Ascension</DESCRIPTION>
+		</FIELD> 
+		<FIELD name="dec" datatype="double" unit="degree" 
+			ucd="pos.eq.dec;meta.main" ref="system">
+			<DESCRIPTION>Right Ascension</DESCRIPTION>
+		</FIELD>
+		<FIELD name="time" datatype="double" unit="d" 
+			ucd="time.epoch;meta.main" ref="time_frame">
+			<DESCRIPTION>Time of observation</DESCRIPTION>
+		</FIELD>
+		<FIELD name="mag" datatype="float" ucd="phot.mag;em.opt.V" unit="mag"/>
+			<DESCRIPTION>Magnitude of the source</DESCRIPTION>
+		</FIELD>
+		<DATA>
+			<TABLEDATA>
+				<TR>
+					<TD>270.14754119086</TD>
+					<TD>-30.90475459580</TD>
+					<TD>2309.00199864</TD>
+				 	<TD>18.990655</TD>
+				</TR>
+			</TABLEDATA>
+		</DATA> 
+	</TABLE>
+</VOTABLE>
+\end{lstlisting}
 
 
 \section{Changes from Previous Versions} \label{app:changes}
 
-\subsection{Changes from REC-1.03} \begin{itemize}[noitemsep] \item
-added the extension for time search.  \item moving base URL to a plain
-http://server/path? format \item changed error response to comply with
-DALI \item changed resource metadata importing directly from
-SimpleDALRegExt \item relaxed RA and Dec FIELDs in response to allow
-float or double datatype \item no more exactly one RESOURCE in response,
-now stating exactly one of type="results" \item removed fixed version
-(1.0 or 1.1) for VOTable default response \item Added DALI MAXREC and
-RESPONSEFORMAT \item Added POST as optional HTTP query method \item
-Addition and changes on authors/editors.  \item Plain porting of the
-HTML document into ivoatex template, including change history, then
-modified it and reshaped.  \end{itemize}
+\subsection{Changes from REC-1.03} 
+\begin{itemize}[noitemsep] 
+\item added the extension for time search.  
+\item moving base URL to a plain http://server/path? format 
+\item changed error response to comply with DALI 
+\item changed resource metadata importing directly from SimpleDALRegExt 
+\item relaxed RA and Dec FIELDs in response to allow float or double datatype 
+\item no more exactly one RESOURCE in response, now stating exactly one of type="results" 
+\item removed fixed version (1.0 or 1.1) for VOTable default response 
+\item Added DALI MAXREC and RESPONSEFORMAT 
+\item Added POST as optional HTTP query method 
+\item Addition and changes on authors/editors.  
+\item Plain porting of the HTML document into ivoatex template, 
+including change history, then modified it and reshaped.  
+\end{itemize}
 
-\subsection{Changes from PR-1.02} \begin{itemize}[noitemsep] \item
-converted to Recommendation \end{itemize}
+\subsection{Changes from PR-1.02} 
+\begin{itemize}[noitemsep] 
+\item converted to Recommendation 
+\end{itemize}
 
-\subsection{Changes from PR-1.01} \begin{itemize}[noitemsep] \item
-eliminated the choice of encoding an ERROR response in a PARAM that is a
+\subsection{Changes from PR-1.01} 
+\begin{itemize}[noitemsep] 
+\item removed the choice of encoding an ERROR response in a PARAM that is a
 direct child of VOTABLE as this is not legal in the VOTable schema.
-\item Allowed the use of the INFO element for error messages.  \item In
-examples, made sure PARAM elements have datatype attributes \item
-Corrected wording to be definitive that positions are given in the ICRS
-coordinate system.  \item Other typos.  \end{itemize}
+\item Allowed the use of the INFO element for error messages.  
+\item In examples, made sure PARAM elements have datatype attributes 
+\item Corrected wording to be definitive that positions are given in the ICRS
+coordinate system.  
+\item Other typos.  
+\end{itemize}
 
-\subsection{Changes from PR-1.00} \begin{itemize}[noitemsep] \item
-Various typos.  \item Clarified description of VERB parameter:
-\begin{itemize}[noitemsep] \item Clarified what is meant by optional for
-client and server.  \item Clarified the meaning of the values.
-\end{itemize} \item Explicitly mention the 3 legal locations for ERROR
-messages.  \item Refer to string types as character arrays, as per the
-VOTable std.  \item Prefers text/xml;content=x-votable over
-text/xml;votable.  \item Added examples of error message, legal response
-in appendix.  \end{itemize}
+\subsection{Changes from PR-1.00} 
+\begin{itemize}[noitemsep] 
+\item Various typos.  
+\item Clarified description of VERB parameter:
+	\begin{itemize}[noitemsep] 
+	\item Clarified what is meant by optional for
+	client and server.  
+	\item Clarified the meaning of the values.
+	\end{itemize} 
+\item Explicitly mention the 3 legal locations for ERROR
+messages.  
+\item Refer to string types as character arrays, as per the
+VOTable std.  
+\item Prefers text/xml;content=x-votable over
+text/xml;votable.  
+\item Added examples of error message, legal response
+in appendix.  
+\end{itemize}
 
 \subsection{Changes from the original NVO Specification Document}
-\begin{itemize}[noitemsep] \item References to the original HTML
+\begin{itemize}[noitemsep] 
+\item References to the original HTML
 document have been replaced with references to this IVOA specification.
 \item Replaced references to "curator" with "data provider" or similar
-wording.  \item Replaced references to the NVO with references either to
-the IVOA or this specification, as appropriate.  \item Ambiguous
+wording.  
+\item Replaced references to the NVO with references either to
+the IVOA or this specification, as appropriate.  
+\item Ambiguous
 language like "perhaps" has been replaced with more definitive wording
 where appropriate. Use of the word "will" is replaced with "must" and
 "can" with "may", in accordance with the definitions set in the preface.
-\item Grammatical and spelling corrections have been made.  \item The
-content is organized into sections typical of an IVOA spec.  \item
-Description of the URL syntax is sharper, borrowing language from the
-SIA specification [SIA]. This includes: \begin{itemize}[noitemsep] \item
-More explicitly specifying the form of the URL.  \item Sharpening the
-definition of the input parameters.  \item Indicating that parameter
-order is not significant.  \item Stating explicitly that unsupported
-optional arguments should be ignored.  \item Adding examples.  \item
-Re-ordering information for improved flow.  \end{itemize} \item The
-version of VOTable supported is explicitly stated.  \item Whereas the
+\item Grammatical and spelling corrections have been made.  
+\item The
+content is organized into sections typical of an IVOA spec.  
+\item Description of the URL syntax is sharper, borrowing language from the
+SIA specification [SIA]. This includes: \begin{itemize}[noitemsep] 
+\item More explicitly specifying the form of the URL.  
+\item Sharpening the
+definition of the input parameters.  
+\item Indicating that parameter
+order is not significant.  
+\item Stating explicitly that unsupported
+optional arguments should be ignored.  
+\item Adding examples.  
+\item Re-ordering information for improved flow.  \end{itemize} 
+\item The
+version of VOTable supported is explicitly stated.  
+\item Whereas the
 NVO version describes the parameter with ucd="OBS\_ANG-SIZE" as "an
 expression of the opening angle of the cones", this version describes it
 specifically as "an expression of the uncertainty of the positions".
 \item A note has been added to recognize the ambiguity in the location
-of the ERROR parameter.  \item The general description of the resource
+of the ERROR parameter.  
+\item The general description of the resource
 profile has been altered to allow rendering of the metadata to change
-according to the standards and conventions of the IVOA.  \item An
+according to the standards and conventions of the IVOA.  
+\item An
 editor's note has been added that makes reference to the RM document
-[RM].  \item A requirement that \textbf{MaxSR} be given in decimal
-degrees has been added.  \item For the \textbf{BaseURL} resource profile
+[RM].  
+\item A requirement that \textbf{MaxSR} be given in decimal
+degrees has been added.  
+\item For the \textbf{BaseURL} resource profile
 metadatum, the example has been replaced with a reference to the BaseURL
-syntax description.  \item An appendix has been added to describe the
-current practice for registering Cone Search services.  \end{itemize}
+syntax description.  
+\item An appendix has been added to describe the
+current practice for registering Cone Search services.  
+\end{itemize}
 
 \bibliography{ivoatex/ivoabib,ivoatex/docrepo,ConeSearch}
 
