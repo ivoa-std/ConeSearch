@@ -322,10 +322,8 @@ format, this response \textbf{MUST} comply with the following
 requirements.
 
 There \textbf{must} be a single \xmlel{RESOURCE} with
-\xmlel{type}=\texttt{"results"}\todo{Do current cone services use this
-attribute? Update: no, most Simple Cone Search-1.03 services do not.} in
-the VOTable, and containing a single \xmlel{TABLE}\todo{should we relax
-on the number of tables? Discuss this with apps}.
+\xmlel{type}=\texttt{"results"} in
+the VOTable, and containing a single \xmlel{TABLE}
 
 The \xmlel{TABLE} \textbf{must} have \xmlel{FIELD}s where the following
 UCD values have been set. There \textbf{must} only be one \xmlel{FIELD}
@@ -407,32 +405,45 @@ preferred by this document), or \item the \xmlel{RESOURCE} element
 \end{itemize}
 
 If a \xmlel{PARAM} element is used, it must appear as a direct child of
-the \xmlel{RESOURCE} element.\todo{Removed reference to the DEFINITION
-element solution, definitely out of VOTable since long.} Please note
+the \xmlel{RESOURCE} element.
+Please note
 that, apart from being deprecated here, the use of the \xmlel{PARAM}
 element to convey error response was already discouraged in the previous
 version of this specification.
 
-\begin{bigdescription} \item[Example Error Responses] Error INFO as
-child of VOTABLE (preferred)\\
-\begin{lstlisting}[language=XML,basicstyle=\footnotesize] <?xml
-version="1.0"?> <!DOCTYPE VOTABLE SYSTEM
-"http://us-vo.org/xml/VOTable.dtd"> <VOTABLE version="1.0">
-<DESCRIPTION>MAST Simple Cone Search Service</DESCRIPTION> <INFO
-ID="Error" name="Error" value="Error in input RA value: as3f"/>
-</VOTABLE> \end{lstlisting} Error PARAM as child of RESOURCE (allowed)
-\begin{lstlisting}[language=XML,basicstyle=\footnotesize] <?xml
-version="1.0"?> <!DOCTYPE VOTABLE SYSTEM
-"http://us-vo.org/xml/VOTable.dtd"> <VOTABLE version="1.0">
-<DESCRIPTION> HEASARC Browse data service Please send inquiries to
-mailto:request@athena.gsfc.nasa.gov </DESCRIPTION> <RESOURCE
-ID="error_resource"> <PARAM ID="Error" name="Error" datatype="char"
-arraysize="*" value="Invalid data type: text/html"/> </RESOURCE>
-</VOTABLE> \end{lstlisting} \end{bigdescription}
+\begin{bigdescription} 
+	\item[Example Error Responses] Error INFO as child of VOTABLE (preferred)\\
+
+\begin{lstlisting}[language=XML,basicstyle=\footnotesize]
+<?xml version="1.0"?>
+<!DOCTYPE VOTABLE SYSTEM "http://us-vo.org/xml/VOTable.dtd">
+<VOTABLE version="1.0">
+	<DESCRIPTION>MAST Simple Cone Search Service</DESCRIPTION>
+	<INFO ID="Error" name="Error"
+		value="Error in input RA value: as3f"/>
+</VOTABLE> 
+\end{lstlisting} 
+
+Error PARAM as child of RESOURCE (allowed)
+
+\begin{lstlisting}[language=XML,basicstyle=\footnotesize]
+<?xml version="1.0"?>
+<!DOCTYPE VOTABLE SYSTEM "http://us-vo.org/xml/VOTable.dtd">
+<VOTABLE version="1.0">
+	<DESCRIPTION>HEASARC Browse data service Please send inquiries to
+		mailto:request@athena.gsfc.nasa.gov</DESCRIPTION>
+	<RESOURCE ID="error_resource">
+		<PARAM ID="Error" name="Error" 
+			datatype="char" arraysize="*" 
+			value="Invalid data type: text/html"/>
+	</RESOURCE>
+</VOTABLE>
+\end{lstlisting}
+
+\end{bigdescription}
 
 Queries targeting no records \textbf{should not} generate an error
-response, but an empty metadata response.\todo{Does it make sense to
-keep this sentence, shortened from the previous version? MMo guess: no}
+response, but an empty metadata response.
 
 \section{Resource Registry Extension} \label{sec:regext}
 
