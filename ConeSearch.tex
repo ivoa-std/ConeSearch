@@ -46,7 +46,7 @@ specification with the Data Access Layer (DAL) landscape.  We also
 extend the protocol to query catalogs by an interval of time.  The
 response returns a list of astronomical sources from the catalog whose
 time values lie within the time interval, formatted as a
-VOTable.\todo{check this}
+VOTable.
 
 
 \end{abstract}
@@ -186,9 +186,7 @@ POST method in order to fulfill DALI compliance.
 
 The set of query constraints a cone search needs to understand
 \textbf{must} include the \textbf{RA}, \textbf{DEC}, \textbf{SR}
-parameters, \textbf{may} understand the TIME parameter \todo{is may ok?
-this needs to be checked. The idea is not to break conesearch as it has
-been used until now, to allow services without time to work as usual},
+parameters, \textbf{may} understand the TIME parameter,
 \textbf{should} include the \textbf{MAXREC} and \textbf{RESPONSEFORMAT}
 ones and \textbf{may} include the \textbf{VERB} one, all of which are to
 be interpreted with the following stated meaning and the DALI
@@ -228,12 +226,6 @@ observation. Values used in the TIME parameter are always interpreted as
 specified in DALI in the section on literal values: UTC time scale and
 UNKNOWN reference position. Modified Julian Date values are always in
 days. The parameter TIME \textbf{may} be present in the query. 
-
-\todo{I added the TIME as an interval of time, consistent with SIA2 and
-SODA. I personally would have chosen BCRS to be in line with ST-MOCs,
-but talking to Francois and Pat they wanted this to be inline with SIA2
-and SODA. As long as this makes sense and we move fast I am willing to
-compromise there.}
 
 \subsubsection{MAXREC} As defined by DALI a cone search \textbf{should}
 accept the \textbf{MAXREC} parameter to let the client limit the number
@@ -508,8 +500,6 @@ two schemata version being delivered by the \xmlel{version} attribute in
 the schema root element.
 
 The \xmlel{cs:ConeSearch} type is described in Sec.~\ref{subsec:cstype}.
-\todo{Do we need to add here something about the fact that sometimes
-services will provide time and sometimes not?}
 
 \subsubsection{Interface} The \xmlel{capability} element described in
 Sec.~\ref{subsec:capability} \textbf{must} include a child
@@ -633,8 +623,6 @@ Type Schema Documentation}
 
 \vspace{1ex}\noindent\textbf{\xmlel{cs:Query} Type Schema Definition}
 
-\todo{Added here the time, please check that}
-
 \begin{lstlisting}[language=XML,basicstyle=\footnotesize]
 <xs:complexType name="Query" > <xs:sequence > <xs:element name="ra"
 type="xs:double" /> <xs:element name="dec" type="xs:double" />
@@ -666,9 +654,6 @@ radius of the search cone in decimal degrees.
 \item[Occurrence] required
 
 \end{description}
-
-               
-\todo{Added this here}
 
 \item[Element \xmlel{time}] \begin{description} \item[Type]
 floating-point number: \xmlel{xs:double} \item[Meaning] the interval of
@@ -753,7 +738,7 @@ J115959.4+600403</TD> <TD>179.9978875</TD><TD>60.0677083</TD> <TD>
 \todo{shouldn't we change the example to VOTable 1.4}
 
 This is an example of a legal response to a Cone Search query using the
-time parameter: \todo{Can you check this please?}
+time parameter:
 \begin{lstlisting}[language=XML,basicstyle=\footnotesize] <?xml
 version="1.0" encoding="UTF-8"?> <VOTABLE version="1.4"
 xmlns="http://www.ivoa.net/xml/VOTable/v1.3"> <RESOURCE> <COOSYS
