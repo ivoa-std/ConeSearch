@@ -1,4 +1,4 @@
-[![PDF-Preview](https://img.shield.io/badge/PDF-Preview-blue)](https://github.com/ivoa-std/ConeSearch/releases/download/auto-pdf-preview/ConeSearch-draft.pdf)
+[![PDF-Preview](https://img.shields.io/badge/PDF-Preview-blue)](https://github.com/ivoa-std/ConeSearch/releases/download/auto-pdf-preview/ConeSearch-draft.pdf)
 
 # Simple Cone Search
 
