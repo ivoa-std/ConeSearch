@@ -1,0 +1,164 @@
+
+<HTML><HEAD>
+<META http-equiv=3DContent-Type content=3D"text/html; charset=3Dwindows-1252">
+<META content=3D"MSHTML 6.00.2719.2200" name=3DGENERATOR></HEAD>
+<BODY>
+<CENTER>
+<P align=3Dleft><B>Note:</B> This is a project development document. The software and 
+services available here are prototypes. They are being built in order to 
+evaluate tools and methods and are subject to frequent and unannounced 
+revisions. The NVO project encourages wide use and experimentation of these 
+prototypes, but they may not work with all browsers or user environments. 
+Software and services intended for general use will be clearly identified. We 
+appreciate <A href="mailto:feedback@us-vo.org">feedback</A> from the user 
+community.</P>
+<P>&nbsp;</P>
+<H3>NVO compliance</H3>
+<H2>Simple Cone Search</H2><I>A first guide for data Curators</I> </CENTER>
+<P>This page describes how a curator of an astronomical source catalog can 
+publish that catalog to the National Virtual Observatory in such a way that a 
+simple cone search can be done. The data remains in the control of the curator, 
+served through a web server to the world, but the query profile and response 
+profile are carefully controlled, as described below. We hope that setting up 
+this web service is simple enough that curators will not have to spend too much 
+time on it -- we know that their NVO funding is small -- but we hope to use the 
+data they serve as a basis for more sophisticated tools. 
+<P>The NVO is not interested in how services are impemented, how data is stored 
+or manipulated. The NVO is interested in how data is exposed to the world 
+through well-defined requests and responses. 
+<P>We are assuming that the curator has already selected a catalog of 
+astronomical sources. Perhaps for the moment we can keep things simple by asking 
+for at most one catalog to be published per person. The publication will be 
+easier if a catalog is chosen with few columns. 
+<OL>
+  <LI>Compliance REQUIRES that a web service be maintained with the following 
+  characteristics: 
+  <UL>
+    <LI>The service must respond to http GET requests of the following 
+    format:<BR>&nbsp;&nbsp;&nbsp;&nbsp;<B> 
+    &lt;BaseURL&gt;?RA=3D....&amp;DEC=3D....&amp;SR=3D....</B>
+    <P></P>
+    <LI>The three keywords have the following meanings: 
+    <UL>
+      <LI><B>RA</B> is a right-ascension in the J2000 coordinate system. Its 
+      argument must be in decimal degrees. 
+      <LI><B>DEC</B> is a declination in the J2000 coordinate system. Its 
+      argument must be in decimal degrees. 
+      <LI><B>SR</B> is a search radius in decimal degrees. </LI></UL></LI></UL>
+  <P>The curator has thus made a web service where the meaning of the query is a 
+  cone-search on the sky. There may be other keywords in the query, but this 
+  document does not specify their meaning or usage. 
+  <P>Optional keywords are: 
+  <UL>
+    <LI><B>VERB</B> is an integer verbosity that specifies how many columns are 
+    to be returned in the resulting table, with 1 meaning the bare minimum and 3 
+    being the full width of the resulting table, which may be hundreds of 
+    columns. </LI></UL>
+  <P></P>
+  <LI>The service will respond with an XML document in the VOTable format, that 
+  represents a table of astronomical sources whose positions are within the 
+  cone. There may also be other sources outside the cone -- the service 
+  implementor may decide on the exact search criterion. 
+  <P>The MIME type of the response should be <TT>text/xml</TT>. The VOTable 
+  format is described <A href="http://www.ivoa.net/twiki/bin/view/IVOA/IvoaVOTable">here</a>. 
+  <P>The VOTable MUST comply with these conditions:
+  <P>
+  <UL>
+    <LI>There is a single RESOURCE in the VOTable, and that contains a single 
+    TABLE.
+    <P></P>
+    <LI>The TABLE must have FIELDS where the following <A 
+    href="http://vizier.u-strasbg.fr/UCD">UCD</A> values have been set. 
+    There can be only one FIELD with each of these UCDs:
+    <P>
+    <UL>
+      <LI>Exactly one FIELD must have ucd="ID_MAIN", with the type string (fixed 
+      or variable length), representing an ID string for that record of the 
+      table. This identifier may not be repeated in the table, and it could be 
+      used to retrieve that same record again from that same table.
+      <P></P>
+      <LI>Exactly one FIELD must have ucd="POS_EQ_RA_MAIN", with type double, 
+      representing the J2000 right-ascension of the source.
+      <P></P>
+      <LI>Exactly one FIELD must have ucd="POS_EQ_DEC_MAIN", with type double, 
+      representing the J2000 declination of the source.
+      <P></P>
+      <LI>There may be an expression of the opening angle of the cones -- the 
+      positional error of star positions, or angular size if the cones represent 
+      images. The default value of the opening angle is zero, or else it may be 
+      set for all table entries with a PARAM in the RESOURCE which has a UCD 
+      that is set to OBS_ANG-SIZE and has a value which is the angle in decimal 
+      degrees. Alternatively, there may be a FIELD in the table whihc has this 
+      same UCD, and is to be interpreted as a different value for each row of 
+      the table </LI></UL></LI></UL>
+  <P>There may be other FIELDS in the table, preferably each with description, 
+  datatype, unit, UCD and so on. 
+  <P></P>
+  <LI>The service will respond with a stub version of the VOTable in the case of 
+  error. This could happen if the three parameters (RA, DEC, SR) are not all 
+  present, or if they cannot be parsed to floating-point numbers, or if the 
+  numbers are bad (DEC=91.0 for example). The service may also make an error 
+  return if the Search Radius is larger than the MaxSR parameter of the Resource 
+  Profile (see below). 
+  <P>In the case of error, the service MUST respond with a VOTable that contains 
+  a single parameter called <B>Error</B>, where the corresponding value should 
+  contain some explanation of the nature of the error. 
+  <P>Other conditions may NOT be considered erroneous, for example if a query 
+  cone is in the Southern hemisphere and the catalog coverage is in the Northern 
+  hemisphere. This type of query is different from an error return; it should 
+  return a VOTable as described above, with metadata, but no data records. In 
+  particular, a zero value of Search Radius should not return an error 
+  condition. This is because an application may be more interested in the 
+  metadata than the data, and send a fixed query (for example 
+  RA=0&amp;DEC=90&amp;SR=0) simply to discover the fields delivered by the 
+  service. 
+  <P></P>
+  <LI>The service MUST be described with a Resource Profile that includes the 
+  following information. Several of these fields are hierarchical in nature, and 
+  may be expressed as strings separated by dots, with the root domain first. 
+  <P>This Profile will be expressed as a colelction of keyword-value pairs, 
+  initially by inputting it into a centralized database, later by encoding it in 
+  XML and storing it on the same server(s) that1G have the corresponding catalog. 
+  Each of the string-based values in the Profile should be less than 2048 bytes. 
+
+  <P>These are the keywords and descriptions required for publication: 
+  <UL>
+    <LI><B>ResponsibleParty</B>: The Curator's name and email.
+    <P></P>
+    <LI><B>ServiceName</B>: The name of the Catalog, for example 
+    "IRSA.2MASS.ExtendedSources".
+    <P></P>
+    <LI><B>Description</B>: A couple of paragraphs of text that describe the 
+    nature of the catalog and its wider context.
+    <P></P>
+    <LI><B>Instrument</B>: The instrument that made the observations, for 
+    example STScI.HST.WFPC2. 
+    <P></P>
+    <LI><B>Waveband</B>: The waveband of the observations, with ONE selected 
+    from this list: radio, infrared, optical, ultraviolet, xray, gammaray.
+    <P></P>
+    <LI><B>Epoch</B>: The epoch of the observations, as a freeform string.
+    <P></P>
+    <LI><B>Coverage</B>: The coverage on the sky, as a freeform string.
+    <P></P>
+    <LI><B>MaxSR</B>: The largest Search Radius that will be accepted by the 
+    service without returning an error condition (use 180.0 if there is no 
+    restriction).
+    <P></P>
+    <LI><B>MaxRecords</B>: The largest number of records that the service will 
+    return.
+    <P></P>
+    <LI><B>Verbosity</B>: True or false, depending on whether the service 
+    supports the VERB keyword in the request. 
+    <LI><B>BaseURL</B>: The base string for forming a URL, for example 
+    <BR><B>&nbsp;&nbsp;&nbsp;&nbsp;http://virtualsky.org/servlet/cover?CAT=messier&amp;</B><BR>so 
+    that a query can be constructed by appending the keywords listed above, for 
+    example: 
+    <BR><B>&nbsp;&nbsp;&nbsp;&nbsp;http://virtualsky.org/servlet/cover?CAT=messier&amp;RA=220&amp;DEC=40&amp;SR=10</B>
+    <P></P></LI></UL>
+  <P></P>
+  <LI>Publishing the service will consist of filling in a web-based form with 
+  the Profile information of section (4), TOGETHER with maintaining the web 
+  service that is described by that Profile. </LI>
+</BODY></HTML>
+
