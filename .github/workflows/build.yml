@@ -1,5 +1,8 @@
 name: Test building the standard
 
+env:
+  doc_name: ConeSearch
+
 on: 
   pull_request:
     types: [opened, synchronize, reopened]
