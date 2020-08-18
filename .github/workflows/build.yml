@@ -22,10 +22,14 @@ jobs:
     - name: Setup dependencies
       run: |
         sudo apt update
-        sudo apt install texlive-latex-base texlive-latex-recommended texlive-latex-extra texlive-fonts-recommended xsltproc latex-mk cm-super
+        sudo apt install texlive-latex-base texlive-latex-recommended texlive-latex-extra texlive-fonts-recommended xsltproc latexmk cm-super
       
     - name: Build the document
+<<<<<<< HEAD
       run: make  
+=======
+      run: make 
+>>>>>>> ivoa-std/master
       
     - name: Check the output
       run: |
