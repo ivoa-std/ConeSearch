@@ -35,20 +35,11 @@ workflow and available
 The current IVOA Recommendation is: 
 [REC-1.03](http://ivoa.net/documents/latest/ConeSearch.html).
 
-The release available here tagged with the same version number is a re-styled
-document that keeps the same content and was prepared while porting the
-HTML version to a LaTeX one in view of a minor revision. The originating
-HTML is, for this reason, currently preserved also in this development
-git repository (REC-SCS-1.03.20080222.html).
-The porting includes all of the history changes to the original document 
-listed in appendix.  Porting tried to be as faithful as possible, given broken
-links and references, styling issues and so. The goal was not to
-produce a one-to-one ivoatex SCS-1.03, but to form a basis to start a
-revision from.
-
-The IVOA Simple Cone Search itself starts out of a US-NVO specification
-that, in turn, is preserved in this repository
-(NVO_conesearch_April2002.html).
+The release available in this repo tagged with the same version number 
+is a re-styled document that keeps the same content and was prepared 
+while porting the HTML version to a LaTeX one in view of a minor revision. 
+The originating HTML is available from the 
+[official IVOA Document Repository](http://ivoa.net/documents/latest/ConeSearch.html).
 
 ## License 
 
