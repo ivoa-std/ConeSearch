@@ -399,10 +399,14 @@ Sec.~\ref{subsec:err103} here below.
 
 \subsection{(\textbf{deprecated}) Alternative Error Response}
 \label{subsec:err103} In the case of error, the service \textbf{must}
-respond with a VOTable that contains a single \xmlel{PARAM} element or a
-single \xmlel{INFO} element with \xmlel{name}=\texttt{"Error"}, where
+respond with a VOTable that contains a \xmlel{PARAM} element or an
+\xmlel{INFO} element with \xmlel{name}=\texttt{"Error"}, where
 the corresponding \xmlel{value} attribute should contain some
-explanation of the nature of the error. If an \xmlel{INFO} element is
+explanation of the nature of the error. No other \xmlel{PARAM} or
+\xmlel{INFO} element in the response can be present having
+\xmlel{name}=\texttt{"Error"} set, but additional \xmlel{INFO} and
+\xmlel{PARAM} elements with the \xmlel{name} parameter set to a different value
+are allowed. If an \xmlel{INFO} element is
 used, it must appear as a direct child of one of the following elements:
 \begin{itemize} \item the root \xmlel{VOTABLE} element (which is
 preferred by this document), or \item the \xmlel{RESOURCE} element
