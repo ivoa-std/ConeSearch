@@ -208,8 +208,14 @@ given in decimal degrees. It is a single value parameter and
 
 \subsubsection{SR} \textbf{SR} represents the radius of the cone to
 search, given in decimal degrees. It is a single valued parameter and
-\textbf{must} be present in the query. If set to zero (SR=0) it should
-have the same effect as setting MAXREC=0, i.e. a service metadata
+\textbf{must} be present in the query. 
+
+If set to zero (SR=0) it should
+not return an error condition because the request might describe an 
+interest in retrieving only the metadata structure of the service's 
+response (i.e. discovery of the FIELDS delivered by the service).
+
+This is similar to setting MAXREC=0, i.e. a service metadata
 request as prescribed by DALI\footnote{SR=0 is kept in this version of
 this specification for back compatibility. It is suggested to prefer the
 usage of MAXREC to enable metadata discovery}\textsuperscript{,
@@ -228,7 +234,7 @@ days. The parameter TIME \textbf{may} be present in the query.
 
 \subsubsection{MAXREC} As defined by DALI a cone search \textbf{should}
 accept the \textbf{MAXREC} parameter to let the client limit the number
-of records returned or require a service metadata response (see above).
+of records returned or require a service metadata response.
 Its usage is encouraged and preferred to the SR=0 solution for metadata
 discovery.
 
