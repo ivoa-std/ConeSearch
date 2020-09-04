@@ -152,27 +152,38 @@ It \textbf{must} have one \{query\} resource and \textbf{should} have a
 VOSI-capability resource and a VOSI-availability one. The
 VOSI-capability \textbf{must} be a sibling to the \{query\} one.
 
-\subsection{\{query\} resource} \label{sec:basepar} The Simple Cone
+\subsection{\{query\} resource} 
+\label{sec:basepar} 
+
+The Simple Cone
 Search \{query\} resource \textbf{must} meet the following requirements:
-\begin{itemize} \item the resource \textbf{must} respond to requests
-submitted using an HTTP GET query string, and \textbf{should} respond to
-HTTP POST query actions (as described in later in this same section);
-\item the response, by default, \textbf{must} be a valid VOTable
-document, providing a table containing the sources of the catalogue
-whose positions and/or timestamps are within the cone and/or time
-interval described in the query request (see Sec.~\ref{sec:response});
-\item in case of error, the response \textbf{must} follow prescriptions
-as described in Sec.~\ref{sec:error}.  \end{itemize}
+
+\begin{itemize} 
+	\item the resource \textbf{must} respond to requests
+	submitted using an HTTP GET query string, and \textbf{should} respond to
+	HTTP POST query actions (as described in later in this same section);
+	\item the response, by default, \textbf{must} be a valid VOTable
+	document, providing a table containing the sources of the catalogue
+	whose positions and/or timestamps are within the cone and/or time
+	interval described in the query request (see Sec.~\ref{sec:response});
+	\item in case of error, the response \textbf{must} follow prescriptions
+	as described in Sec.~\ref{sec:error}.  
+\end{itemize}
 
 The Simple Cone Search service \texttt{\{query\}} resource is a
 synchronous web resource, as described by DALI, of the form
-$$\hbox{\nolinkurl{http://<server>/<local_path>?} }$$ To this base URL
+
+\centerline{\nolinkurl{http://<server>/<local\_path>?}}
+
+To this base URL
 the query parameters, described hereafter, are attached to build the
 query request to be submitted through HTTP.
 
 Usage of fixed, custom query parameters, defined by the service provider
 to build a base URL of the form
-$$\hbox{\nolinkurl{http://<server>/<local_path>?<base\_query>&}}$$
+
+\centerline{\nolinkurl{http://<server>/<local\_path>?<base\_query>&}}
+
 (standard behaviour of base URLs in Simple Cone Search-1.03) is allowed
 but \textbf{deprecated} in order to bring cone searches base URLs in the
 common ReST shape promoted by DALI. Clients \textbf{must} anyway treat
