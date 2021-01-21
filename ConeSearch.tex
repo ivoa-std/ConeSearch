@@ -127,14 +127,14 @@ single table; it is expected that the table contains several columns.
 \end{figure}
 
 Fig.~\ref{fig:archdiag} shows the role this document plays within the
-IVOA architecture \citep{note:VOARCH}.
+IVOA architecture \citep{2010ivoa.rept.1123A}.
 
 \section{Resource}
 \label{sec:resif}
 
 A Simple Cone Search service for accessing catalogue resources is
 implemented as a synchronous resource, as compliant as possible to the
-DALI specification \citep{std:DALI}.
+DALI specification \citep{2017ivoa.spec.0517D}.
 
 \begin{table}[th] 
 \begin{center}
@@ -238,9 +238,9 @@ of records returned or require a service metadata response.
 Its usage is encouraged and preferred to the SR=0 solution for metadata
 discovery.
 
-\subsubsection{RESPONSEFORMAT} \label{subsubsec:responseformat} An
+\subsubsection{RESPONSEFORMAT} \label{subsubsec:responseformat} A
 Simple Cone Search service \textbf{must} provide responses in VOTable
-\citep{std:VOTABLE} format, compliant with respect to what will be
+\citep{2019ivoa.spec.1021O} format, compliant with respect to what will be
 detailed in Sec.~\ref{sec:response}, but \textbf{should} also support
 the DALI \textbf{RESPONSEFORMAT} parameter. Allowed media types for
 VOTable response \textbf{should} be the
@@ -397,7 +397,7 @@ described as a VO resource (see Sec.~\ref{sec:regext}).
 
 The service \textbf{may}, as an alternative, report exceptions using the
 profile expressed by the previous Simple Cone Search recommendation
-\citep[v1.03]{std:SCS}. This alternative for error reporting is to be
+\citep[v1.03]{2008ivoa.specQ0222P}. This alternative for error reporting is to be
 considered \textbf{deprecated}, being the purpose of this specification
 to fill in the gap of the Simple Cone Search protocol with the general
 DAL landscape. The way the alternative works is detailed in
@@ -470,18 +470,18 @@ To adequately describe that a service supports the Simple Cone Search
 protocol, it is necessary to define Simple Cone Search specific
 capability metadata. This is needed both to allow discovery of cone
 search services within VO registered resources (through the Registry
-Interfaces standard, \citet{std:RI1}, deploying VOResource documents,
-\citet{std:VOR}) and to generally describe service behaviour to help
+Interfaces standard, \citet{2018ivoa.spec.0723D}, deploying VOResource documents,
+\citet{2018ivoa.spec.0625P}) and to generally describe service behaviour to help
 applications consume it properly, given compliance to the protocol.
 
 This section specifies these metadata for cone search resources and is
 intended to be applicable wherever VOResource records are used, in
 particular for standard encoding of resource descriptions within IVOA
 registries and for encoding capability metadata available through VOSI
-\citep{std:VOSI11} interfaces.
+\citep{2017ivoa.spec.0524G} interfaces.
 
 Apart from the above standards referenced here above, this registry
-extension depends on the VODataService \citep{std:VODS11} standard.
+extension depends on the VODataService \citep{2010ivoa.spec.1202P} standard.
 
 \subsection{Resource record and Capability requirements} To be
 recognized as a Simple Cone Search, the service resource must be
@@ -513,7 +513,7 @@ for the namespace associated with the Simple Cone Search extension
 schema, that is
 $$\hbox{\nolinkurl{http://www.ivoa.net/xml/ConeSearch/v1.0} ,}$$ the
 same as for Simple Cone Search-1.03, as explained in the XML Schema
-Versioning \citep{note:schemaversioning} document; distinction among the
+Versioning \citep{2018ivoa.spec.0529H} document; distinction among the
 two schemata version being delivered by the \xmlel{version} attribute in
 the schema root element.
 
