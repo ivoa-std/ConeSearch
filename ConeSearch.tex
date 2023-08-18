@@ -23,6 +23,7 @@ showstringspaces=False}
 
 \editor{Ray Plante}
 
+\previousversion[http://www.ivoa.net/Documents/ConeSearch/20200828/index.html]{WD 1.1 20200828}
 \previousversion[http://www.ivoa.net/Documents/REC/DAL/ConeSearch-20080222.html]{REC 1.03}
 \previousversion[http://www.ivoa.net/Documents/PR/DAL/ConeSearch-20070914.html]{PR 2007-09-14}
 \previousversion[http://www.ivoa.net/Documents/PR/DAL/ConeSearch-20070628.html]{PR 2007-06-28}
@@ -36,26 +37,21 @@ This specification defines a simple query protocol for retrieving records from a
 
 
 \section*{Acknowledgments}
-This document was originally published as a document of the US National Virtual Observatory (NVO), available at \url{http://us-vo.org/pubs/files/conesearch.html}\todo{this link does not work anymore, find out if it's possible to find a link or remove it.}. This IVOA version is essentially a transcription of that document into the IVOA standards document format. Minor changes have been made to sharpen the specification description where needed and to otherwise fit it into the IVOA standards context; these changes are enumerated in Appendix \ref{appendix:c5}. It is the intention of this document that all existing services compliant with the original NVO document will be compliant with this specification. Similarly, all future service implementations that are based on this specification are expected to be compliant with the spirit of the original NVO document and practices in the VO current at the time of this writing; thus, existing client applications should work with the new implementations without change.
+This document was originally published as a document of the US National Virtual Observatory
+(NVO)\footnote{The NVO document: "Conesearch definition" (Roy Williams, Bob Hanish, Alex Szalay;
+April 2002) is currently available at this
+link: \url{https://wiki.ivoa.net/internal/IVOA/ConeSearch/NVO\_conesearch\_April2002.html.}} 
+and then transcripted
+into an IVOA standards document format to become an IVOA Recommendation. The changes made in this transcription 
+and in the process of producing the first recommendation are reported in Appendix \ref{appendix:nvochanges}.
 
-Cone Search represents the first and arguably the most successful "standard protocol" developed within the Virtual Observatory movement. The editor, therefore, gratefully acknowledges the work of the original authors of the Cone Search specification as well as the numerous data providers who have implemented and continue to support this protocol.
+The Simple Cone Search version 1.03 document has been developed with support from the National Science Foundation's
+Information Technology Research Program under Cooperative Agreement AST0122449 with The Johns Hopkins University.
 
-This document has been developed with support from the National Science Foundation's Information Technology Research Program under Cooperative Agreement AST0122449 with The Johns Hopkins University.
-
-\section*{Conformance-related definitions}
-
-The words ``MUST'', ``SHALL'', ``SHOULD'', ``MAY'', ``RECOMMENDED'', and
-``OPTIONAL'' (in upper or lower case) used in this document are to be
-interpreted as described in IETF standard RFC2119 \citep{std:RFC2119}.
-
-The \emph{Virtual Observatory (VO)} is a
-general term for a collection of federated resources that can be used
-to conduct astronomical research, education, and outreach.
-The \href{http://www.ivoa.net}{International
-Virtual Observatory Alliance (IVOA)} is a global
-collaboration of separately funded projects to develop standards and
-infrastructure that enable VO applications.
-
+The ConeSearch-1.1 revision has been developed and supported under the 
+ASTERICS and ESCAPE projects (funded by the European Commission Framework Programme
+Horizon 2020 Research and Innovation Action, grant agreements n. 653477 and n. 824064
+respectively). Work done within the two projects has been reported in \ref{appendix:first11changes}.
 
 \section{Introduction}
 
@@ -373,10 +369,22 @@ Subsequent versions of this document should include the ConeSearch extension sch
 
 \section{Changes from Previous Versions}
 
+\subsection{Changes from WD-1.1-20200828}
+
 \subsection{Changes from REC-1.03}
+\label{appendix:first11changes}
 \begin{itemize}
+	\item moving base URL to a plain http://server/path? format
+	\item changed error response to comply with DALI
+	\item changed resource metadata importing directly from SimpleDALRegExt
+	\item relaxed RA and Dec FIELDs in response to allow float or double datatype
+	\item no more exactly one RESOURCE in response, now stating exactly one of type="results"
+	\item removed fixed version (1.0 or 1.1) for VOTable default response
+	\item Added DALI MAXREC and RESPONSEFORMAT
+	\item Added POST as optional HTTP query method
 	\item Addition of authors/editors.
-	\item Plain porting of the HTML document into ivoatex template, including change history.
+	\item Plain porting of the HTML document into ivoatex template,
+including change history, then modified it and reshaped.
 \end{itemize}
 
 \subsection{Changes from PR-1.02}
@@ -408,7 +416,7 @@ Subsequent versions of this document should include the ConeSearch extension sch
 \end{itemize}
 
 \subsection{Changes from the original NVO Specification Document}
-\label{appendix:c5}
+\label{appendix:nvochanges}
 \begin{itemize}
 	\item References to the original HTML document have been replaced with references to this IVOA specification.
 	\item Replaced references to "curator" with "data provider" or similar wording.

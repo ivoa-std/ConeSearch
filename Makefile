@@ -8,7 +8,7 @@ DOCVERSION = 1.1
 
 # Publication date, ISO format; update manually for "releases"
 #DOCDATE = 2019-11-15
-DOCDATE = 2020-08-28
+DOCDATE = 2023-08-18
 
 # What is it you're writing: NOTE, WD, PR, REC, PEN, or EN
 DOCTYPE = WD
@@ -21,7 +21,7 @@ SOURCES = $(DOCNAME).tex
 FIGURES =
 
 # List of PDF figures (for vector graphics)
-VECTORFIGURES = role_diagram.pdf
+VECTORFIGURES = 
 
 # Additional files to distribute (e.g., CSS, schema files, examples...)
 AUX_FILES = 
