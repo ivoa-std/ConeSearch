@@ -156,11 +156,10 @@ Note that when it contains extra GET arguments, the base URL ends in an ampersan
 	\begin{bigdescription}
 	\item[Example Error Responses] Error INFO as child of VOTABLE (preferred)\\
 	\begin{lstlisting}[language=XML,basicstyle=\footnotesize]
-<?xml version="1.0"?>
-<!DOCTYPE VOTABLE SYSTEM "http://us-vo.org/xml/VOTable.dtd">
-<VOTABLE version="1.0">
-  <DESCRIPTION>MAST Simple Cone Search Service</DESCRIPTION>
-  <INFO ID="Error" name="Error" value="Error in input RA value: as3f"/>
+<VOTABLE xmlns="http://www.ivoa.net/xml/VOTable/v1.3">
+  <INFO ID="Error" name="Error" 
+    value="Field RA: 'as3f' is not a valid literal for RA"/>
+  <RESOURCE/>
 </VOTABLE>
 	\end{lstlisting}
 	Error PARAM as child of RESOURCE (allowed)
