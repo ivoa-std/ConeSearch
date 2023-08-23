@@ -133,7 +133,13 @@ Note that when it contains extra GET arguments, the base URL ends in an ampersan
 		\item There may be other FIELDs in the table. Their specification should include a description, data-type, and UCD.
 	\end{itemize}
 	\item The service must respond with a stubbed version of the VOTable in the case of error. This must happen if the three required parameters (RA, DEC, SR) are not all present, or if their values cannot be parsed to floating-point numbers, or if the numbers are out of range (DEC=91.0, for example). The service may also make an error return if the search radius (give by the SR parameter) is larger than the MaxSR parameter of the Resource Profile (see Section \ref{sec:3}).
-	In the case of error, the service MUST respond with a VOTable that contains a single PARAM element or a single INFO element with \texttt{name="Error"}, where the corresponding value attribute should contain some explanation of the nature of the error. If an INFO element is used, it must appear as a direct child of one of the following elements:
+	In the case of error, the service MUST respond with a VOTable that contains
+	a PARAM element or an INFO element with \texttt{name="Error"}, where the
+	corresponding value attribute should contain some explanation of the nature
+	of the error. No other PARAM or INFO element in the response can be present
+	having \texttt{name=''Error''} set, but additional INFO and PARAM elements
+	with the name parameter set to a different value are allowed. If an INFO element 
+	is used, it must appear as a direct child of one of the following elements:
 	\begin{itemize}
 		\item the root VOTABLE element (which is preferred by this document), or
 		\item the RESOURCE element
