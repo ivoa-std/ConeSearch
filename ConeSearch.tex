@@ -116,7 +116,8 @@ Note that when it contains extra GET arguments, the base URL ends in an ampersan
 	\end{itemize}
 	A query following this syntax represents a request for information on sources located within the specified cone on the sky.
 	\item The service must respond with an XML document in the VOTable format, that represents a table of astronomical sources whose positions are within the cone (see Appendix \ref{appendix:a} for an example). There may also be other sources outside the cone -- the service implementor may decide on the exact search criterion used internally to the service to select the sources.
-	The base MIME-type of the HTTP response should be \texttt{text/xml}. The more specific form \texttt{text/xml;content=x-votable} may optionally be used. The MIME-type, \texttt{text/xml;votable} shall also be considered legal (for backward compatibility reasons); however, this value is strongly discouraged as it is not compliant with the MIME-type standard \citep{std:MIME}. The XML content of the response must be compliant with VOTable schema, version 1.0 \citep{std:VOT11} or 1.1 \citep{2004ivoa.spec.0811O}.
+	The base MIME-type of the HTTP response should be \texttt{text/xml}. The more specific form \texttt{text/xml;content=x-votable} may optionally be used. The MIME-type, \texttt{text/xml;votable} shall also be considered legal (for backward compatibility reasons); however, this value is strongly discouraged as it is not compliant with the MIME-type standard \citep{std:MIME}.
+	Simple Cone Search services MUST return VOTable version 1 documents.
 	\begin{bigdescription}
 		\item[Editor's Note] The original NVO specification allowed a MIME-type of text/xml;votable, thus for backward compatibility this is still allowed but discouraged.
 	\end{bigdescription}
