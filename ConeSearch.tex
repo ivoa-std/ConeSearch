@@ -79,7 +79,7 @@ This specification assumes that the data provider has already selected a catalog
 \end{figure}
 
 Fig.~\ref{fig:archdiag} shows the role this document plays within the
-IVOA architecture \citep{note:VOARCH}.
+IVOA architecture \citep{2021ivoa.spec.1101D}.
 
 \section{Service Interface Requirements}
 \label{sec:2}
@@ -124,7 +124,7 @@ Note that when it contains extra GET arguments, the base URL ends in an ampersan
 	The VOTable MUST comply with these conditions:
 	\begin{itemize}
 		\item There must be a single RESOURCE in the VOTable, and that contains a single TABLE.
-		\item The TABLE must have FIELDS where the following UCD \todo{SCS-1.03 used to point to CDS tools, but now those ones are overwritten by UCD1+ tools} values have been set. There must only be one FIELD with each of these UCDs:
+		\item The TABLE must have FIELDS where the following UCD values have been set. There must only be one FIELD with each of these UCDs:
 		\begin{itemize}
 			\item Exactly one FIELD must have ucd="ID\_MAIN", with an array character type (fixed or variable length), representing an ID string for that record of the table. This identifier may not be repeated in the table, and it could be used to retrieve that same record again from that same table.
 			\item Exactly one FIELD must have ucd="POS\_EQ\_RA\_MAIN", with type double, representing the right-ascension of the source in the ICRS coordinate system.
@@ -194,7 +194,7 @@ The resource profile consists of the following metadata with the stated definiti
 	\item[\textbf{ResponsibleParty}] The data provider's name and email.
 	\item[\textbf{ServiceName}] The name of the catalog served by the service, for example "IRSA.2MASS.ExtendedSources".
 	\item[\textbf{Description}] A couple of paragraphs of text that describe the nature of the catalog and its wider context.
-	\item[\textbf{Instrument}] The instrument that made the observations, for example STScI.HST.WFPC2.
+	\item[\textbf{Instrument}] The instrument that made the observations, for example STScI.\-HST.\-WFPC2.
 	\item[\textbf{Waveband}] The waveband of the observations, with ONE selected from this list: radio, millimeter, infrared, optical, ultraviolet, xray, gammaray.
 	\item[\textbf{Epoch}] The epoch of the observations, as a free-form string.
 	\item[\textbf{Coverage}] The coverage on the sky, as a free-form string.
@@ -278,7 +278,7 @@ This is a sample of a legal response to a Cone Search query.
 \section{Current Practices for Representing Resource Profiles}
 
 \subsection{Mapping for Resource Profile Metadata to the RM}
-As mentioned in an Editor's Note in Section \ref{sec:3}, the original NVO specification pre-dated the IVOA standard for resource metadata known as the RM \citep{STD:RM101}. This section indicates how the resource profile metadata defined in this specification maps to the metadata defined in the RM.
+As mentioned in an Editor's Note in Section \ref{sec:3}, the original NVO specification pre-dated the IVOA standard for resource metadata known as the RM \citep{2004ivoa.spec.0426H}. This section indicates how the resource profile metadata defined in this specification maps to the metadata defined in the RM.
 \begin{table}[th]
 \begin{tabular}{p{0.4\textwidth}p{0.5\textwidth}}
 \sptablerule
@@ -296,9 +296,9 @@ As mentioned in an Editor's Note in Section \ref{sec:3}, the original NVO specif
 \textbf{Verbosity} & n/a\textsuperscript{2}\\
 \textbf{BaseURL} & Service.BaseURL\\
 \sptablerule
-\caption{Metadata Mapping}
 \label{table:b1meta}
 \end{tabular}
+\caption{Metadata Mapping}
 \end{table}
 Table notes:
 \begin{enumerate}
@@ -307,7 +307,8 @@ Table notes:
 \end{enumerate}
 
 \subsection{VOResource (pre-v1.0) Schema Extension for Cone Search Services}
-Just prior to the adoption of IVOA standard for registry interfaces, v1.0, resource descriptions were encoded using the VOResource XML Schema, v0.10 and its family of extension schemas. The extensions used to specifically describe Cone Search services were VODataService, v0.5 and ConeSearch, v0.3\todo{The references to RI, VOResource, VODataService and ConeSearch here, are all referring to xsd schemata currently obsoleted.}. See the embedded documentation in each of these schemas for the precise definitions and usage of the metadata encodable through them.
+Just prior to the adoption of IVOA standard for registry interfaces, v1.0, resource descriptions were encoded using the VOResource XML Schema, v0.10 and its family of extension schemas. The extensions used to specifically describe Cone Search services were VODataService, v0.5 and ConeSearch, v0.3
+%%% \todo{The references to RI, VOResource, VODataService and ConeSearch here, are all referring to xsd schemata currently obsoleted.}. See the embedded documentation in each of these schemas for the precise definitions and usage of the metadata encodable through them. %%%
 
 The following table enumerates the mapping of resource profile metadata defined in this specification with those defined in the XML schemas.
 
@@ -329,9 +330,9 @@ The following table enumerates the mapping of resource profile metadata defined 
 \textbf{Verbosity} & ConeSearch & capability/verbosity\\
 \textbf{BaseURL} & VOResource & interface/accessURL\\
 \sptablerule
-\caption{VOResource pre-0.10 extension}
 \label{table:extable}
 \end{tabular}
+\caption{VOResource pre-0.10 extension}
 \end{table}
 Table Notes:
 \begin{enumerate}
@@ -355,16 +356,16 @@ The following table enumerates the mapping of resource profile metadata defined 
 \textbf{Description} &	VOResource & content/description\\
 \textbf{Instrument} & VOResource & instrument\\
 \textbf{Waveband} & VODataService & coverage/waveband\\
-\textbf{Epoch} & VODataService & coverage/stc:STCResourceProfile/stc:AstroCoordArea\textsuperscript{1}\\
-\textbf{Coverage} & VODataService & coverage/stc:STCResourceProfile/stc:AstroCoordArea\textsuperscript{1}\\
+\textbf{Epoch} & VODataService & coverage-/stc:STCResourceProfile-/stc:AstroCoordArea\textsuperscript{1}\\
+\textbf{Coverage} & VODataService & coverage-/stc:STCResourceProfile-/stc:AstroCoordArea\textsuperscript{1}\\
 \textbf{MaxSR} & ConeSearch & capability/maxSR\\
 \textbf{MaxRecords} & ConeSearch & capability/maxRecords\\
 \textbf{Verbosity} & ConeSearch & capability/verbosity\\
-\textbf{BaseURL} & VOResource & capability/interface[@role='std']/accessURL\\
+\textbf{BaseURL} & VOResource & capability-/interface[@role='std']-/accessURL\\
 \sptablerule
-\caption{VOResource 1.0 extension}
 \label{table:extable}
 \end{tabular}
+\caption{VOResource 1.0 extension}
 \end{table}
 
 Table Notes:
