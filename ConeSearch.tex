@@ -1,12 +1,10 @@
-\documentclass[11pt,a4paper]{ivoa}
+\documentclass[11pt,a4paper]{ivoa} 
 \input tthdefs
-
 \usepackage{todonotes}
 
 \usepackage{listings}
 \lstloadlanguages{XML,sh}
-\lstset{flexiblecolumns=true,tagstyle=\ttfamily,
-showstringspaces=False}
+\lstset{flexiblecolumns=true,tagstyle=\ttfamily, showstringspaces=False}
 
 \usepackage{multirow}
 
@@ -25,57 +23,80 @@ showstringspaces=False}
 
 \previousversion[http://www.ivoa.net/Documents/ConeSearch/20200828/index.html]{WD 1.1 2020-08-28}
 \previousversion[http://www.ivoa.net/Documents/REC/DAL/ConeSearch-20080222.html]{REC 1.03}
-\previousversion[http://www.ivoa.net/Documents/PR/DAL/ConeSearch-20070914.html]{PR 2007-09-14}
-\previousversion[http://www.ivoa.net/Documents/PR/DAL/ConeSearch-20070628.html]{PR 2007-06-28}
-\previousversion[http://www.ivoa.net/Documents/PR/DAL/ConeSearch-20060908.html]{PR 2006-09-08}
+\previousversion[http://www.ivoa.net/Documents/PR/DAL/ConeSearch-20070914.html]{PR 1.02 2007-09-14}
+\previousversion[http://www.ivoa.net/Documents/PR/DAL/ConeSearch-20070628.html]{PR 1.01 2007-06-28}
+\previousversion[http://www.ivoa.net/Documents/PR/DAL/ConeSearch-20060908.html]{PR 1.00 2006-09-08}
        
 
 \begin{document}
-\begin{abstract}
-This specification defines a simple query protocol for retrieving records from a catalog of astronomical sources. The query describes sky position and an angular distance, defining a cone on the sky. The response returns a list of astronomical sources from the catalog whose positions lie within the cone, formatted as a VOTable. This version of the specification is essentially a transcription of the original Cone Search specification in order to move it into the IVOA standardization process.
-\end{abstract}
+
+\begin{abstract} This specification defines a simple
+query protocol for retrieving records from a catalog of astronomical
+sources. The query describes sky position and an angular distance,
+defining a cone on the sky. The response returns a list of astronomical
+sources from the catalog whose positions lie within the cone, formatted
+as a VOTable. This version of the specification is essentially a
+transcription of the original Cone Search specification in order to move
+it into the IVOA standardization process. \end{abstract}
 
 
-\section*{Acknowledgments}
-This document was originally published as a document of the US National Virtual Observatory
-(NVO)\footnote{The NVO document: "Conesearch definition" (Roy Williams, Bob Hanish, Alex Szalay;
-April 2002) is currently available at this
-link: \url{https://wiki.ivoa.net/internal/IVOA/ConeSearch/NVO\_conesearch\_April2002.html.}} 
-and then transcripted
-into an IVOA standards document format to become an IVOA Recommendation. The changes made in this transcription 
-and in the process of producing the first recommendation are reported in Appendix \ref{appendix:nvochanges}.
+\section*{Acknowledgments} 
 
-The Simple Cone Search version 1.03 document has been developed with support from the National Science Foundation's
-Information Technology Research Program under Cooperative Agreement AST0122449 with The Johns Hopkins University.
+This document was originally published as a
+document of the US National Virtual Observatory (NVO)\footnote{The NVO
+document: "Conesearch definition" (Roy Williams, Bob Hanish, Alex
+Szalay; April 2002) is currently available at this link:
+\url{https://wiki.ivoa.net/internal/IVOA/ConeSearch/NVO\_conesearch\_April2002.html.}}
+and then transcripted into an IVOA standards document format to become
+an IVOA Recommendation. The changes made in this transcription and in
+the process of producing the first recommendation are reported in
+Appendix \ref{appendix:nvochanges}.
 
-The ConeSearch-1.1 revision has been developed and supported under the 
-ASTERICS and ESCAPE projects (funded by the European Commission Framework Programme
-Horizon 2020 Research and Innovation Action, grant agreements n. 653477 and n. 824064
-respectively). Work done within the two projects has been reported in \ref{appendix:first11changes}.
+The Simple Cone Search version 1.03 document has been developed with
+support from the National Science Foundation's Information Technology
+Research Program under Cooperative Agreement AST0122449 with The Johns
+Hopkins University.
+
+The ConeSearch-1.1 revision has been developed and supported under the
+ASTERICS and ESCAPE projects (funded by the European Commission
+Framework Programme Horizon 2020 Research and Innovation Action, grant
+agreements n. 653477 and n. 824064 respectively). Work done within the
+two projects has been reported in \ref{appendix:first11changes}.
 
 \section{Introduction}
 
-This specification describes how a provider of an astronomical source catalog can publish that catalog to the Virtual Observatory in such a way that a simple cone search can be done. The data remains in the control of the data provider, served through a web server to the world, but the query profile and response profile are carefully controlled, as described below. It is intended that setting up this web service be simple enough that data providers will not have to spend too much time on it (their funding to support such services is typically small). At the same time, the service implementation and the data it provides can serve as a basis for more sophisticated tools.
+This specification describes how a provider of an astronomical source
+catalog can publish that catalog to the Virtual Observatory in such a
+way that a simple cone search can be done. The data remains in the
+control of the data provider, served through a web server to the world,
+but the query profile and response profile are carefully controlled, as
+described below. It is intended that setting up this web service be
+simple enough that data providers will not have to spend too much time
+on it (their funding to support such services is typically small). At
+the same time, the service implementation and the data it provides can
+serve as a basis for more sophisticated tools.
 
-This specification does not specify how Cone Search services are implemented, or how the data are stored or manipulated. The concern of this specification is how the data are exposed to the world through well-defined requests and responses.
+This specification does not specify how Cone Search services are
+implemented, or how the data are stored or manipulated. The concern of
+this specification is how the data are exposed to the world through
+well-defined requests and responses.
 
-This specification assumes that the data provider has already selected a catalog of astronomical sources. This catalog can be presented as a single table; it is expected that the table contains several columns.
+This specification assumes that the data provider has already selected a
+catalog of astronomical sources. This catalog can be presented as a
+single table; it is expected that the table contains several columns.
 
 \subsection{Role within the VO Architecture}
 
-\begin{figure}
-\centering
-
-% Get the architecture diagram from the TCG chair
-% http://wiki.ivoa.net/twiki/bin/view/IVOA/IvoaTCG
-% If they give you a PDF, for now dumb it down to a png by
-% convert -antialias -density 72x72 archdiag.pdf archdiag.png
-% Oh -- Notes don't need this; you'd have to remove archdiag.png
-% from FIGURES in the Makefile, too.
-
+\begin{figure} \centering
+%% Get the architecture diagram from the TCG chair %
+%http://wiki.ivoa.net/twiki/bin/view/IVOA/IvoaTCG % If they give you a
+%PDF, for now dumb it down to a png by % convert -antialias -density
+%72x72 archdiag.pdf archdiag.png % Oh -- Notes don't need this; you'd
+%have to remove archdiag.png % from FIGURES in the Makefile, too.
 \includegraphics[width=0.9\textwidth]{role_diagram}
-\caption{Architecture diagram for the Simple Cone Search specification.}
-\label{fig:archdiag}
+\caption{Architecture diagram for the Simple Cone Search
+specification.}
+\label{fig:archdiag} 
 \end{figure}
 
 Fig.~\ref{fig:archdiag} shows the role this document plays within the
@@ -84,132 +105,304 @@ IVOA architecture \citep{2021ivoa.spec.1101D}.
 \section{Service Interface Requirements}
 \label{sec:2}
 
-A service implementation that is compliant with this standard must meet the following requirements:
+A service implementation that is compliant with this standard must meet
+the following requirements:
 
 \begin{enumerate}
-	\item the service must respond to a HTTP GET request represented by a URL having two parts:\\
+	\item the service must respond to a HTTP GET request
+		represented by a URL having two parts:\\ 
+
 	\begin{itemize}
 		\item A base URL of the form\\
 		
 		\url{http://<server-address>/<path>?[<extra-GET-arg>&[...]]}\\
 		
-		where <server-address> and <path> are URI-compliant components indicating the domain address and local location path where the service is deployed. The <server-address> may end with one or more locally supported URL arguments, <extra-GET-arg>; these arguments are not recognized parts of the Cone Search protocol and thus are treated opaquely by clients of the service as part of the base URL.\\
-Note that when it contains extra GET arguments, the base URL ends in an ampersand, \&; if there are no extra arguments, then it ends in a question mark, ?.\\
+			where <server-address> and <path> are URI-compliant components
+			indicating the domain address and local location path where the service
+			is deployed. The <server-address> may end with one or more locally
+			supported URL arguments, <extra-GET-arg>; these arguments are not
+			recognized parts of the Cone Search protocol and thus are treated
+			opaquely by clients of the service as part of the base URL.\\ Note that
+			when it contains extra GET arguments, the base URL ends in an ampersand,
+			\&; if there are no extra arguments, then it ends in a question mark,
+			?.\\ 
+		
 		\begin{bigdescription}
-		\item[Examples] \url{http://mycone.org/cgi-bin/VOsearch?}\\
-		\url{http://adil.ncsa.uiuc.edu/vocone?resolv&issurvey=T&}
-		\end{bigdescription}
+			\item[Examples]
+				\url{http://mycone.org/cgi-bin/VOsearch?}\\
+				\url{http://adil.ncsa.uiuc.edu/vocone?resolv&issurvey=T&}
+		\end{bigdescription} 
+		
 		Every query to a given cone search service uses the same base URL.
-		\item Constraints expressed as a list of ampersand-delimited GET arguments of the form: <name>=<value> where <name> is a parameter name specified by this specification and <value> is its value. The constraints represent the query parameters which can vary for each successive query. The order of the name-parameter pairs is not significant.
-		\item The baseURL and constraint list are concatenated to form the query.
-		\item The set of query constraints must include the following parameters, which are interpreted by the service with the stated meaning:
-		\begin{description}
-			\item[\textbf{RA}] a right-ascension in the ICRS coordinate system for the positon of the center of the cone to search, given in decimal degrees.
-			\item[\textbf{DEC}] a declination in the ICRS coordinate system for the positon of the center of the cone to search, given in decimal degrees.
-			\item[\textbf{SR}] the radius of the cone to search, given in decimal degrees.
-		\end{description}
+		
+		\item Constraints expressed as a list of
+			ampersand-delimited GET arguments of the form: <name>=<value> where
+			<name> is a parameter name specified by this specification and <value>
+			is its value. The constraints represent the query parameters which can
+			vary for each successive query. The order of the name-parameter pairs is
+			not significant.
+		\item The baseURL and constraint list are concatenated
+			to form the query. 
+		\item The set of query constraints must include the
+			following parameters, which are interpreted by the service with the
+			stated meaning: 
+			\begin{description}
+				\item[\textbf{RA}] a right-ascension
+					in the ICRS coordinate system for the positon of the center of the cone
+					to search, given in decimal degrees.
+				\item[\textbf{DEC}] a declination
+					in the ICRS coordinate system for the positon of the center of the cone
+					to search, given in decimal degrees.
+				\item[\textbf{SR}] the radius of
+					the cone to search, given in decimal degrees.
+			\end{description}
+			\begin{bigdescription}
+				\item[Example]
+					\url{http://mycone.org/cgi-bin/search?RA=180.567&DEC=-30.45&SR=0.0125}
+			\end{bigdescription}
+		\item The query MAY contain the optional parameter,
+			\textbf{VERB}, whose value is an integer--either 1, 2, or 3--indicating
+			verbosity which determines how many columns are to be returned in the
+			resulting table. Support for this parameter by a Cone Search service
+			implementation is optional. If the service supports the parameter, then
+			when the value is 1, the response should include the bare minimum of
+			columns that the provider considers useful in describing the returned
+			objects (while still remaining compliant with this standard; see section
+			2.2 below). When the value is 3, the service should return all of the
+			columns that are available for describing the objects. A value of 2 is
+			intended for requesting a medium number of columns between the minimum
+			and maximum (inclusive) that are considered by the provider to most
+			typically useful to the user. When the VERB parameter is not provided,
+			the server should respond as if VERB=2. If the VERB parameter is not
+			supported by the service, the service should ignore the parameter and
+			should always return the same columns for every request.
+		\item There may be other parameters in the query, but this document does not
+			specify their meaning or usage. If a query includes an optional parameter,
+			either one specified by this document or not, that is not supported by
+			the service implementation, the service must ignore that parameter.
+	\end{itemize}
+	
+	A query following this syntax represents a request for
+	information on sources located within the specified cone on the sky.
+
+	\item The service must respond with an XML document in the VOTable
+		format, that represents a table of astronomical sources whose positions
+		are within the cone (see Appendix \ref{appendix:a} for an example).
+		There may also be other sources outside the cone -- the service
+		implementor may decide on the exact search criterion used internally to
+		the service to select the sources. The base MIME-type of the HTTP
+		response should be \texttt{text/xml}. The more specific form
+		\texttt{text/xml;content=x-votable} may optionally be used. The
+		MIME-type, \texttt{text/xml;votable} shall also be considered legal (for
+		backward compatibility reasons); however, this value is strongly
+		discouraged as it is not compliant with the MIME-type standard
+		\citep{std:MIME}. Simple Cone Search services MUST return VOTable
+		version 1 documents.
+		
 		\begin{bigdescription}
-			\item[Example] \url{http://mycone.org/cgi-bin/search?RA=180.567&DEC=-30.45&SR=0.0125}
+			\item[Editor's Note] The original NVO specification allowed a 
+				MIME-type of text/xml;votable, thus for backward
+				compatibility this is still allowed but discouraged.
 		\end{bigdescription}
-		\item The query MAY contain the optional parameter, \textbf{VERB}, whose value is an integer--either 1, 2, or 3--indicating verbosity which determines how many columns are to be returned in the resulting table. Support for this parameter by a Cone Search service implementation is optional. If the service supports the parameter, then when the value is 1, the response should include the bare minimum of columns that the provider considers useful in describing the returned objects (while still remaining compliant with this standard; see section 2.2 below). When the value is 3, the service should return all of the columns that are available for describing the objects. A value of 2 is intended for requesting a medium number of columns between the minimum and maximum (inclusive) that are considered by the provider to most typically useful to the user. When the VERB parameter is not provided, the server should respond as if VERB=2. If the VERB parameter is not supported by the service, the service should ignore the parameter and should always return the same columns for every request.
-		\item There may be other parameters in the query, but this document does not specify their meaning or usage. If a query includes an optional parameter, either one specified by this document or not, that is not supported by the service implementation, the service must ignore that parameter.
-	\end{itemize}
-	A query following this syntax represents a request for information on sources located within the specified cone on the sky.
-	\item The service must respond with an XML document in the VOTable format, that represents a table of astronomical sources whose positions are within the cone (see Appendix \ref{appendix:a} for an example). There may also be other sources outside the cone -- the service implementor may decide on the exact search criterion used internally to the service to select the sources.
-	The base MIME-type of the HTTP response should be \texttt{text/xml}. The more specific form \texttt{text/xml;content=x-votable} may optionally be used. The MIME-type, \texttt{text/xml;votable} shall also be considered legal (for backward compatibility reasons); however, this value is strongly discouraged as it is not compliant with the MIME-type standard \citep{std:MIME}.
-	Simple Cone Search services MUST return VOTable version 1 documents.
-	\begin{bigdescription}
-		\item[Editor's Note] The original NVO specification allowed a MIME-type of text/xml;votable, thus for backward compatibility this is still allowed but discouraged.
-	\end{bigdescription}
-	The VOTable MUST comply with these conditions:
-	\begin{itemize}
-		\item There must be a single RESOURCE in the VOTable, and that contains a single TABLE.
-		\item The TABLE must have FIELDS where the following UCD values have been set. There must only be one FIELD with each of these UCDs:
+		
+		The VOTable MUST comply with these conditions:
+
 		\begin{itemize}
-			\item Exactly one FIELD must have ucd="ID\_MAIN", with an array character type (fixed or variable length), representing an ID string for that record of the table. This identifier may not be repeated in the table, and it could be used to retrieve that same record again from that same table.
-			\item Exactly one FIELD must have ucd="POS\_EQ\_RA\_MAIN", with type double, representing the right-ascension of the source in the ICRS coordinate system.
-			\item Exactly one FIELD must have ucd="POS\_EQ\_DEC\_MAIN", with type double, representing the declination of the source in the ICRS coordinate system.
+			\item There must be a single RESOURCE in the VOTable,
+				and that contains a single TABLE.
+			\item The TABLE must have FIELDS where
+				the following UCD values have been set. There must only be one FIELD
+				with each of these UCDs:
+				
+				\begin{itemize}
+					\item Exactly one FIELD must
+						have ucd="ID\_MAIN", with an array character type (fixed or variable
+						length), representing an ID string for that record of the table. This
+						identifier may not be repeated in the table, and it could be used to
+						retrieve that same record again from that same table.
+					\item Exactly one
+						FIELD must have ucd="POS\_EQ\_RA\_MAIN", with type double, representing
+						the right-ascension of the source in the ICRS coordinate system.
+					\item
+						Exactly one FIELD must have ucd="POS\_EQ\_DEC\_MAIN", with type double,
+						representing the declination of the source in the ICRS coordinate system.
+				\end{itemize}
+			
+			\item The VOTable may include an expression of the
+				uncertainty of the positions given in the above mentioned fields to be
+				interpreted either as a positional error of the source positions, or an
+				angular size if the sources are resolved. If this uncertainty is not
+				provided, it should be taken to be zero; otherwise, it may be set for
+				all table entries with a PARAM in the RESOURCE which has a UCD that is
+				set to OBS\_ANG-SIZE and has a value which is the angle in decimal
+				degrees. Alternatively, a different value for each row in the table can
+				be given via a FIELD in the table having a UCD set to OBS\_ANG-SIZE.
+			\item There may be other FIELDs in the table. Their specification should
+				include a description, data-type, and UCD.
 		\end{itemize}
-		\item 	The VOTable may include an expression of the uncertainty of the positions given in the above mentioned fields to be interpreted either as a positional error of the source positions, or an angular size if the sources are resolved. If this uncertainty is not provided, it should be taken to be zero; otherwise, it may be set for all table entries with a PARAM in the RESOURCE which has a UCD that is set to OBS\_ANG-SIZE and has a value which is the angle in decimal degrees. Alternatively, a different value for each row in the table can be given via a FIELD in the table having a UCD set to OBS\_ANG-SIZE.
-		\item There may be other FIELDs in the table. Their specification should include a description, data-type, and UCD.
-	\end{itemize}
-	\item The service must respond with a stubbed version of the VOTable in the case of error. This must happen if the three required parameters (RA, DEC, SR) are not all present, or if their values cannot be parsed to floating-point numbers, or if the numbers are out of range (DEC=91.0, for example). The service may also make an error return if the search radius (give by the SR parameter) is larger than the MaxSR parameter of the Resource Profile (see Section \ref{sec:3}).
-	In the case of error, the service MUST respond with a VOTable that contains
-	a PARAM element or an INFO element with \texttt{name="Error"}, where the
-	corresponding value attribute should contain some explanation of the nature
-	of the error. No other PARAM or INFO element in the response can be present
-	having \texttt{name=''Error''} set, but additional INFO and PARAM elements
-	with the name parameter set to a different value are allowed. If an INFO element 
-	is used, it must appear as a direct child of one of the following elements:
-	\begin{itemize}
-		\item the root VOTABLE element (which is preferred by this document), or
-		\item the RESOURCE element
-	\end{itemize}
-	If a PARAM element is used, it must appear as a direct child of one of following elements:
-	\begin{itemize}
-		\item the RESOURCE element, or
-		\item a DEFINITION element below the root VOTABLE element (which is discouraged by this document).
-	\end{itemize}
-	\begin{bigdescription}
-	\item[Editor's Note] It was recognized that this requirement, as it was described in the original NVO specification, is ambiguous about both the element to use for the ERROR message and its location in the document. The VOTable standard allows PARAM and INFO elements to appear in various places within the document. Since several of the different methods have been used in practice by Cone Search service implementations, no attempt is made in this version to correct this ambiguity. All of the above-mentioned locations should be considered legal, and Cone Search service clients should be prepared to look in all of them for an ERROR message. The use of PARAM as a child of DEFINITIONS is discouraged as the DEFINITIONS element was deprecated in VOTable v1.1.
-	\end{bigdescription}
-	\begin{bigdescription}
-	\item[Example Error Responses] Error INFO as child of VOTABLE (preferred)\\
-	\begin{lstlisting}[language=XML,basicstyle=\footnotesize]
+		
+	\item The service must respond with a stubbed version of the VOTable in the case
+		of error. This must happen if the three required parameters (RA, DEC,
+		SR) are not all present, or if their values cannot be parsed to
+		floating-point numbers, or if the numbers are out of range (DEC=91.0,
+		for example). The service may also make an error return if the search
+		radius (give by the SR parameter) is larger than the MaxSR parameter of
+		the Resource Profile (see Section \ref{sec:3}). In the case of error,
+		the service MUST respond with a VOTable that contains a PARAM element or
+		an INFO element with \texttt{name="Error"}, where thecorresponding value
+		attribute should contain some explanation of the nature of the error. No
+		other PARAM or INFO element in the response can be present having
+		\texttt{name=''Error''} set, but additional INFO and PARAM elements with
+		the name parameter set to a different value are allowed. If an INFO
+		element is used, it must appear as a direct child of one of the
+		following elements:
+		
+		\begin{itemize} 
+			\item the root VOTABLE element	(which is preferred by this document), or
+			\item the RESOURCE element
+		\end{itemize}
+		
+		If a PARAM element is used, it must appear as a direct
+		child of one of following elements:
+		
+		\begin{itemize}
+			\item the RESOURCE element, or
+			\item a DEFINITION element below the root VOTABLE element
+				(which is discouraged by this document).
+		\end{itemize}
+
+		\begin{bigdescription}
+			\item[Editor's Note]
+				It was recognized that this
+				requirement, as it was described in the original NVO specification, is
+				ambiguous about both the element to use for the ERROR message and its
+				location in the document. The VOTable standard allows PARAM and INFO
+				elements to appear in various places within the document. Since several
+				of the different methods have been used in practice by Cone Search
+				service implementations, no attempt is made in this version to correct
+				this ambiguity. All of the above-mentioned locations should be
+				considered legal, and Cone Search service clients should be prepared to
+				look in all of them for an ERROR message. The use of PARAM as a child of
+				DEFINITIONS is discouraged as the DEFINITIONS element was deprecated in
+				VOTable v1.1.
+		\end{bigdescription}
+		\begin{bigdescription}
+			\item[Example Error Responses]
+				Error INFO as child of VOTABLE (preferred)\\
+				
+			\begin{lstlisting}[language=XML,basicstyle=\footnotesize]			
 <VOTABLE xmlns="http://www.ivoa.net/xml/VOTable/v1.3">
-  <INFO ID="Error" name="Error" 
+   <INFO ID="Error" name="Error" 
     value="Field RA: 'as3f' is not a valid literal for RA"/>
-  <RESOURCE/>
-</VOTABLE>
-	\end{lstlisting}
-	Error PARAM as child of RESOURCE (allowed)
-	\begin{lstlisting}[language=XML,basicstyle=\footnotesize]
+   <RESOURCE/>
+</VOTABLE> 
+			\end{lstlisting}
+			
+			Error PARAM as child of RESOURCE (allowed)
+			
+			\begin{lstlisting}[language=XML,basicstyle=\footnotesize]
 <?xml version="1.0"?>
 <!DOCTYPE VOTABLE SYSTEM "http://us-vo.org/xml/VOTable.dtd">
 <VOTABLE version="1.0">
   <DESCRIPTION>
-     HEASARC Browse data service
-     Please send inquiries to mailto:request@athena.gsfc.nasa.gov
+    HEASARC Browse data service
+    Please send inquiries to mailto:request@athena.gsfc.nasa.gov
   </DESCRIPTION>
   <RESOURCE ID="error_resource">
-   <PARAM ID="Error" name="Error" datatype="char" arraysize="*"
-          value="Invalid data type: text/html"/>
- </RESOURCE>
+    <PARAM ID="Error" name="Error" datatype="char" arraysize="*"
+      value="Invalid data type: text/html"/>
+  </RESOURCE>
 </VOTABLE>
-	\end{lstlisting}
-	\end{bigdescription}
-	Other conditions may NOT be considered erroneous, for example if a query cone is in the Southern hemisphere and the catalog coverage is in the Northern hemisphere. This type of query is different from an error return; it should return a VOTable as described above, with metadata, but no data records. In particular, a zero value of Search Radius should not return an error condition. This is because an application may be more interested in the metadata than the data, and send a fixed query (for example RA=0\&DEC=90\&SR=0) simply to discover the fields delivered by the service.
+			\end{lstlisting}
+		
+		\end{bigdescription}
+		
+		Other conditions may
+		NOT be considered erroneous, for example if a query cone is in the
+		Southern hemisphere and the catalog coverage is in the Northern
+		hemisphere. This type of query is different from an error return; it
+		should return a VOTable as described above, with metadata, but no data
+		records. In particular, a zero value of Search Radius should not return
+		an error condition. This is because an application may be more
+		interested in the metadata than the data, and send a fixed query (for
+		example RA=0\&DEC=90\&SR=0) simply to discover the fields delivered by
+		the service.
 \end{enumerate}
 
 \section{The Resource Profile}
-\label{sec:3}
-A Cone Search service MUST be described with a Resource Profile that includes the following information. The Profile is composed of named metadata listed below. The format used to encode the profile should be compliant with the publishing standards of the IVOA throughout the time the service is supported by the data provider. The metadata names and values used in the profile encoding should match those given below as closely as possible; where they do not match exactly, they should be consistent with the IVOA metadata conventions in place at any given time and the mapping of names and values actually used and those given below should be well documented.
-\begin{bigdescription}
-\item[Editor's Note] The original NVO specification pre-dates the IVOA standard for resource metadata [RM], and so, obviously, some inconsistencies with that standard exist. To deal with this, the wording of this section has been altered to allow profiles to be constructed according to the latest practices in the IVOA. Appendix B outlines the mapping of the metadata listed below to that in the RM as well as the XML Schema used to render the metadata within a Registry.
-\end{bigdescription}
-Several of the metadata listed below can have values that are hierarchical; this hierarchy should be represented in a manner most appropriate to the format used. When the format does not provide any such mechanism, it is recommended that the value be represented as a strings delimited by dots with the root domain of the value appearing first.
+\label{sec:3} 
 
-The resource profile consists of the following metadata with the stated definitions:
+A Cone Search service MUST
+be described with a Resource Profile that includes the following
+information. The Profile is composed of named metadata listed below. The
+format used to encode the profile should be compliant with the
+publishing standards of the IVOA throughout the time the service is
+supported by the data provider. The metadata names and values used in
+the profile encoding should match those given below as closely as
+possible; where they do not match exactly, they should be consistent
+with the IVOA metadata conventions in place at any given time and the
+mapping of names and values actually used and those given below should
+be well documented.
+
+\begin{bigdescription}
+	\item[Editor's Note] 
+		The original NVO specification pre-dates the IVOA standard for resource
+		metadata [RM], and so, obviously, some inconsistencies with that
+		standard exist. To deal with this, the wording of this section has been
+		altered to allow profiles to be constructed according to the latest
+		practices in the IVOA. Appendix B outlines the mapping of the metadata
+		listed below to that in the RM as well as the XML Schema used to render
+		the metadata within a Registry.
+\end{bigdescription}
+
+Several of the
+metadata listed below can have values that are hierarchical; this
+hierarchy should be represented in a manner most appropriate to the
+format used. When the format does not provide any such mechanism, it is
+recommended that the value be represented as a strings delimited by dots
+with the root domain of the value appearing first.
+
+The resource profile consists of the following metadata with the stated
+definitions:
+
 \begin{itemize}
 	\item[\textbf{ResponsibleParty}] The data provider's name and email.
-	\item[\textbf{ServiceName}] The name of the catalog served by the service, for example "IRSA.2MASS.ExtendedSources".
-	\item[\textbf{Description}] A couple of paragraphs of text that describe the nature of the catalog and its wider context.
-	\item[\textbf{Instrument}] The instrument that made the observations, for example STScI.\-HST.\-WFPC2.
-	\item[\textbf{Waveband}] The waveband of the observations, with ONE selected from this list: radio, millimeter, infrared, optical, ultraviolet, xray, gammaray.
+	\item[\textbf{ServiceName}] The name of the
+		catalog served by the service, for example "IRSA.2MASS.ExtendedSources".
+	\item[\textbf{Description}] A couple of paragraphs of text that describe
+		the nature of the catalog and its wider context.
+	\item[\textbf{Instrument}] The instrument that made the observations,
+		for example STScI.\-HST.\-WFPC2.
+	\item[\textbf{Waveband}] The waveband
+		of the observations, with ONE selected from this list: radio,
+		millimeter, infrared, optical, ultraviolet, xray, gammaray.
 	\item[\textbf{Epoch}] The epoch of the observations, as a free-form string.
 	\item[\textbf{Coverage}] The coverage on the sky, as a free-form string.
-	\item[\textbf{MaxSR}] The largest search radius, given in decimal degrees, that will be accepted by the service without returning an error condition. A value of 180.0 indicates that there is no restriction.
-	\item[\textbf{MaxRecords}] The largest number of records that the service will return.
-	\item[\textbf{Verbosity}] True or false, depending on whether the service supports the VERB keyword in the request.
-	\item[\textbf{BaseURL}] The base URL for the service as described in Section \ref{sec:2}.
+	\item[\textbf{MaxSR}] The largest search radius, given in decimal
+		degrees, that will be accepted by the service without returning an error
+		condition. A value of 180.0 indicates that there is no restriction.
+	\item[\textbf{MaxRecords}] The largest number of records that the
+		service will return.
+	\item[\textbf{Verbosity}] True or false, depending
+		on whether the service supports the VERB keyword in the request.
+	\item[\textbf{BaseURL}] The base URL for the service as described in
+		Section \ref{sec:2}.
 \end{itemize}
-The service will be considered published to the VO if the profile has been added to an IVOA Registry according to the IVOA standards and conventions at the time the service is made available, TOGETHER with maintaining the web service that is described by the profile in compliant order.
+
+The service will be considered
+published to the VO if the profile has been added to an IVOA Registry
+according to the IVOA standards and conventions at the time the service
+is made available, TOGETHER with maintaining the web service that is
+described by the profile in compliant order.
 
 \appendix
+
 \section{Sample VOTable Response}
 \label{appendix:a}
+
 This is a sample of a legal response to a Cone Search query.
-\begin{lstlisting}[language=XML,basicstyle=\footnotesize]
+
+\begin{lstlisting}[language=XML,basicstyle=\footnotesize] 
 <?xml version="1.0"?>
 <!DOCTYPE VOTABLE SYSTEM "http://us-vo.org/xml/VOTable.dtd">
 <VOTABLE version="1.0">
@@ -217,57 +410,75 @@ This is a sample of a legal response to a Cone Search query.
     <COOSYS system="eq_FK5" equinox="2000" />
   </DEFINITIONS>
   <RESOURCE ID="T9001">
-     <DESCRIPTION>
-       HEASARC Browse data service
-       Please send inquiries to mailto:request@athena.gsfc.nasa.gov
+    <DESCRIPTION>
+      HEASARC Browse data service
+      Please send inquiries to mailto:request@athena.gsfc.nasa.gov
     </DESCRIPTION>
-    <PARAM ID="default_search_radius" ucd="OBS_ANG-SIZE" datatype="double" 
-           value="0.0516666666666667" />
+    <PARAM ID="default_search_radius" ucd="OBS_ANG-SIZE" 
+      datatype="double" value="0.0516666666666667" />
     <TABLE ID="heasarc_first_9001">
-      <DESCRIPTION> Faint Images of the Radio Sky at Twenty cm Source Catalog (FIRST) </DESCRIPTION>
-      <FIELD name="unique_id" datatype="char" arraysize="*"  ucd="ID_MAIN">
-        <DESCRIPTION> Integer key </DESCRIPTION>
+      <DESCRIPTION>
+        Faint Images of the Radio Sky at Twenty cm Source Catalog (FIRST)
+      </DESCRIPTION>
+      <FIELD name="unique_id" datatype="char" arraysize="*" ucd="ID_MAIN">
+        <DESCRIPTION>Integer key</DESCRIPTION>
       </FIELD>
-      <FIELD name="name" datatype="char" arraysize="*"  >
-        <DESCRIPTION> FIRST Source Designation </DESCRIPTION>
+      <FIELD name="name" datatype="char" arraysize="*">
+        <DESCRIPTION>FIRST Source Designation</DESCRIPTION>
       </FIELD>
       <FIELD name="ra" datatype="double" unit="degree" ucd="POS_EQ_RA_MAIN">
-        <DESCRIPTION> Right Ascension </DESCRIPTION>
+        <DESCRIPTION>Right Ascension</DESCRIPTION>
       </FIELD>
       <FIELD name="dec" datatype="double" unit="degree" ucd="POS_EQ_DEC_MAIN">
-        <DESCRIPTION> Declination </DESCRIPTION>
+        <DESCRIPTION>Declination</DESCRIPTION>
       </FIELD>
-      <FIELD name="flux_20_cm" datatype="double" unit="mJy" >
-        <DESCRIPTION> Peak 1.4GHz Flux Density (mJy) </DESCRIPTION>
+      <FIELD name="flux_20_cm" datatype="double" unit="mJy">
+        <DESCRIPTION>Peak 1.4GHz Flux Density (mJy)</DESCRIPTION>
       </FIELD>
-      <FIELD name="flux_20_cm_error" datatype="double" unit="mJy" >
-        <DESCRIPTION> Estimated rms in at Source (mJy) </DESCRIPTION>
+      <FIELD name="flux_20_cm_error" datatype="double" unit="mJy">
+        <DESCRIPTION>Estimated rms in at Source (mJy)</DESCRIPTION>
       </FIELD>
-      <FIELD name="int_flux_20_cm" datatype="double" unit="mJy" >
-        <DESCRIPTION> Integrated 1.4GHz Flux Density (mJy) </DESCRIPTION>
+      <FIELD name="int_flux_20_cm" datatype="double" unit="mJy">
+        <DESCRIPTION>Integrated 1.4GHz Flux Density (mJy)</DESCRIPTION>
       </FIELD>
       <DATA>
         <TABLEDATA>
-		<TR>
-		  <TD>384559</TD><TD>FIRST J120002.6+595708</TD>
-		  <TD>180.0110042</TD><TD>59.9523889</TD>
-		  <TD>    1.11</TD><TD> 0.139</TD><TD>    1.14</TD>
-		</TR>
-		<TR>
-		  <TD>385094</TD><TD>FIRST J120025.3+600103</TD>
-		  <TD>180.1057250</TD><TD>60.0175556</TD>
-		  <TD>    2.89</TD><TD> 0.142</TD><TD>    2.56</TD>
-		</TR>
-		<TR>
-		  <TD>384928</TD><TD>FIRST J120018.1+600236</TD>
-		  <TD>180.0755500</TD><TD>60.0434750</TD>
-		  <TD>   19.38</TD><TD> 0.145</TD><TD>   19.23</TD>
-		</TR>
-		<TR>
-		  <TD>384490</TD><TD>FIRST J115959.4+600403</TD>
-		  <TD>179.9978875</TD><TD>60.0677083</TD>
-		  <TD>    1.01</TD><TD> 0.147</TD><TD>    1.20</TD>
-		</TR>
+          <TR>
+            <TD>384559</TD>
+            <TD>FIRST J120002.6+595708</TD>
+            <TD>180.0110042</TD>
+            <TD>59.9523889</TD>
+            <TD>1.11</TD>
+            <TD>0.139</TD>
+            <TD>1.14</TD>
+          </TR>
+          <TR>
+            <TD>385094</TD>
+            <TD>FIRST J120025.3+600103</TD>
+            <TD>180.1057250</TD>
+            <TD>60.0175556</TD>
+            <TD>2.89</TD>
+            <TD>0.142</TD>
+            <TD>2.56</TD>
+            </TR>
+          <TR>
+            <TD>384928</TD>
+            <TD>FIRST J120018.1+600236</TD>
+            <TD>180.0755500</TD>
+            <TD>60.0434750</TD>
+            <TD>19.38</TD>
+            <TD>0.145</TD>
+            <TD>19.23</TD>
+          </TR>
+          <TR>
+            <TD>384490</TD>
+            <TD>FIRST J115959.4+600403</TD>
+            <TD>179.9978875</TD>
+            <TD>60.0677083</TD>
+            <TD>1.01</TD>
+            <TD>0.147</TD>
+            <TD>1.20</TD>
+          </TR>
         </TABLEDATA>
       </DATA>
     </TABLE>
@@ -277,8 +488,14 @@ This is a sample of a legal response to a Cone Search query.
 
 \section{Current Practices for Representing Resource Profiles}
 
-\subsection{Mapping for Resource Profile Metadata to the RM}
-As mentioned in an Editor's Note in Section \ref{sec:3}, the original NVO specification pre-dated the IVOA standard for resource metadata known as the RM \citep{2004ivoa.spec.0426H}. This section indicates how the resource profile metadata defined in this specification maps to the metadata defined in the RM.
+\subsection{Mapping for Resource Profile Metadata to the RM} 
+
+As mentioned in an Editor's Note in Section \ref{sec:3}, the original NVO
+specification pre-dated the IVOA standard for resource metadata known as
+the RM \citep{2004ivoa.spec.0426H}. This section indicates how the
+resource profile metadata defined in this specification maps to the
+metadata defined in the RM. 
+
 \begin{table}[th]
 \begin{tabular}{p{0.4\textwidth}p{0.5\textwidth}}
 \sptablerule
@@ -297,63 +514,91 @@ As mentioned in an Editor's Note in Section \ref{sec:3}, the original NVO specif
 \textbf{BaseURL} & Service.BaseURL\\
 \sptablerule
 \label{table:b1meta}
-\end{tabular}
-\caption{Metadata Mapping}
-\end{table}
+\end{tabular} \caption{Metadata
+Mapping} \end{table}
+
 Table notes:
 \begin{enumerate}
-	\item The notion of the epoch the observations is captured in the RM as the temporal coverage. The notion of the equinox of the observational positions is captured part of the RM's Coverage.Spatial.
-	\item As this concept is not covered by the RM, it should be considered service-specific capability metadata.
+	\item The notion of
+		the epoch the observations is captured in the RM as the temporal
+		coverage. The notion of the equinox of the observational positions is
+		captured part of the RM's Coverage.Spatial.
+	\item As this concept is not
+		covered by the RM, it should be considered service-specific capability
+		metadata.
 \end{enumerate}
 
-\subsection{VOResource (pre-v1.0) Schema Extension for Cone Search Services}
-Just prior to the adoption of IVOA standard for registry interfaces, v1.0, resource descriptions were encoded using the VOResource XML Schema, v0.10 and its family of extension schemas. The extensions used to specifically describe Cone Search services were VODataService, v0.5 and ConeSearch, v0.3
-%%% \todo{The references to RI, VOResource, VODataService and ConeSearch here, are all referring to xsd schemata currently obsoleted.}. See the embedded documentation in each of these schemas for the precise definitions and usage of the metadata encodable through them. %%%
+\subsection{VOResource (pre-v1.0) Schema Extension for Cone Search Services} 
 
-The following table enumerates the mapping of resource profile metadata defined in this specification with those defined in the XML schemas.
+Just prior to the adoption of IVOA standard for registry
+interfaces, v1.0, resource descriptions were encoded using the
+VOResource XML Schema, v0.10 and its family of extension schemas. The
+extensions used to specifically describe Cone Search services were
+VODataService, v0.5 and ConeSearch, v0.3.
+%%%% \todo{The references to RI,
+%VOResource, VODataService and ConeSearch here, are all referring to xsd
+%schemata currently obsoleted.}. See the embedded documentation in each
+%of these schemas for the precise definitions and usage of the metadata
+%encodable through them. %%%
+
+The following table enumerates the mapping of resource profile metadata
+defined in this specification with those defined in the XML schemas.
 
 \begin{table}[th]
 \begin{tabular}{p{0.38\textwidth}p{0.27\textwidth}p{0.34\textwidth}}
 \sptablerule
 \multirow{2}{*}{\textbf{Cone Search Metadatum}}&\multicolumn{2}{p{0.59\textwidth}}{\textbf{VOResource Metadatum}}\\
-&\textbf{Schema Name}&\textbf{XPath Name}\\
+&\textbf{Schema Name}&\textbf{XPath Name}\\ 
 \sptablerule
 \textbf{ResponsibleParty} & VOResource & curation/publisher, curation/contact/email\\
 \textbf{ServiceName} & VOResource & title\\
-\textbf{Description} &	VOResource & content/description\\
+\textbf{Description} & VOResource & content/description\\
 \textbf{Instrument} & VOResource & instrument\\
 \textbf{Waveband} & VODataService & coverage/spectral/waveband\\
 \textbf{Epoch} & VODataService & coverage/temporal/startTime, coverage/temporal/stopTime\textsuperscript{1}\\
 \textbf{Coverage} & VODataService & coverage/spatial\textsuperscript{2}\\
 \textbf{MaxSR} & ConeSearch & capability/maxSR\\
 \textbf{MaxRecords} & ConeSearch & capability/maxRecords\\
-\textbf{Verbosity} & ConeSearch & capability/verbosity\\
-\textbf{BaseURL} & VOResource & interface/accessURL\\
+\textbf{Verbosity} & ConeSearch &capability/verbosity\\
+\textbf{BaseURL} & VOResource interface/accessURL\\
 \sptablerule
 \label{table:extable}
 \end{tabular}
 \caption{VOResource pre-0.10 extension}
-\end{table}
+\end{table} 
+
 Table Notes:
-\begin{enumerate}
- \item The notion of the epoch the observations is captured in the schema inside coverage/temporal. The notion of the equinox of the observational positions is captured within coverage/spatial/region, such as in coverage/spatial/region[@xsi:type='vs:Circle']/coordFrame. 
- \item the coverage/spatial element encodes its information as a complex set of child elements.
+\begin{enumerate} 
+	\item The notion of the epoch the observations is
+		captured in the schema inside coverage/temporal. The notion of the
+		equinox of the observational positions is captured within
+		coverage/spatial/region, such as in
+		coverage/spatial/region[@xsi:type='vs:Circle']/coordFrame.
+	\item the	coverage/spatial element encodes its information as a 
+		complex set of child elements.
 \end{enumerate}
 
 \subsection{VOResource (v1.0) Schema Extension for Cone Search Services}
-With the expected adoption of the IVOA standard for Registry Interface, resources are described using the VOResource schema, v1.0 and its family of extensions. Cone Search services are specifically described using the VODataService, v1.0, and ConeSearch, v1.0, extension schemas. Coverage information is encoded using the Space-Time Coordinates (STC) schema.
 
-The following table enumerates the mapping of resource profile metadata defined in this specification with those defined in the XML schemas.
+With the expected adoption of the IVOA standard for Registry
+Interface, resources are described using the VOResource schema, v1.0 and
+its family of extensions. Cone Search services are specifically
+described using the VODataService, v1.0, and ConeSearch, v1.0, extension
+schemas. Coverage information is encoded using the Space-Time
+Coordinates (STC) schema.
+
+The following table enumerates the mapping of resource profile metadata
+defined in this specification with those defined in the XML schemas.
 
 \begin{table}[th]
 \begin{tabular}{p{0.4\textwidth}p{0.29\textwidth}p{0.3\textwidth}}
 \sptablerule
-\multirow{2}{*}{\textbf{Cone Search Metadatum}}&\multicolumn{2}{p{0.59\textwidth}}{\textbf{VOResource Metadatum}}\\
+\multirow{2}{*}{\textbf{Cone Search Metadatum}}&\multicolumn{2}{p{0.59\textwidth}}{\textbf{VOResource Metadatum}}\\ 
 &\textbf{Schema Name}&\textbf{XPath Name}\\
 \sptablerule
 \textbf{ResponsibleParty} & VOResource & curation/publisher, curation/contact/email\\
 \textbf{ServiceName} & VOResource & title\\
-\textbf{Description} &	VOResource & content/description\\
+\textbf{Description} & VOResource & content/description\\
 \textbf{Instrument} & VOResource & instrument\\
 \textbf{Waveband} & VODataService & coverage/waveband\\
 \textbf{Epoch} & VODataService & coverage-/stc:STCResourceProfile-/stc:AstroCoordArea\textsuperscript{1}\\
@@ -370,15 +615,22 @@ The following table enumerates the mapping of resource profile metadata defined 
 
 Table Notes:
 \begin{enumerate}
-	\item In STC, coverage on the sky and in time are described in an integrated way within the stc:AstroCoordArea element. The notion of the equinox of the observational positions is captured within stc:AstroCoordSystem element.
-\end{enumerate}
-Subsequent versions of this document should include the ConeSearch extension schema as a formal part of the specification.
+	\item In STC, coverage on the sky and in
+		time are described in an integrated way within the stc:AstroCoordArea
+		element. The notion of the equinox of the observational positions is
+		captured within stc:AstroCoordSystem element.
+\end{enumerate} 
+
+Subsequent versions of this document should include the ConeSearch extension 
+schemaas a formal part of the specification.
 
 \section{Changes from Previous Versions}
 
 \subsection{Changes from WD-1.1-20200828}
 \begin{itemize}
-	\item Complete revert of changes to restore clean 1.03 contents, in view of specific minor updates (here above)
+	\item embedded errata 1, 2 and 3 for ConeSearch-1.03
+	\item Complete revert of changes to restore clean 1.03 contents,
+		in view of specific minor updates (listed here above)
 \end{itemize}
 
 \subsection{Changes from REC-1.03}
@@ -388,13 +640,14 @@ Subsequent versions of this document should include the ConeSearch extension sch
 	\item changed error response to comply with DALI
 	\item changed resource metadata importing directly from SimpleDALRegExt
 	\item relaxed RA and Dec FIELDs in response to allow float or double datatype
-	\item no more exactly one RESOURCE in response, now stating exactly one of type="results"
+	\item no more exactly one RESOURCE in response, now stating exactly one of
+		type="results"
 	\item removed fixed version (1.0 or 1.1) for VOTable default response
 	\item Added DALI MAXREC and RESPONSEFORMAT
 	\item Added POST as optional HTTP query method
 	\item Addition of authors/editors.
 	\item Plain porting of the HTML document into ivoatex template,
-including change history, then modified it and reshaped.
+		including change history, then modified it and reshaped.
 \end{itemize}
 
 \subsection{Changes from PR-1.02}
@@ -404,10 +657,13 @@ including change history, then modified it and reshaped.
 
 \subsection{Changes from PR-1.01}
 \begin{itemize}
-	\item eliminated the choice of encoding an ERROR response in a PARAM that is a direct child of VOTABLE as this is not legal in the VOTable schema.
+	\item eliminated the
+		choice of encoding an ERROR response in a PARAM that is a direct child
+		of VOTABLE as this is not legal in the VOTable schema.
 	\item Allowed the use of the INFO element for error messages.
 	\item In examples, made sure PARAM elements have datatype attributes
-	\item Corrected wording to be definitive that positions are given in the ICRS coordinate system.
+	\item Corrected wording to be definitive that positions are given 
+		in the ICRS coordinate system.
 	\item Other typos.
 \end{itemize}
 
@@ -415,10 +671,10 @@ including change history, then modified it and reshaped.
 \begin{itemize}
 	\item Various typos.
 	\item Clarified description of VERB parameter:
-	\begin{itemize}
-		\item Clarified what is meant by optional for client and server.
-		\item Clarified the meaning of the values.
-	\end{itemize}
+		\begin{itemize}
+			\item Clarified what is meant by optional for client and server.
+			\item Clarified the meaning of the values.
+		\end{itemize}
 	\item Explicitly mention the 3 legal locations for ERROR messages.
 	\item Refer to string types as character arrays, as per the VOTable std.
 	\item Prefers text/xml;content=x-votable over text/xml;votable.
@@ -428,29 +684,46 @@ including change history, then modified it and reshaped.
 \subsection{Changes from the original NVO Specification Document}
 \label{appendix:nvochanges}
 \begin{itemize}
-	\item References to the original HTML document have been replaced with references to this IVOA specification.
-	\item Replaced references to "curator" with "data provider" or similar wording.
-	\item Replaced references to the NVO with references either to the IVOA or this specification, as appropriate.
-	\item Ambiguous language like "perhaps" has been replaced with more definitive wording where appropriate. Use of the word "will" is replaced with "must" and "can" with "may", in accordance with the definitions set in the preface.
+	\item References to the original HTML document have been replaced 
+		with references to this IVOA specification.
+	\item Replaced references to "curator" with "data
+		provider" or similar wording.
+	\item Replaced references to the NVO with
+		references either to the IVOA or this specification, as appropriate.
+	\item Ambiguous language like "perhaps" has been replaced with more
+		definitive wording where appropriate. Use of the word "will" is replaced
+		with "must" and "can" with "may", in accordance with the definitions set
+		in the preface.
 	\item Grammatical and spelling corrections have been made.
 	\item The content is organized into sections typical of an IVOA spec.
-	\item Description of the URL syntax is sharper, borrowing language from the SIA specification [SIA]. This includes:
-	\begin{itemize}
-		\item More explicitly specifying the form of the URL.
-		\item Sharpening the definition of the input parameters.
-		\item Indicating that parameter order is not significant.
-		\item Stating explicitly that unsupported optional arguments should be ignored.
-		\item Adding examples.
-		\item Re-ordering information for improved flow.
-	\end{itemize}
+	\item Description of the URL syntax is sharper, borrowing language
+		from the SIA specification [SIA]. This includes:
+		\begin{itemize}
+			\item More explicitly specifying the form of the URL.
+			\item Sharpening the definition of the input parameters.
+			\item Indicating that parameter order is not significant.
+			\item Stating explicitly that unsupported optional arguments
+				should be ignored.
+			\item Adding examples.
+			\item Re-ordering information for improved flow.
+		\end{itemize}
 	\item The version of VOTable supported is explicitly stated.
-	\item Whereas the NVO version describes the parameter with ucd="OBS\_ANG-SIZE" as "an expression of the opening angle of the cones", this version describes it specifically as "an expression of the uncertainty of the positions".
-	\item A note has been added to recognize the ambiguity in the location of the ERROR parameter.
-	\item The general description of the resource profile has been altered to allow rendering of the metadata to change according to the standards and conventions of the IVOA.
-	\item An editor's note has been added that makes reference to the RM document [RM].
-	\item A requirement that \textbf{MaxSR} be given in decimal degrees has been added.
-	\item For the \textbf{BaseURL} resource profile metadatum, the example has been replaced with a reference to the BaseURL syntax description.
-	\item An appendix has been added to describe the current practice for registering Cone Search services.
+	\item Whereas the NVO	version describes the parameter with
+		ucd="OBS\_ANG-SIZE" as "an
+		expression of the opening angle of the cones", this version describes it
+		specifically as "an expression of the uncertainty of the positions".
+	\item A note has been added to recognize the ambiguity in the location
+		of the ERROR parameter.
+	\item The general description of the resource
+		profile has been altered to allow rendering of the metadata to change
+		according to the standards and conventions of the IVOA.
+	\item An	editor's note has been added that makes reference to the RM document [RM].
+	\item A requirement that \textbf{MaxSR} be given in decimal
+		degrees has been added. \item For the \textbf{BaseURL} resource profile
+		metadatum, the example has been replaced with a reference to the BaseURL
+		syntax description.
+	\item An appendix has been added to describe the
+		current practice for registering Cone Search services.
 \end{itemize}
 
 \bibliography{ivoatex/ivoabib,ivoatex/docrepo,ConeSearch}
