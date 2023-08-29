@@ -215,17 +215,17 @@ the following requirements:
 				with each of these UCDs:
 				
 				\begin{itemize}
-					\item Exactly one FIELD must
-						have ucd="ID\_MAIN", with an array character type (fixed or variable
+					\item Exactly one FIELD must have ucd="meta.id;meta.main",
+						with an array character type (fixed or variable
 						length), representing an ID string for that record of the table. This
 						identifier may not be repeated in the table, and it could be used to
 						retrieve that same record again from that same table.
-					\item Exactly one
-						FIELD must have ucd="POS\_EQ\_RA\_MAIN", with type double, representing
-						the right-ascension of the source in the ICRS coordinate system.
-					\item
-						Exactly one FIELD must have ucd="POS\_EQ\_DEC\_MAIN", with type double,
+					\item Exactly one FIELD must have ucd="pos.eq.ra;meta.main",
+						representing the right-ascension of the source in the ICRS coordinate system.
+					\item Exactly one FIELD must have ucd="pos.eq.dec;meta.main",
 						representing the declination of the source in the ICRS coordinate system.
+					\item The above right-ascension and declination FIELD(s) must have the datatype
+						attribute set to float or double (following the VOTable\ref{2019ivoa.spec.1021O} standard).
 				\end{itemize}
 			
 			\item The VOTable may include an expression of the
