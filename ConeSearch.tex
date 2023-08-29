@@ -225,7 +225,7 @@ the following requirements:
 					\item Exactly one FIELD must have ucd="pos.eq.dec;meta.main",
 						representing the declination of the source in the ICRS coordinate system.
 					\item The above right-ascension and declination FIELD(s) must have the datatype
-						attribute set to float or double (following the VOTable\ref{2019ivoa.spec.1021O} standard).
+						attribute set to float or double, following the VOTable standard \citep{2019ivoa.spec.1021O}.
 				\end{itemize}
 			
 			\item The VOTable may include an expression of the
@@ -414,22 +414,22 @@ This is a sample of a legal response to a Cone Search query.
       HEASARC Browse data service
       Please send inquiries to mailto:request@athena.gsfc.nasa.gov
     </DESCRIPTION>
-    <PARAM ID="default_search_radius" ucd="OBS_ANG-SIZE" 
+    <PARAM ID="default_search_radius" ucd="phys.angSize;obs" 
       datatype="double" value="0.0516666666666667" />
     <TABLE ID="heasarc_first_9001">
       <DESCRIPTION>
         Faint Images of the Radio Sky at Twenty cm Source Catalog (FIRST)
       </DESCRIPTION>
-      <FIELD name="unique_id" datatype="char" arraysize="*" ucd="ID_MAIN">
+      <FIELD name="unique_id" datatype="char" arraysize="*" ucd="meta.id;meta.main">
         <DESCRIPTION>Integer key</DESCRIPTION>
       </FIELD>
       <FIELD name="name" datatype="char" arraysize="*">
         <DESCRIPTION>FIRST Source Designation</DESCRIPTION>
       </FIELD>
-      <FIELD name="ra" datatype="double" unit="degree" ucd="POS_EQ_RA_MAIN">
+      <FIELD name="ra" datatype="double" unit="degree" ucd="pos.eq.ra;meta.main">
         <DESCRIPTION>Right Ascension</DESCRIPTION>
       </FIELD>
-      <FIELD name="dec" datatype="double" unit="degree" ucd="POS_EQ_DEC_MAIN">
+      <FIELD name="dec" datatype="double" unit="degree" ucd="pos.eq.dec;meta.main">
         <DESCRIPTION>Declination</DESCRIPTION>
       </FIELD>
       <FIELD name="flux_20_cm" datatype="double" unit="mJy">
