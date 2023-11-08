@@ -13,32 +13,45 @@ Document authors (ivoatex maintainers have different rules):
 For the time being, keep both role_diagram.pdf and role_diagram.svg as
 created by this in the VCS.  This helps document builds on machines
 with missing dependencies.
+
+
+Archdiag maintainers: When adding boxes here, first look for a good place,
+preferably in one of the grid positions given in the comments for the
+WGs (e.g., 55 for Registry).  Good y positions are ones that already
+exist.  Leave out the w at first.
+
+Then, run
+
+make archdiag-debug.svg
+
+and open archdiag-debug.svg in a javascript-enabled browser.  In that
+browser's javascript console you will see lines like:
+
+SpectralDM: 67; 11.5
+
+The first number is the box's natural width, which you should use in the w
+attribute of the rec/prerec.  The second is the offset to x you'd need to
+add to one of the x grid lines (the x=something in the opening comments
+of the various sections) to have the box centered.
 -->
 
 <archdiag xmlns="http://ivoa.net/archdiag">
-	<!-- Registry: x=55, y=150..450 -->
-	<rec name="VOResource" x="55" y="155"/>
-	<rec name="RegistryInterface" x="55" y="205"/>
-	<rec name="VODataService" x="55" y="350"/>
-	<rec name="StandardsRegExt" x="55" y="375"/>
-	<rec name="SimpleDALR.E." x="55" y="400"/>
+  <!-- Registry: x=55, y=150..450 -->
+  <rec name="VOResource" x="64.5" y="155" w="71"/>
+  <rec name="Resource M.D." x="58" y="230" w="84"/>
 
-	<!-- Apps: all over the place -->
-	<rec name="VOTable" x="270" y="325"/>
+  <!-- Apps: all over the place -->
+  <rec name="VOTable" x="270" y="325" w="50"/>
 
-	<!-- DAL: x=655, y=155..435 -->
-	<rec name="DALI" x="310" y="290"/>
-	<thisrec name="SCS" x="655" y="155"/>
+  <!-- DAL: x=655, y=155..435 -->
+  <thisrec name="ConeSearch" x="665.5" y="155" w="69"/>
 
-	<!-- Data Models: x=430..580, y=250..400 -->
+  <!-- Data Models: x=430..580, y=250..400 -->
 
-	<!-- GWS: all over the place -->
-	<rec name="VOSI" x="540" y="435"/>
+  <!-- GWS: all over the place -->
 
-	<!-- Semantics: x=160..250 y=250..400 -->
-	<rec name="VOUnits" x="200" y="250"/>
-	<rec name="UCD" x="160" y="310"/>
-	<rec name="Vocabularies" x="160" y="335"/>
+  <!-- Semantics: x=160..250 y=250..400 -->
+  <rec name="UCD" x="189" y="310" w="32"/>
 
-	<!-- TD -->
+  <!-- TD -->
 </archdiag>
