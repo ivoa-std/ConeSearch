@@ -19,7 +19,7 @@ AUTHOR_EMAIL=marco.molinaro@inaf.it
 
 # Source files for the TeX document (but the main file must always
 # be called $(DOCNAME).tex)
-SOURCES = $(DOCNAME).tex
+SOURCES = $(DOCNAME).tex gitmeta.tex
 
 # List of image files to be included in submitted package (anything that
 # can be rendered directly by common web browsers)
