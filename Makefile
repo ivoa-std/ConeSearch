@@ -1,4 +1,5 @@
-# ivoatex Makefile.  The ivoatex/README for the targets available.
+# ivoatex Makefile.  The http://ivoa.net/documents/notes/IVOATex
+# for the targets available.
 
 # short name of your document (edit $DOCNAME.tex; would be like RegTAP)
 DOCNAME = ConeSearch
@@ -7,23 +8,36 @@ DOCNAME = ConeSearch
 DOCVERSION = 1.1
 
 # Publication date, ISO format; update manually for "releases"
-#DOCDATE = 2019-11-15
-DOCDATE = 2020-08-28
+DOCDATE = 2023-08-29
 
 # What is it you're writing: NOTE, WD, PR, REC, PEN, or EN
 DOCTYPE = WD
 
-# Source files for the TeX document (but the main file must always
-# be called $(DOCNAME).tex
-SOURCES = $(DOCNAME).tex
+# An e-mail address of the person doing the submission to the document
+# repository (can be empty until a make upload is being made)
+AUTHOR_EMAIL=marco.molinaro@inaf.it
 
-# List of pixel image files to be included in submitted package 
+# Source files for the TeX document (but the main file must always
+# be called $(DOCNAME).tex)
+SOURCES = $(DOCNAME).tex gitmeta.tex
+
+# List of image files to be included in submitted package (anything that
+# can be rendered directly by common web browsers)
 FIGURES =
 
-# List of PDF figures (for vector graphics)
-VECTORFIGURES = role_diagram.pdf
+# List of PDF figures (figures that must be converted to pixel images to
+# work in web browsers).
+VECTORFIGURES =
 
 # Additional files to distribute (e.g., CSS, schema files, examples...)
-AUX_FILES = 
+AUX_FILES =
 
-include ivoatex/Makefile
+-include ivoatex/Makefile
+
+ivoatex/Makefile:
+	@echo "*** ivoatex submodule not found.  Initialising submodules."
+	@echo
+	git submodule update --init
+
+test:
+	@echo "No tests defined yet"
