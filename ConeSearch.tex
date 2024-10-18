@@ -209,8 +209,9 @@ the following requirements:
 		The VOTable MUST comply with these conditions:
 
 		\begin{itemize}
-			\item There must be a single RESOURCE in the VOTable,
-				and that contains a single TABLE.
+			\item There must be a single RESOURCE with \texttt{type=''results''} in the VOTable,
+				and that RESOURCE must contain a single TABLE. Additional RESOURCE(s) are
+				allowed to enable, e.g., DataLink service descriptors.
 			\item The TABLE must have FIELDS where
 				the following UCD values have been set. There must only be one FIELD
 				with each of these UCDs:
