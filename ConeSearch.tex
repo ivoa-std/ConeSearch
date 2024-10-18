@@ -229,17 +229,17 @@ the following requirements:
 				with each of these UCDs:
 				
 				\begin{itemize}
-					\item Exactly one FIELD must
-						have ucd="ID\_MAIN", with an array character type (fixed or variable
+					\item Exactly one FIELD must have ucd="meta.id;meta.main",
+						with an array character type (fixed or variable
 						length), representing an ID string for that record of the table. This
 						identifier may not be repeated in the table, and it could be used to
 						retrieve that same record again from that same table.
-					\item Exactly one
-						FIELD must have ucd="POS\_EQ\_RA\_MAIN", with type double, representing
-						the right-ascension of the source in the ICRS coordinate system.
-					\item
-						Exactly one FIELD must have ucd="POS\_EQ\_DEC\_MAIN", with type double,
+					\item Exactly one FIELD must have ucd="pos.eq.ra;meta.main",
+						representing the right-ascension of the source in the ICRS coordinate system.
+					\item Exactly one FIELD must have ucd="pos.eq.dec;meta.main",
 						representing the declination of the source in the ICRS coordinate system.
+					\item The above right-ascension and declination FIELD(s) must have the datatype
+						attribute set to float or double, following the VOTable standard \citep{2019ivoa.spec.1021O}.
 				\end{itemize}
 			
 			\item The VOTable may include an expression of the
@@ -248,9 +248,9 @@ the following requirements:
 				angular size if the sources are resolved. If this uncertainty is not
 				provided, it should be taken to be zero; otherwise, it may be set for
 				all table entries with a PARAM in the RESOURCE which has a UCD that is
-				set to OBS\_ANG-SIZE and has a value which is the angle in decimal
+				set to phys.angSize;obs and has a value which is the angle in decimal
 				degrees. Alternatively, a different value for each row in the table can
-				be given via a FIELD in the table having a UCD set to OBS\_ANG-SIZE.
+				be given via a FIELD in the table having a UCD set to phys.angSize;obs.
 			\item There may be other FIELDs in the table. Their specification should
 				include a description, data-type, and UCD.
 		\end{itemize}
@@ -424,22 +424,22 @@ This is a sample of a legal response to a Cone Search query.
       HEASARC Browse data service
       Please send inquiries to mailto:request@athena.gsfc.nasa.gov
     </DESCRIPTION>
-    <PARAM ID="default_search_radius" ucd="OBS_ANG-SIZE" 
+    <PARAM ID="default_search_radius" ucd="phys.angSize;obs" 
       datatype="double" value="0.0516666666666667" />
     <TABLE ID="heasarc_first_9001">
       <DESCRIPTION>
         Faint Images of the Radio Sky at Twenty cm Source Catalog (FIRST)
       </DESCRIPTION>
-      <FIELD name="unique_id" datatype="char" arraysize="*" ucd="ID_MAIN">
+      <FIELD name="unique_id" datatype="char" arraysize="*" ucd="meta.id;meta.main">
         <DESCRIPTION>Integer key</DESCRIPTION>
       </FIELD>
       <FIELD name="name" datatype="char" arraysize="*">
         <DESCRIPTION>FIRST Source Designation</DESCRIPTION>
       </FIELD>
-      <FIELD name="ra" datatype="double" unit="degree" ucd="POS_EQ_RA_MAIN">
+      <FIELD name="ra" datatype="double" unit="degree" ucd="pos.eq.ra;meta.main">
         <DESCRIPTION>Right Ascension</DESCRIPTION>
       </FIELD>
-      <FIELD name="dec" datatype="double" unit="degree" ucd="POS_EQ_DEC_MAIN">
+      <FIELD name="dec" datatype="double" unit="degree" ucd="pos.eq.dec;meta.main">
         <DESCRIPTION>Declination</DESCRIPTION>
       </FIELD>
       <FIELD name="flux_20_cm" datatype="double" unit="mJy">
