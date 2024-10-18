@@ -144,7 +144,7 @@ the following requirements:
 			not significant.
 		\item The baseURL and constraint list are concatenated
 			to form the query. 
-		\item The set of query constraints must include the
+		\item The set of query constraints MUST include the
 			following parameters, which are interpreted by the service with the
 			stated meaning: 
 			\begin{description}
@@ -154,13 +154,25 @@ the following requirements:
 				\item[\textbf{DEC}] a declination
 					in the ICRS coordinate system for the positon of the center of the cone
 					to search, given in decimal degrees.
-				\item[\textbf{SR}] the radius of
-					the cone to search, given in decimal degrees.
+				\item[\textbf{SR}] the radius of the cone to search, given in decimal degrees.
+					If set to zero (SR=0) it should not return an error condition because the
+					request might describe an interest in retrieving only the metadata structure
+					of the service's response (i.e. discovery of the FIELDS delivered by the service).
+					This is similar to setting MAXREC=0, i.e. a service metadata request as prescribed
+					by DALI\footnote{SR=0 is kept in this version of this specification for back
+					compatibility. It is suggested to prefer the usage of MAXREC to enable metadata
+					discovery}\citep{2017ivoa.spec.0517D}.
 			\end{description}
 			\begin{bigdescription}
 				\item[Example]
 					\url{http://mycone.org/cgi-bin/search?RA=180.567&DEC=-30.45&SR=0.0125}
 			\end{bigdescription}
+		\item As defined by DALI a service SHOULD also understand the following parameter:
+			\begin{description}
+				\item[\textbf{MAXREC}] to let the client limit the number of records returned
+					or require a service metadata response. Its usage is encouraged and preferred
+					to the SR=0 solution for metadata discovery.
+			\end{description}
 		\item The query MAY contain the optional parameter,
 			\textbf{VERB}, whose value is an integer--either 1, 2, or 3--indicating
 			verbosity which determines how many columns are to be returned in the
@@ -324,11 +336,7 @@ the following requirements:
 		Southern hemisphere and the catalog coverage is in the Northern
 		hemisphere. This type of query is different from an error return; it
 		should return a VOTable as described above, with metadata, but no data
-		records. In particular, a zero value of Search Radius should not return
-		an error condition. This is because an application may be more
-		interested in the metadata than the data, and send a fixed query (for
-		example RA=0\&DEC=90\&SR=0) simply to discover the fields delivered by
-		the service.
+		records.
 \end{enumerate}
 
 \section{The Resource Profile}
