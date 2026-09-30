@@ -30,7 +30,7 @@ FIGURES =
 VECTORFIGURES = role_diagram.pdf
 
 # Additional files to distribute (e.g., CSS, schema files, examples...)
-AUX_FILES =
+AUX_FILES = response-sample.xml
 
 -include ivoatex/Makefile
 

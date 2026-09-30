@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<VOTABLE version="1.4" 
+  xmlns="http://www.ivoa.net/xml/VOTable/v1.3" 
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+  xsi:schemaLocation="http://www.ivoa.net/xml/VOTable/v1.3 
+          http://www.ivoa.net/xml/VOTable/votable-1.4.xsd">
+  <RESOURCE name="simbad_cone-search_result" type="results">
+    <INFO name="standardID" 
+      value="ivo://ivoa.net/std/conesearch">IVOID of the service specification</INFO>
+    <INFO name="data_ivoid" 
+      value="ivo://cds.simbad">IVOID of underlying data collection</INFO>
+    <INFO name="publisher"
+      value="CDS/SIMBAD">Data centre that produced the VOTable</INFO>
+    <INFO name="article" 
+      value="10.1051/aas:2000332">Bibcode or DOI of a reference article</INFO>
+    <INFO name="server_software" 
+      value="SIMBAD-ConeSearch/2.7-SNAPSHOT (Strasbourg)">Software version</INFO>
+    <INFO name="service_protocol" value="ivo://ivoa.net/std/conesearch">
+      IVOID of the protocol through which the data was retrieved</INFO>
+    <INFO name="request" 
+      value="https://simbad.cds.unistra.fr/cone/
+             ?RA=10.684709&amp;DEC=41.26875&amp;SR=0.01666&amp;VERB=1&amp;MAXREC=2000">
+      Request URL including a query string</INFO>
+    <INFO name="request_date" 
+      value="2026-06-09T06:09:04.156417Z">Query execution date</INFO>
+    <INFO name="contact" 
+      value="cds-question@unistra.fr">Email or URL to contact publisher</INFO>
+    <INFO name="QUERY_STATUS" value="OK">Successful query</INFO>
+    <COOSYS ID="SIMBAD-COOSYS" system="ICRS" epoch="J2000" equinox="2000"/>
+    <TABLE>
+      <FIELD name="distance"
+        datatype="float" ucd="pos.angDistance" unit="deg">
+        <DESCRIPTION>
+	  Distance (in degrees) between this object and the cone-search's target.
+	</DESCRIPTION>
+      </FIELD>
+      <FIELD ID="main_id" name="main_id" 
+        arraysize="*" datatype="char" ucd="meta.id;meta.main">
+        <DESCRIPTION>Main identifier for an object</DESCRIPTION>
+      </FIELD>
+      <FIELD name="ra"
+        datatype="double" ref="SIMBAD-COOSYS" ucd="pos.eq.ra;meta.main" unit="deg">
+        <DESCRIPTION>Right ascension</DESCRIPTION>
+      </FIELD>
+      <FIELD name="dec" 
+        datatype="double" ref="SIMBAD-COOSYS" ucd="pos.eq.dec;meta.main" unit="deg">
+        <DESCRIPTION>Declination</DESCRIPTION>
+      </FIELD>
+      <FIELD arraysize="*" datatype="char" name="otype"/>
+      <FIELD datatype="int" name="biblist"/>
+      <DATA>
+        <TABLEDATA>
+          <TR>
+            <TD>7.879335328886527E-7</TD>
+            <TD>M  31</TD>
+            <TD>10.6847083</TD>
+            <TD>41.2687500</TD>
+            <TD>AGN</TD>
+            <TD>13679</TD>
+          </TR>
+          ...
+        </TABLEDATA>
+      </DATA>
+    </TABLE>
+  </RESOURCE>
+</VOTABLE>
