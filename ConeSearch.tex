@@ -171,10 +171,10 @@ represented by a URL having two parts:\\
 			stated meaning: 
 			\begin{description}
 				\item[\textbf{RA}] a right-ascension
-					in the ICRS coordinate system for the positon of the center of the cone
+					in the ICRS coordinate system for the position of the center of the cone
 					to search, given in decimal degrees.
 				\item[\textbf{DEC}] a declination
-					in the ICRS coordinate system for the positon of the center of the cone
+					in the ICRS coordinate system for the position of the center of the cone
 					to search, given in decimal degrees.
 				\item[\textbf{SR}] the radius of the cone to search, given in decimal degrees.
 					If set to zero (SR=0) it should not return an error condition because the
@@ -255,7 +255,7 @@ available in the served source catalog:
 Right-ascension and declination of the output columns \textbf{MUST} be in decimal degrees.
 
 By default, the service \textbf{must} respond with an XML document in the
-VOTable\citep{2025ivoa.spec.0116O} format. However, if RESPONSEFORMAT is
+VOTable \citep{2025ivoa.spec.0116O} format. However, if RESPONSEFORMAT is
 set (see Sec.~\ref{subsec:baseurl}) the response table \textbf{should}
 match the requested format; if this format is unsupported the request
 \textbf{should} fail.
@@ -277,7 +277,7 @@ Simple Cone Search services \textbf{MUST} return VOTable
 version 1 documents.
 
 The response in VOTable format \textbf{MUST} follow the prescriptions on
-VOTable usage in result contained (currently) in Sec. 4.4 of the DALI 1.1
+VOTable usage in result contained (currently) in Sec.\ 4.4 of the DALI 1.1
 specification. Moreover it \textbf{MUST} comply with these conditions:
 
 \begin{itemize}
@@ -365,7 +365,7 @@ WHERE
   AND intf_role='std'
 \end{lstlisting}
 
-The \texttt{std\_version} attribute (i.e the version of the interface's
+The \texttt{std\_version} attribute (i.e.\ the version of the interface's
 capability) could help, if present on the registered resource, to inform
 the client application about the ConeSearch version the service is
 following.
