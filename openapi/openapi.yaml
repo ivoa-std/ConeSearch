@@ -1,0 +1,81 @@
+openapi: 3.0.0
+info:
+  title: IVOA Simple Cone Search
+  description: |
+    This is the OpenAPI representation of the ConeSearch-1.1
+    specification
+  version: 1.1
+servers:
+- url: /cone
+paths:
+  /search:
+    get:
+      summary: The Simple Cone Search base query endpoint
+      description: |
+        Parametric HTTP GET queries following ConeSearch
+        to retrieve astrophysics source within the cone
+      parameters:
+        - name: RA
+          in: query
+          required: true
+          description: |
+            A right-ascension in the ICRS coordinate system for the positon
+            of the center of the cone to search, given in decimal degrees
+          schema:
+            type: number
+            format: float
+        - name: DEC
+          in: query
+          required: true
+          description: |
+            A declination in the ICRS coordinate system for the positon of
+            the center of the cone to search, given in decimal degrees
+          schema:
+            type: number
+            format: float
+        - name: SR
+          in: query
+          required: true
+          description: |
+            The radius of the cone to search, given in decimal degrees. If set
+            to zero (SR=0) it should not return an error condition because the
+            request might describe an interest in retrieving only the metadata
+            structure of the service’s response (i.e. discovery of the FIELDs
+            delivered by the service). Returning data alongside metadata with
+            SR=0 is also allowed. The metadata enquiry behaviour is similar
+            to setting MAXREC=0, i.e. a service metadata request as prescribed
+            by DALI
+          schema:
+            type: number
+            format: float
+        - $ref: ../dali/dali-maxrec.yaml
+        - $ref: ../dali/dali-responseformat.yaml
+        - name: VERB
+          in: query
+          required: false
+          description: |
+            An integer indicating verbosity which determines how many columns
+            are to be returned in the resulting table. If supported by the service,
+            1 means that the bare minimum number of columns the provider considers
+            useful in describing the returned objects. A value of 2 is intended for
+            requesting a medium number of columns considered by the provider the
+            most typically useful. When the value is 3, the service should return
+            all of the columns that are available for describing the objects.
+            If not provided, it defaults to 2.
+          schema:
+            type: integer
+            format: int32
+      responses:
+        "200":
+          description: |
+            Successful query, returns a table containing the astronomical
+            sources whose positions are within the cone described by RA, DEC, SR
+          content:
+            application/x-votable+xml:
+              schema:
+                type: object
+                xml:
+                  name: VOTable
+                  namespace: http://www.ivoa.net/xml/VOTable/v1.5
+        "400":
+          $ref: ../vosi/vosi-std-responses.yaml#/bad-request 
